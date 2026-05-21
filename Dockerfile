@@ -25,7 +25,7 @@ COPY composer.json composer.lock ./
 
 # Install PHP dependencies without executing project scripts yet.
 RUN composer install --no-interaction --no-scripts --optimize-autoloader
-
+RUN php bin/console doctrine:fixtures:load --append
 # Copy the application source after dependencies are cached.
 COPY . .
 
