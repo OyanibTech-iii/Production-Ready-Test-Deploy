@@ -7,6 +7,12 @@ if [ -z "$DATABASE_URL" ] && [ -n "$MYSQL_URL" ]; then
     echo "Exported DATABASE_URL from MYSQL_URL"
 fi
 
+# Run migrations if we have a database URL
+if [ -n "$DATABASE_URL" ]; then
+    echo "Running database migrations..."
+    php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || echo "Migrations failed, continuing..."
+fi
+
 echo "Starting PHP-FPM..."
 php-fpm -F &
 PHP_PID=$!

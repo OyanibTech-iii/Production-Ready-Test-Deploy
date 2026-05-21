@@ -22,18 +22,24 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Copy dependency manifests first to leverage Docker caching.
-COPY composer.json composer.lock ./
+COPY composer.json composer.lock package.json package-lock.json ./
 
 # Install PHP dependencies without executing project scripts yet.
 RUN composer install --no-interaction --no-scripts --optimize-autoloader
 
+# Install frontend dependencies and build assets.
+RUN npm install --no-interaction
+
 # Copy the application source after dependencies are cached.
 COPY . .
+
+# Build frontend assets.
+RUN npm run build
 
 # Create a default .env file if one does not already exist.
 RUN if [ ! -f /app/.env ]; then \
     DB_URL=${DATABASE_URL:-${MYSQL_URL:-mysql://root@127.0.0.1:3306/app_db?serverVersion=8.0}}; \
-    echo "APP_ENV=${APP_ENV:-prod}\nAPP_DEBUG=${APP_DEBUG:-false}\nAPP_SECRET=${APP_SECRET:-ChangeMe}\nDEFAULT_URI=${DEFAULT_URI:-http://localhost}\nDATABASE_URL=$DB_URL\nMAILER_DSN=${MAILER_DSN:-null://null}\nMESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\nREDIS_CACHE_URL=${REDIS_CACHE_URL:-redis://localhost}\nREDIS_RATE_LIMITER_URL=${REDIS_RATE_LIMITER_URL:-redis://localhost}\n" > /app/.env; \
+    echo "APP_ENV=${APP_ENV:-prod}\nAPP_DEBUG=${APP_DEBUG:-false}\nAPP_SECRET=${APP_SECRET:-ChangeMe}\nDEFAULT_URI=${DEFAULT_URI:-http://localhost}\nDATABASE_URL=$DB_URL\nMAILER_DSN=${MAILER_DSN:-null://null}\nMESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\nREDIS_URL=${REDIS_URL:-redis://localhost}\nREDIS_CACHE_URL=${REDIS_CACHE_URL:-redis://localhost}\nREDIS_RATE_LIMITER_URL=${REDIS_RATE_LIMITER_URL:-redis://localhost}\nREDIS_SESSION_URL=${REDIS_SESSION_URL:-redis://localhost}\n" > /app/.env; \
     fi
 
 # Reinstall dependencies and optimize the autoloader for production.
