@@ -1,30 +1,20 @@
 #!/bin/bash
 set -e
 
-# Generate JWT keys if they don't exist
-if [ ! -f config/jwt/private.pem ]; then
-    echo "Generating JWT keys..."
-    php bin/console lexik:jwt:generate-keypair --skip-if-exists
-    chown www-data:www-data config/jwt/*.pem
+# Map MYSQL_URL to DATABASE_URL if DATABASE_URL is not set (common on Railway)
+if [ -z "$DATABASE_URL" ] && [ -n "$MYSQL_URL" ]; then
+    export DATABASE_URL="$MYSQL_URL"
+    echo "Exported DATABASE_URL from MYSQL_URL"
 fi
 
-# Run migrations if database is available
-echo "Running migrations..."
-php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-
-# Clear and warm up cache
-echo "Clearing cache..."
-php bin/console cache:clear
-php bin/console cache:warmup
-
-# Set up Nginx port dynamically (Railway provides $PORT)
-echo "Configuring Nginx to listen on port $PORT"
-envsubst '${PORT}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
-
-# Start PHP-FPM in the background
 echo "Starting PHP-FPM..."
-php-fpm -D
+php-fpm -F &
+PHP_PID=$!
 
-# Start Nginx in the foreground
+echo "Waiting for PHP-FPM to start..."
+sleep 2
+
 echo "Starting Nginx..."
-nginx -g 'daemon off;'
+nginx -g "daemon off;"
+
+wait $PHP_PID
