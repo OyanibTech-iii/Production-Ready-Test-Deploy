@@ -87,7 +87,7 @@ HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=3 \
     CMD curl -f http://localhost/ || exit 1
 
 # Expose HTTP port 80 from the container.
-EXPOSE 80
+EXPOSE 9000
 
 # Start the container using the custom entrypoint.
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
