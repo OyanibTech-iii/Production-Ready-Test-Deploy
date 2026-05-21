@@ -40,7 +40,10 @@ RUN npm run build
 RUN if [ ! -f /app/.env ]; then \
     DB_URL=${DATABASE_URL:-${MYSQL_URL:-mysql://root@127.0.0.1:3306/app_db?serverVersion=8.0}}; \
     REDIS_DSN=${REDIS_URL:-redis://localhost}; \
-    echo "APP_ENV=${APP_ENV:-prod}\nAPP_DEBUG=${APP_DEBUG:-false}\nAPP_SECRET=${APP_SECRET:-ChangeMe}\nDEFAULT_URI=${DEFAULT_URI:-http://localhost}\nDATABASE_URL=$DB_URL\nMAILER_DSN=${MAILER_DSN:-null://null}\nMESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\nREDIS_URL=$REDIS_DSN\nREDIS_CACHE_URL=${REDIS_CACHE_URL:-$REDIS_DSN/2}\nREDIS_RATE_LIMITER_URL=${REDIS_RATE_LIMITER_URL:-$REDIS_DSN/1}\nREDIS_SESSION_URL=${REDIS_SESSION_URL:-$REDIS_DSN/2}\n" > /app/.env; \
+    printf "APP_ENV=%s\nAPP_DEBUG=%s\nAPP_SECRET=%s\nDEFAULT_URI=%s\nDATABASE_URL=%s\nMAILER_DSN=%s\nMESSENGER_TRANSPORT_DSN=%s\nREDIS_URL=%s\nREDIS_CACHE_URL=%s\nREDIS_RATE_LIMITER_URL=%s\nREDIS_SESSION_URL=%s\n" \
+    "${APP_ENV:-prod}" "${APP_DEBUG:-false}" "${APP_SECRET:-ChangeMe}" "${DEFAULT_URI:-http://localhost}" \
+    "$DB_URL" "${MAILER_DSN:-null://null}" "${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}" \
+    "$REDIS_DSN" "${REDIS_CACHE_URL:-$REDIS_DSN/2}" "${REDIS_RATE_LIMITER_URL:-$REDIS_DSN/1}" "${REDIS_SESSION_URL:-$REDIS_DSN/2}" > /app/.env; \
     fi
 
 # Reinstall dependencies and optimize the autoloader for production.

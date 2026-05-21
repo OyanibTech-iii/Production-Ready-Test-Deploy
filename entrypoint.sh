@@ -16,24 +16,15 @@ fi
 # If REDIS_URL is set, ensure other Redis-related env vars use it as a base if not already set
 if [ -n "$REDIS_URL" ]; then
     # Strip trailing slash if present
-    BASE_REDIS_URL=$(echo $REDIS_URL | sed 's/\/$//')
+    REDIS_BASE=$(echo "$REDIS_URL" | sed 's/\/$//')
+    # Strip existing database index if present (e.g., /0, /1, etc.)
+    REDIS_BASE=$(echo "$REDIS_BASE" | sed 's/\/[0-9]\{1,2\}$//')
     
-    # Check if it already has a database index (e.g., redis://host:port/0)
-    # If so, extract the base part
-    if [[ "$BASE_REDIS_URL" =~ ^(redis[s]?://[^/]+)(/[0-9]+)?$ ]]; then
-        BASE_PART="${BASH_REMATCH[1]}"
-        echo "Detected Redis base URL: $BASE_PART"
-        
-        export REDIS_URL="${REDIS_URL}"
-        export REDIS_CACHE_URL="${REDIS_CACHE_URL:-$BASE_PART/2}"
-        export REDIS_RATE_LIMITER_URL="${REDIS_RATE_LIMITER_URL:-$BASE_PART/1}"
-        export REDIS_SESSION_URL="${REDIS_SESSION_URL:-$BASE_PART/2}"
-    else
-        # Fallback if pattern match fails
-        export REDIS_CACHE_URL="${REDIS_CACHE_URL:-$BASE_REDIS_URL/2}"
-        export REDIS_RATE_LIMITER_URL="${REDIS_RATE_LIMITER_URL:-$BASE_REDIS_URL/1}"
-        export REDIS_SESSION_URL="${REDIS_SESSION_URL:-$BASE_REDIS_URL/2}"
-    fi
+    echo "Detected Redis base URL: $REDIS_BASE"
+    
+    export REDIS_CACHE_URL="${REDIS_CACHE_URL:-$REDIS_BASE/2}"
+    export REDIS_RATE_LIMITER_URL="${REDIS_RATE_LIMITER_URL:-$REDIS_BASE/1}"
+    export REDIS_SESSION_URL="${REDIS_SESSION_URL:-$REDIS_BASE/2}"
     echo "Configured Redis environment variables using REDIS_URL"
 fi
 

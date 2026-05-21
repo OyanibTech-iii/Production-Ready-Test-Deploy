@@ -50,6 +50,7 @@ services:
         arguments:
             - '%env(REDIS_SESSION_URL)%'
 
-    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+    app.session_handler.redis:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
         arguments:
             - '@session.redis'
