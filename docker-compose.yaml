@@ -13,12 +13,16 @@ services:
       - ./public:/app/public
       - ./var:/app/var
     environment:
-      DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}?serverVersion=8.0.32&charset=utf8mb4"
+      DATABASE_URL: "mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user_password}@db:3306/${MYSQL_DATABASE:-root_db}?serverVersion=8.0.32&charset=utf8mb4"
       APP_ENV: prod
       APP_DEBUG: "false"
+      REDIS_CACHE_URL: "redis://redis:6379/2"
+      REDIS_RATE_LIMITER_URL: "redis://redis:6379/1"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - platform-network
     healthcheck:
@@ -28,6 +32,49 @@ services:
       retries: 3
       start_period: 10s
 
+  db:
+    image: mysql:8.0
+    container_name: platform_b_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-root_db}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-user_password}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - platform-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
+
+  redis:
+    image: redis:alpine
+    container_name: platform_b_redis
+    networks:
+      - platform-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: platform_b_pma
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${MYSQL_USER:-user}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-user_password}
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - platform-network
+
 networks:
   platform-network:
     driver: bridge
+
+volumes:
+  db_data:

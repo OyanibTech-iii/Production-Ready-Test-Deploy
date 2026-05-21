@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     nodejs \
     npm \
-    && docker-php-ext-install pdo pdo_mysql \
+    libicu-dev \
+    && docker-php-ext-install pdo pdo_mysql intl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer globally so Composer commands are available.
@@ -32,10 +33,8 @@ COPY . .
 # Create a default .env file if one does not already exist.
 RUN if [ ! -f /app/.env ]; then \
     DB_URL=${DATABASE_URL:-${MYSQL_URL:-mysql://root@127.0.0.1:3306/app_db?serverVersion=8.0}}; \
-    echo "APP_ENV=${APP_ENV:-prod}\nAPP_DEBUG=${APP_DEBUG:-false}\nAPP_SECRET=${APP_SECRET:-ChangeMe}\nDEFAULT_URI=${DEFAULT_URI:-http://localhost}\nDATABASE_URL=$DB_URL\nMAILER_DSN=${MAILER_DSN:-null://null}\nMESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\n" > /app/.env; \
+    echo "APP_ENV=${APP_ENV:-prod}\nAPP_DEBUG=${APP_DEBUG:-false}\nAPP_SECRET=${APP_SECRET:-ChangeMe}\nDEFAULT_URI=${DEFAULT_URI:-http://localhost}\nDATABASE_URL=$DB_URL\nMAILER_DSN=${MAILER_DSN:-null://null}\nMESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\nREDIS_CACHE_URL=${REDIS_CACHE_URL:-redis://localhost}\nREDIS_RATE_LIMITER_URL=${REDIS_RATE_LIMITER_URL:-redis://localhost}\n" > /app/.env; \
     fi
-
-RUN php bin/console doctrine:fixtures:load --append
 
 # Reinstall dependencies and optimize the autoloader for production.
 RUN composer install --no-interaction --optimize-autoloader --no-ansi || true
