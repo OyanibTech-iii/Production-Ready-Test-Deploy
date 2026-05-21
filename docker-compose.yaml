@@ -16,8 +16,10 @@ services:
       DATABASE_URL: "mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user_password}@db:3306/${MYSQL_DATABASE:-root_db}?serverVersion=8.0.32&charset=utf8mb4"
       APP_ENV: prod
       APP_DEBUG: "false"
+      REDIS_URL: "redis://redis:6379/0"
       REDIS_CACHE_URL: "redis://redis:6379/2"
       REDIS_RATE_LIMITER_URL: "redis://redis:6379/1"
+      REDIS_SESSION_URL: "redis://redis:6379/2"
     depends_on:
       db:
         condition: service_healthy

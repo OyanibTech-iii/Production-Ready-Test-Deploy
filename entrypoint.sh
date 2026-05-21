@@ -7,6 +7,14 @@ if [ -z "$DATABASE_URL" ] && [ -n "$MYSQL_URL" ]; then
     echo "Exported DATABASE_URL from MYSQL_URL"
 fi
 
+# Set APP_ENV to prod if not set
+export APP_ENV=${APP_ENV:-prod}
+
+# Dump environment variables for Symfony to pick up, bypassing PHP-FPM clear_env
+echo "Dumping environment variables..."
+composer dump-env $APP_ENV --no-interaction
+chown www-data:www-data .env.local.php || true
+
 # Run migrations if we have a database URL
 if [ -n "$DATABASE_URL" ]; then
     echo "Running database migrations..."
