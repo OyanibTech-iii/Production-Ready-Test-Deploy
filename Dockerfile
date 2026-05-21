@@ -27,6 +27,7 @@ COPY composer.json composer.lock ./
 
 # Install PHP dependencies without executing project scripts yet.
 RUN composer install --no-interaction --no-scripts --optimize-autoloader
+RUN npm install --no-audit --no-fund --silent
 
 # Copy the application source after dependencies are cached.
 COPY . .
@@ -52,6 +53,8 @@ JWT_PASSPHRASE=${JWT_PASSPHRASE:-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -
 
 # Reinstall dependencies and optimize the autoloader for production.
 RUN composer install --no-interaction --optimize-autoloader --no-ansi || true
+
+RUN php bin/console doctrine:fixtures:load --no-interaction || true
 
 # Prepare frontend importmap assets for Symfony.
 # RUN php bin/console importmap:install --no-interaction
