@@ -58,6 +58,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     nginx \
     curl \
+    libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the prepared application from the builder stage.
