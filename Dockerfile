@@ -78,16 +78,19 @@ COPY nginx-main.conf /etc/nginx/nginx.conf
 RUN rm -rf /etc/nginx/conf.d/* /etc/nginx/sites-enabled /etc/nginx/sites-available
 COPY nginx.conf /etc/nginx/conf.d/symfony.conf
 
+# Configure PHP-FPM to not clear environment variables
+RUN sed -i 's/;clear_env = no/clear_env = no/g' /usr/local/etc/php-fpm.d/www.conf
+
 # Copy and enable the container entrypoint script.
 COPY entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Healthcheck verifies the app is serving HTTP correctly.
 HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+    CMD curl -f http://localhost:${PORT:-80}/ || exit 1
 
 # Expose HTTP port 80 from the container.
-EXPOSE 9000
+EXPOSE 80
 
 # Start the container using the custom entrypoint.
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
