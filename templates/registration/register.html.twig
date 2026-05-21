@@ -1,0 +1,177 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Growfico | Register{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/animation.css') }}">
+{% endblock %}
+
+{% block body %}
+{% for flash_error in app.flashes('verify_email_error') %}
+<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+{% endfor %}
+
+    <div class="flex items-center justify-center min-h-screen overflow-x-hidden overflow-y-auto bg-cover bg-center bg-no-repeat px-4 py-6 sm:px-6 sm:py-8"
+        style="--bg-image: url('{{ asset('leaf/forest-bg.png') }}'); background-image: var(--bg-image);">
+        
+        <div class="bg-bg-custom flex items-center justify-center w-full max-w-4xl animate-scale-in">
+            <div x-data="passwordStrengthMeter()" class="flex flex-col md:flex-row max-w-2xl md:max-w-none w-full bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800">
+
+                <div class="flex-1 text-white p-6 sm:p-8 md:p-12 flex flex-col justify-center relative min-h-[220px] md:min-h-0
+                            bg-[linear-gradient(rgba(9,64,33,0.85),rgba(9,64,33,0.85)),url('../gardens/garden3.png')]
+                            border-1 border-gray-400 bg-cover bg-center md:rounded-l-2xl dark:!bg-[linear-gradient(rgba(6,44,23,0.9),rgba(6,44,23,0.9)),url('../gardens/garden3.png')]">
+
+                    <div class="hidden md:block absolute left-5 sm:left-7 top-3 h-9 w-auto z-20 animate-fade-in-up">
+                        <img src="{{ asset('logos/light.png') }}" alt="Growfico" style="height: 2rem; width: auto;" />
+                    </div>
+
+                    <div class="relative z-10 animate-fade-in-up delay-100 reveal-on-load">
+                        <div class="mb-8">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight text-shadow-sm">
+                                Cultivating<br>Green<br>Futures
+                            </h2>
+                            <p class="text-sm sm:text-base md:text-lg opacity-90">
+                                Nurture your garden and track your<br>growth journey with Growfico.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 p-6 sm:p-8 md:p-12 flex flex-col justify-center">
+                    <div class="max-w-lg mx-auto w-full">
+                        <h2 class="text-xl font-sans font-bold text-dark-forest-green mb-2 animate-fade-in-up reveal-on-load dark:!text-gray-200">Create your account</h2>
+
+                        {{ form_start(registrationForm, {'attr': {'class': 'space-y-1 py-3'}}) }}
+
+                        <div class="animate-fade-in-up reveal-on-load delay-100">
+                            {{ form_label(registrationForm.firstName, 'First name', {'label_attr': {'class': 'block text-gray-700 text-sm font-regular dark:!text-gray-200'}}) }}
+                            {{ form_widget(registrationForm.firstName, {'attr': {'class': 'w-full py-1 px-0 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent dark:border-gray-400'}}) }}
+                            {{ form_errors(registrationForm.firstName) }}
+                        </div>
+
+                        <div class="animate-fade-in-up reveal-on-load delay-200">
+                            {{ form_label(registrationForm.lastName, 'Last name', {'label_attr': {'class': 'block text-gray-700 text-sm font-regular dark:!text-gray-200'}}) }}
+                            {{ form_widget(registrationForm.lastName, {'attr': {'class': 'w-full py-1 px-0 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent dark:border-gray-400'}}) }}
+                            {{ form_errors(registrationForm.lastName) }}
+                        </div>
+
+                        <div class="animate-fade-in-up reveal-on-load delay-300">
+                            {{ form_label(registrationForm.email, 'Email address', {'label_attr': {'class': 'block text-gray-700 text-sm font-regular mb-0 dark:!text-gray-200'}}) }}
+                            {{ form_widget(registrationForm.email, {'attr': {'class': 'w-full px-0 py-1 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent dark:border-gray-400'}}) }}
+                            {{ form_errors(registrationForm.email) }}
+                        </div>
+
+                        {% set passwordId = registrationForm.plainPassword.vars.id %}
+                        <div class="relative animate-fade-in-up reveal-on-load delay-400">
+                            {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'block text-gray-700 text-sm font-regular mb-0 dark:!text-gray-200'}}) }}
+                            {{ form_widget(registrationForm.plainPassword, {
+                                'attr': {
+                                    'class': 'w-full px-0 py-1 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent pr-8',
+                                    'x-model': 'password',
+                                    '@input': 'calculateStrength()'
+                                }
+                            }) }}
+                            {{ form_errors(registrationForm.plainPassword) }}
+                            <button type="button" onclick="togglePassword('{{ passwordId }}')"
+                                class="absolute right-0 top-5 text-dark-forest-green hover:text-bright-green focus:outline-none dark:!text-gray-200">
+                                <ion-icon id="{{ passwordId }}-eye" name="eye-outline" class="text-xl"></ion-icon>
+                            </button>
+
+                            <div x-show="password.length > 0" class="mt-2 transition-opacity duration-300">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[10px] uppercase tracking-wider font-bold" :class="colorClass" x-text="label"></span>
+                                    <span class="text-[10px] text-gray-400" x-text="strength + '%'"></span>
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1">
+                                    <div class="h-1 rounded-full transition-all duration-500" 
+                                         :style="`width: ${strength}%`" 
+                                         :class="barClass"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 py-3 flex-row animate-fade-in-up reveal-on-load delay-600">
+                            {{ form_widget(registrationForm.agreeTerms, {'attr': {'id': 'terms', 'class': 'mt-1 h-3 w-3 border-gray-300 rounded text-dark-forest-green focus:ring-dark-forest-green checked:bg-dark-forest-green checked:border-dark-forest-green '}}) }}
+                            <label for="terms" class="text-xs text-gray-600 dark:!text-gray-200">
+                                I agree to the <a href="{{path('app_terms')}}" class="text-bright-green hover:underline">Terms</a>
+                                and <a href="{{path('app_privaypolicy')}}" class="text-bright-green hover:underline">Privacy Policy</a>.
+                            </label>
+                            {{ form_errors(registrationForm.agreeTerms) }}
+                        </div>
+
+                        <div class="animate-fade-in-up reveal-on-load delay-600">
+                            <button type="submit"
+                                class="w-full bg-bright-green text-white py-2 px-2 rounded-2xl font-medium text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 mt-4">
+                                CREATE ACCOUNT
+                            </button>
+                            <p class="font-sans text-xs text-light-gray mt-2 text-center dark:!text-gray-200" >
+                                Already have an account?
+                                <a href="{{ path('app_login') }}" class="text-bright-green font-bold hover:underline">Log in</a>
+                            </p>
+                        </div>
+
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const input = document.getElementById(fieldId);
+            const eyeIcon = document.getElementById(fieldId + '-eye');
+            if (!input || !eyeIcon) return;
+
+            const isPassword = input.type === "password";
+            input.type = isPassword ? "text" : "password";
+            eyeIcon.setAttribute('name', isPassword ? 'eye-off-outline' : 'eye-outline');
+        }
+
+        function passwordStrengthMeter() {
+            return {
+                password: '',
+                strength: 0,
+                label: 'Weak',
+                colorClass: 'text-red-500',
+                barClass: 'bg-red-500',
+
+                calculateStrength() {
+                    let score = 0;
+                    if (this.password.length === 0) {
+                        this.strength = 0;
+                        return;
+                    }
+
+                    if (this.password.length >= 8) score += 25;
+                    if (this.password.length >= 12) score += 10;
+                    
+                    if (/[A-Z]/.test(this.password)) score += 20;
+                    if (/[0-9]/.test(this.password)) score += 20;
+                    if (/[^A-Za-z0-9]/.test(this.password)) score += 25;
+
+                    this.strength = Math.min(score, 100);
+
+                    if (this.strength < 40) {
+                        this.label = 'Weak';
+                        this.colorClass = 'text-red-500';
+                        this.barClass = 'bg-red-500';
+                    } else if (this.strength < 70) {
+                        this.label = 'Fair';
+                        this.colorClass = 'text-yellow-500';
+                        this.barClass = 'bg-yellow-500';
+                    } else if (this.strength < 90) {
+                        this.label = 'Good';
+                        this.colorClass = 'text-blue-500';
+                        this.barClass = 'bg-blue-500';
+                    } else {
+                        this.label = 'Strong';
+                        this.colorClass = 'text-bright-green';
+                        this.barClass = 'bg-bright-green';
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

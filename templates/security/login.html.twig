@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in | Growfico{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('styles/animation.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="flex items-center justify-center min-h-screen overflow-x-hidden overflow-y-auto bg-cover bg-center bg-no-repeat px-4 py-6 sm:px-6 sm:py-8 dark:bg-gray-800"
+    style="--bg-url: url('{{ asset('leaf/forest-bg.png') }}'); background-image: var(--bg-url);">
+
+    <div class="bg-bg-custom flex items-center justify-center w-full max-w-4xl animate-scale-in">
+        <div
+            class="absolute bottom-18 -left-44 h-48 w-auto z-10 pointer-events-none animate-fade-in-up reveal-on-load hidden md:block">
+            <img src="{{ asset('logos/peeking.png') }}" alt="Peeking Farmer" class="h-full w-auto object-contain" />
+        </div>
+        <div class="flex flex-col md:flex-row w-full bg-white rounded-2xl shadow-xl overflow-hidden dark:bg-gray-800 ">
+
+            <div class="flex-1 p-6 sm:p-8 md:p-12 flex flex-col justify-center">
+                <div class="max-w-lg mx-auto w-full">
+                    <h2
+                        class="text-xl font-sans font-bold text-dark-forest-green mb-2 animate-fade-in-up reveal-on-load dark:!text-gray-200">
+                        Log in</h2>
+
+                    {% if error %}
+                    <div class="bg-red-100 text-red-700 px-4 py-3 rounded mb-4 animate-fade-in-up dark:bg-gray-800 dark:!text-red-700"
+                        role="alert">
+                        <strong class="font-bold text-sm dark:!text-red-500">Error:</strong>
+                        <span class="block sm:inline text-xs text-red-400 dark:!text-red-400">{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                    </div>
+                    {% endif %}
+
+                    <form id="login-form" method="post" accept-charset="UTF-8" class="space-y-4 py-3" data-turbo="false"
+                        autocomplete="off">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="animate-fade-in-up reveal-on-load delay-100">
+                            <label for="email"
+                                class="block text-gray-700 text-sm font-regular dark:!text-gray-200">Email</label>
+                            <input id="email" type="email" name="email" autofocus
+                                required
+                                class="w-full py-1 px-0 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent dark:border-gray-400">
+                        </div>
+
+                        <div class="relative animate-fade-in-up reveal-on-load delay-200">
+                            <label for="password"
+                                class="block text-gray-700 text-sm font-regular mb-0 dark:!text-gray-200">Password</label>
+                            <input id="password" type="password" name="password" minlength="8"
+                                required
+                                class="w-full px-0 py-1 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent pr-8 dark:border-gray-400">
+                            <button type="button" onclick="togglePassword('password')"
+                                class="absolute right-0 top-5 text-dark-forest-green hover:text-bright-green focus:outline-none dark:!text-gray-200">
+                                <ion-icon id="password-eye" name="eye-outline" class="text-xl"></ion-icon>
+                            </button>
+                        </div>
+
+                        <div
+                            class="flex items-start space-x-2 py-2 flex-row animate-fade-in-up reveal-on-load delay-300">
+                            <input type="checkbox" id="_remember_me" name="_remember_me" value="1"
+                                class="mt-1 h-3 w-3 border-gray-300 rounded-full text-dark-forest-green focus:ring-dark-forest-green dark:!text-gray-200">
+                            <label for="_remember_me" class="text-xs text-gray-600 mt-0.5 dark:!text-gray-200">Remember
+                                me</label>
+                            <a href="{{ path('app_forgot_password') }}" class="text-xs text-bright-green hover:underline ml-auto dark:!text-bright-green">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <div class="space-y-4 animate-fade-in-up reveal-on-load delay-400">
+                            <button type="submit"
+                                class="w-full bg-bright-green text-white py-2 px-2 rounded-2xl font-medium text-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                                SIGN IN
+                            </button>
+
+                            <div class="flex items-center my-6">
+                                <div class="border-t border-gray-300 w-full"></div>
+                                <span class="mx-4 text-[10px] text-gray-400 uppercase tracking-widest">OR</span>
+                                <div class="border-t border-gray-300 w-full"></div>
+                            </div>
+
+                            <a href="{{ path('connect_google_start') }}"
+                                class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium text-dark-forest-green dark:!text-gray-200 dark:hover:bg-gray-800 dark:hover:!text-bright-green dark:hover:border-bright-green">
+                                <ion-icon name="logo-google" class="mr-2 text-xl"></ion-icon>
+                                Continue with Google
+                            </a>
+                        </div>
+                    </form>
+
+                    <p
+                        class="font-sans text-xs text-light-gray mt-4 animate-fade-in-up reveal-on-load delay-500 text-center dark:!text-gray-200">
+                        Don't have an account?
+                        <a href="{{ path('app_register') }}" class="text-bright-green hover:underline font-bold">Create
+                            one</a>
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="flex-1 text-white p-6 sm:p-8 md:p-12 flex flex-col justify-center relative min-h-[220px] md:min-h-0
+                            bg-[linear-gradient(rgba(9,64,33,0.85),rgba(9,64,33,0.85)),url('../gardens/garden3.png')]
+                            border-1 border-gray-400 bg-cover bg-center md:rounded-r-2xl dark:!bg-[linear-gradient(rgba(6,44,23,0.9),rgba(6,44,23,0.9)),url('../gardens/garden3.png')]">
+
+                <div class="hidden md:block absolute right-7 top-6 h-9 w-auto z-20 animate-fade-in-up">
+                    <img src="{{ asset('logos/light.png') }}" alt="Growfico" style="height: 2rem; width: auto;" />
+                </div>
+
+                <div class="relative z-10 animate-fade-in-up delay-200 reveal-on-load">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                        Cultivating<br>Green<br>Futures
+                    </h2>
+                    <p class="text-sm sm:text-base md:text-lg opacity-90">
+                        Nurture your garden and track your<br>growth journey with Growfico.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'security/loading.html.twig' %}
+
+<script>
+    function togglePassword(fieldId) {
+        const input = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(fieldId + '-eye');
+        if (!input || !eyeIcon) return;
+
+        const isPassword = input.type === "password";
+        input.type = isPassword ? "text" : "password";
+        eyeIcon.setAttribute('name', isPassword ? 'eye-off-outline' : 'eye-outline');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('login-form');
+        const overlay = document.getElementById('loading-overlay');
+
+        if (!form || !overlay) return;
+
+        form.addEventListener('submit', function (e) {
+            if (!form.checkValidity()) {
+                // Prevent showing the loader when fields are empty/invalid.
+                e.preventDefault();
+                form.reportValidity();
+                return;
+            }
+
+            e.preventDefault();
+
+            const submitBtns = form.querySelectorAll('button[type="submit"]');
+            submitBtns.forEach(b => b.disabled = true);
+
+            overlay.classList.remove('hidden');
+            overlay.style.display = 'block';
+
+            setTimeout(() => {
+                form.submit();
+            }, 800);
+        });
+    });
+</script>
+{% endblock %}

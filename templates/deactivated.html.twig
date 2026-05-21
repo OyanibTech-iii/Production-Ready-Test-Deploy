@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Account Deactivated | Growfico{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 p-12 dark:bg-gray-700">
+  <div class="max-w-lg w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-10 text-center py-3 px-6 dark:bg-gray-800">
+
+    {# Icon/Header Section #}
+    <div class="mb-8">
+      <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6 dark:bg-gray-700">
+        <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-dark-forest-green tracking-tight dark:!text-gray-200">Account Deactivated</h1>
+      <p class="text-base text-gray-500 mt-3 dark:!text-gray-200">We’re sorry your Growfico account is currently inactive.</p>
+    </div>
+
+    <hr class="my-8 border-gray-100" />
+
+    {% if isDeactivated is defined and isDeactivated %}
+    <div class="space-y-6">
+      <p class="text-sm leading-relaxed text-gray-600 dark:!text-gray-200">
+        We understand this is frustrating. If this happened by mistake, our team is ready to help you get back online.
+      </p>
+
+      <div class="bg-gray-50 rounded-xl p-6 text-left dark:bg-gray-600">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Your Options</p>
+        <ul class="space-y-3">
+          <li class="flex items-start text-sm dark:text-gray-200">
+            <span class="text-bright-green mr-2 dark:!text-gray-200">•</span>
+            <span>Contact support with your account email to report an error.</span>
+          </li>
+          <li class="flex items-start text-sm dark:text-gray-200">
+            <span class="text-bright-green mr-2 dark:!text-gray-200">•</span>
+            <span>Request a responsibility transfer if you were an admin.</span>
+          </li>
+          <li class="flex items-start text-sm dark:text-gray-200">
+            <span class="text-bright-green mr-2 dark:!text-gray-200">•</span>
+            <span>Request a formal account reactivation review.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 pt-4">
+        <button type="button" data-contact-support-open
+          class="flex-1 inline-flex justify-center items-center px-6 py-3 text-xs bg-bright-green hover:bg-opacity-90 text-white font-medium rounded-xl transition-all duration-200 shadow-sm">
+          Contact Support
+        </button>
+        <a href="/"
+          class="flex-1 inline-flex justify-center items-center px-6 py-3 text-xs bg-white border border-gray-400 text-gray-600 font-medium rounded-xl hover:bg-gray-50 transition-all duration-200 dark:!text-gray-800">
+          Return Home
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="py-4">
+      <p class="text-sm text-gray-500 mb-6">If you believe you reached this page in error, please let us know.</p>
+      <button type="button" data-contact-support-open
+        class="inline-block w-full sm:w-auto px-8 py-3 bg-bright-green text-white font-medium rounded-xl transition-colors">
+        Contact Support
+      </button>
+    </div>
+    {% endif %}
+
+    <p class="text-xs text-gray-400 mt-10">Thank you for your patience while we resolve this.</p>
+  </div>
+</div>
+
+<div id="contact-support-modal" class="hidden fixed inset-0 z-[10000] items-center justify-center bg-black/50 p-4"
+  role="dialog" aria-modal="true">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg border border-gray-100 overflow-hidden dark:bg-gray-700">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h2 class="text-lg font-semibold text-dark-forest-green dark:!text-gray-200">Contact Support</h2>
+      <button type="button" data-contact-support-close class="text-gray-500 hover:text-gray-700 transition-colors dark:!text-gray-200">
+        <ion-icon name="close-circle" class="text-2xl"></ion-icon>
+      </button>
+    </div>
+
+    <form id="contact-support-form" data-public-key="{{ ACTIVATION_PUBLIC_KEY }}"
+      data-service-id="{{ ACTIVATION_SERVICE_ID }}" data-template-id="{{ ACTIVATION_TEMPLATE_ID }}"
+      class="p-6 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-dark-forest-green dark:!text-gray-200">First Name</label>
+          <input name="first_name" type="text" required
+            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-bright-green outline-none transition-all" />
+        </div>
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-dark-forest-green dark:!text-gray-200">Last Name</label>
+          <input name="last_name" type="text" required
+            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-bright-green outline-none transition-all" />
+        </div>
+      </div>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-dark-forest-green dark:!text-gray-200">Email</label>
+        <input name="user_email" type="email" required
+          class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-bright-green outline-none transition-all" />
+      </div>
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-dark-forest-green dark:!text-gray-200">Message</label>
+        <textarea name="message" rows="5" required
+          class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-bright-green outline-none transition-all"></textarea>
+      </div>
+      <button type="submit"
+        class="w-full bg-bright-green text-white py-4 px-6 rounded-full font-semibold hover:bg-dark-forest-green transition-all">
+        Send Message
+      </button>
+    </form>
+  </div>
+</div>
+
+{# Reference-style Success/Error Modals #}
+<div id="successModal"
+  style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center;">
+  <div
+    style="background: white; width: 90%; max-width: 400px; padding: 40px 20px; border-radius: 20px; text-align: center;">
+    <div
+      style="background: #e6fffa; color: #16a34a; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+      <ion-icon name="checkmark-circle" style="font-size: 60px;"></ion-icon>
+    </div>
+    <h2 style="color: #2d3748; font-size: 24px;">Sent!</h2>
+    <p style="color: #718096; line-height: 1.5;">Your message was sent successfully.</p>
+    <button onclick="closeFeedbackModal('successModal')"
+      style="background: #16a34a; color: white; padding: 12px 40px; border-radius: 10px; cursor: pointer;">Close</button>
+  </div>
+</div>
+
+<div id="errorModal"
+  style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center;">
+  <div
+    style="background: white; width: 90%; max-width: 400px; padding: 40px 20px; border-radius: 20px; text-align: center;">
+    <div
+      style="background: #fff5f5; color: #e53e3e; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+      <ion-icon name="alert-circle" style="font-size: 60px;"></ion-icon>
+    </div>
+    <h2 style="color: #2d3748; font-size: 24px;">Oops!</h2>
+    <p style="color: #718096; line-height: 1.5;">Something went wrong. Please try again later.</p>
+    <button onclick="closeFeedbackModal('errorModal')"
+      style="background: #e53e3e; color: white; padding: 12px 40px; border-radius: 10px; cursor: pointer;">Close</button>
+  </div>
+</div>
+
+{# Scripts #}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"></script>
+
+<script>
+  function closeFeedbackModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  (function () {
+    const modal = document.getElementById('contact-support-modal');
+    const form = document.getElementById('contact-support-form');
+    if (!form) return;
+
+    emailjs.init(form.dataset.publicKey);
+
+    // Modal Toggles
+    document.querySelectorAll('[data-contact-support-open]').forEach(btn => {
+      btn.onclick = () => { modal.classList.remove('hidden'); modal.classList.add('flex'); };
+    });
+    document.querySelectorAll('[data-contact-support-close]').forEach(btn => {
+      btn.onclick = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+
+      btn.disabled = true;
+      btn.innerHTML = 'Sending...';
+
+      // Use sendForm to handle inputs automatically 
+      emailjs.sendForm(this.dataset.serviceId, this.dataset.templateId, this)
+        .then(() => {
+          modal.classList.add('hidden');
+          document.getElementById('successModal').style.display = 'flex';
+          this.reset();
+        })
+        .catch((err) => {
+          document.getElementById('errorModal').style.display = 'flex';
+          console.error('EmailJS Error:', err);
+        })
+        .finally(() => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        });
+    });
+  })();
+</script>
+{% endblock %}

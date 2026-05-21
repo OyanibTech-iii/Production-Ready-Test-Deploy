@@ -1,0 +1,125 @@
+0000000000000000000000000000000000000000 10770f69a8656d4684d3e80e87d31385af245d48 OyanibTech-iii <pacificooyanib@gmail.com> 1772515173 +0800	commit (initial): jwt api google oauth2
+10770f69a8656d4684d3e80e87d31385af245d48 0000000000000000000000000000000000000000 OyanibTech-iii <pacificooyanib@gmail.com> 1772515193 +0800	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 10770f69a8656d4684d3e80e87d31385af245d48 OyanibTech-iii <pacificooyanib@gmail.com> 1772515193 +0800	Branch: renamed refs/heads/master to refs/heads/main
+10770f69a8656d4684d3e80e87d31385af245d48 4a6f9b079529552e02c889d28f685d45589f8677 OyanibTech-iii <pacificooyanib@gmail.com> 1772555732 +0800	commit: refactore
+4a6f9b079529552e02c889d28f685d45589f8677 a18d85fe4932db8c2391c7c56053147a07cc70d0 OyanibTech-iii <pacificooyanib@gmail.com> 1773010313 +0800	commit: refactoring contoller/twig
+a18d85fe4932db8c2391c7c56053147a07cc70d0 a18d85fe4932db8c2391c7c56053147a07cc70d0 OyanibTech-iii <pacificooyanib@gmail.com> 1773010329 +0800	checkout: moving from main to refactoring
+a18d85fe4932db8c2391c7c56053147a07cc70d0 b389a8eb6183ef343ef3747aff0aa9499e46c673 OyanibTech-iii <pacificooyanib@gmail.com> 1773278661 +0800	commit: itegrate email verifier
+b389a8eb6183ef343ef3747aff0aa9499e46c673 b389a8eb6183ef343ef3747aff0aa9499e46c673 OyanibTech-iii <pacificooyanib@gmail.com> 1773278678 +0800	checkout: moving from refactoring to emailverifier
+b389a8eb6183ef343ef3747aff0aa9499e46c673 28b9db1c8861c46df35b3fb5ff33b0c9a9b1bf6d OyanibTech-iii <pacificooyanib@gmail.com> 1773447467 +0800	commit: API registration Verifier
+28b9db1c8861c46df35b3fb5ff33b0c9a9b1bf6d 28b9db1c8861c46df35b3fb5ff33b0c9a9b1bf6d OyanibTech-iii <pacificooyanib@gmail.com> 1773447513 +0800	checkout: moving from emailverifier to API_RegistrationVerifier
+28b9db1c8861c46df35b3fb5ff33b0c9a9b1bf6d 503cd3b552c341786322cd2d7eb874f1ac5942c4 OyanibTech-iii <pacificooyanib@gmail.com> 1773453999 +0800	commit: API registration Verifier
+503cd3b552c341786322cd2d7eb874f1ac5942c4 3b16f34b3aeed80c5fc509fd655c0432316f268d OyanibTech-iii <pacificooyanib@gmail.com> 1773502939 +0800	commit: EMAILjs Landingpages
+3b16f34b3aeed80c5fc509fd655c0432316f268d 3b16f34b3aeed80c5fc509fd655c0432316f268d OyanibTech-iii <pacificooyanib@gmail.com> 1773502964 +0800	checkout: moving from API_RegistrationVerifier to EMAILjs
+3b16f34b3aeed80c5fc509fd655c0432316f268d 52757a4e28cf539daface0a33241b8e135c1b3c2 OyanibTech-iii <pacificooyanib@gmail.com> 1773538653 +0800	commit: Landingpage UI/UX
+52757a4e28cf539daface0a33241b8e135c1b3c2 52757a4e28cf539daface0a33241b8e135c1b3c2 OyanibTech-iii <pacificooyanib@gmail.com> 1773538682 +0800	checkout: moving from EMAILjs to LandingpageUI/UX
+52757a4e28cf539daface0a33241b8e135c1b3c2 0d5ac2ee6caa4a2d86432f4c50eace672c6a81d7 OyanibTech-iii <pacificooyanib@gmail.com> 1773591311 +0800	commit: Landingpage UI/UX AlpineJS
+0d5ac2ee6caa4a2d86432f4c50eace672c6a81d7 0d5ac2ee6caa4a2d86432f4c50eace672c6a81d7 OyanibTech-iii <pacificooyanib@gmail.com> 1773591350 +0800	checkout: moving from LandingpageUI/UX to AlpineJS
+0d5ac2ee6caa4a2d86432f4c50eace672c6a81d7 0d5ac2ee6caa4a2d86432f4c50eace672c6a81d7 OyanibTech-iii <pacificooyanib@gmail.com> 1774062067 +0800	checkout: moving from AlpineJS to datatable
+0d5ac2ee6caa4a2d86432f4c50eace672c6a81d7 c25646f24280ef353b4b446f63f4e217155827e5 OyanibTech-iii <pacificooyanib@gmail.com> 1774062185 +0800	commit: ft. datatable,pagination
+c25646f24280ef353b4b446f63f4e217155827e5 724bbb28ea99fc806e1de593ad1b5a68639fa7d2 OyanibTech-iii <pacificooyanib@gmail.com> 1774104383 +0800	commit: ft: refinement
+724bbb28ea99fc806e1de593ad1b5a68639fa7d2 bc48bd9f628e9eff77110a367609ffa3ee4ec33c OyanibTech-iii <pacificooyanib@gmail.com> 1774162531 +0800	commit: ft. imgs ficoBot
+bc48bd9f628e9eff77110a367609ffa3ee4ec33c 0909f94b53a79fa0d51c4ec94e097cc3eeeeffc1 OyanibTech-iii <pacificooyanib@gmail.com> 1774181898 +0800	commit: ft. dark mode
+0909f94b53a79fa0d51c4ec94e097cc3eeeeffc1 0909f94b53a79fa0d51c4ec94e097cc3eeeeffc1 OyanibTech-iii <pacificooyanib@gmail.com> 1774181915 +0800	checkout: moving from datatable to darkmode
+0909f94b53a79fa0d51c4ec94e097cc3eeeeffc1 41c3bed886667cce67c669b2d55cb5fcda746047 OyanibTech-iii <pacificooyanib@gmail.com> 1774244352 +0800	commit: ft. ficobot loader bug fixes
+41c3bed886667cce67c669b2d55cb5fcda746047 ecbaad17b450d79d256347185aa6a70e7253bce9 OyanibTech-iii <pacificooyanib@gmail.com> 1774250406 +0800	commit: ft. deac mailer
+ecbaad17b450d79d256347185aa6a70e7253bce9 60afd4b428f0da1bd8e0781e35f2823ab48937ed OyanibTech-iii <pacificooyanib@gmail.com> 1774253280 +0800	commit: minor changes
+60afd4b428f0da1bd8e0781e35f2823ab48937ed 5a06057418a8832577a3eb8343d73e09b2e42b12 OyanibTech-iii <pacificooyanib@gmail.com> 1774682569 +0800	commit: mobile responsivenes
+5a06057418a8832577a3eb8343d73e09b2e42b12 5a06057418a8832577a3eb8343d73e09b2e42b12 OyanibTech-iii <pacificooyanib@gmail.com> 1774682618 +0800	checkout: moving from darkmode to mobileResponsiveness
+5a06057418a8832577a3eb8343d73e09b2e42b12 5a06057418a8832577a3eb8343d73e09b2e42b12 OyanibTech-iii <pacificooyanib@gmail.com> 1774686980 +0800	checkout: moving from mobileResponsiveness to errorpageCatcher
+5a06057418a8832577a3eb8343d73e09b2e42b12 dde7aa9a535194182f1fdc2e67906c0845fc33bc OyanibTech-iii <pacificooyanib@gmail.com> 1774687029 +0800	commit: initialize 404 page
+dde7aa9a535194182f1fdc2e67906c0845fc33bc 12da831c5a8d42e222deaae945e93f75a49737ca OyanibTech-iii <pacificooyanib@gmail.com> 1774712277 +0800	commit: added staff role to google auth
+12da831c5a8d42e222deaae945e93f75a49737ca 12da831c5a8d42e222deaae945e93f75a49737ca OyanibTech-iii <pacificooyanib@gmail.com> 1774723057 +0800	checkout: moving from errorpageCatcher to staffdashboard
+12da831c5a8d42e222deaae945e93f75a49737ca 6c95df48bad844cbff8548855d8628d9fd0f77f7 OyanibTech-iii <pacificooyanib@gmail.com> 1774725683 +0800	commit: ft. cart, responsive, BUG FIXES
+6c95df48bad844cbff8548855d8628d9fd0f77f7 ee83421e74a11122e6c0ab1eb9b1fb5b385512fa OyanibTech-iii <pacificooyanib@gmail.com> 1774763029 +0800	commit: ft. darkmode integration
+ee83421e74a11122e6c0ab1eb9b1fb5b385512fa ee83421e74a11122e6c0ab1eb9b1fb5b385512fa OyanibTech-iii <pacificooyanib@gmail.com> 1774817065 +0800	checkout: moving from staffdashboard to courseIntegration
+ee83421e74a11122e6c0ab1eb9b1fb5b385512fa 3204e88c66a7838bb80d042864181da09144ec44 OyanibTech-iii <pacificooyanib@gmail.com> 1774817140 +0800	commit: ft.accordion, course skeleton
+3204e88c66a7838bb80d042864181da09144ec44 3204e88c66a7838bb80d042864181da09144ec44 OyanibTech-iii <pacificooyanib@gmail.com> 1774837618 +0800	checkout: moving from courseIntegration to ficoBotFallAI
+3204e88c66a7838bb80d042864181da09144ec44 b3b01a16c0ffce9a88be1d051af928dbc469c0a4 OyanibTech-iii <pacificooyanib@gmail.com> 1774837683 +0800	commit: ft. a.i fallback & self-learning via response
+b3b01a16c0ffce9a88be1d051af928dbc469c0a4 b3b01a16c0ffce9a88be1d051af928dbc469c0a4 OyanibTech-iii <pacificooyanib@gmail.com> 1774936747 +0800	checkout: moving from ficoBotFallAI to enrollment
+b3b01a16c0ffce9a88be1d051af928dbc469c0a4 f133f96de5520849d7bd8f4d52db7fede0256624 OyanibTech-iii <pacificooyanib@gmail.com> 1774936792 +0800	commit: enrollment crud and management
+f133f96de5520849d7bd8f4d52db7fede0256624 f133f96de5520849d7bd8f4d52db7fede0256624 OyanibTech-iii <pacificooyanib@gmail.com> 1774940450 +0800	checkout: moving from enrollment to quiz
+f133f96de5520849d7bd8f4d52db7fede0256624 944d8f6b89a609f3f8779f39608a93a4abb9f4f6 OyanibTech-iii <pacificooyanib@gmail.com> 1774940474 +0800	commit: implementing quiz
+944d8f6b89a609f3f8779f39608a93a4abb9f4f6 944d8f6b89a609f3f8779f39608a93a4abb9f4f6 OyanibTech-iii <pacificooyanib@gmail.com> 1774961867 +0800	checkout: moving from quiz to question
+944d8f6b89a609f3f8779f39608a93a4abb9f4f6 2c3ff859887edfc478d8c5760240976b4cec801b OyanibTech-iii <pacificooyanib@gmail.com> 1774961897 +0800	commit: implementing questions
+2c3ff859887edfc478d8c5760240976b4cec801b 2c3ff859887edfc478d8c5760240976b4cec801b OyanibTech-iii <pacificooyanib@gmail.com> 1774965066 +0800	checkout: moving from question to answerChoices
+2c3ff859887edfc478d8c5760240976b4cec801b e4d438dbc5de3de171e895060ba5c13c4670d406 OyanibTech-iii <pacificooyanib@gmail.com> 1774965104 +0800	commit: integrating answer choices
+e4d438dbc5de3de171e895060ba5c13c4670d406 e4d438dbc5de3de171e895060ba5c13c4670d406 OyanibTech-iii <pacificooyanib@gmail.com> 1774979555 +0800	checkout: moving from answerChoices to certificate
+e4d438dbc5de3de171e895060ba5c13c4670d406 78ad4a9c08038d7f8143a9f05d4de0bbbeb0245e OyanibTech-iii <pacificooyanib@gmail.com> 1774979601 +0800	commit: e-cert integration
+78ad4a9c08038d7f8143a9f05d4de0bbbeb0245e 937bff91ab51387dacfef915b94cb77920f749cc OyanibTech-iii <pacificooyanib@gmail.com> 1774981084 +0800	commit: markdown update
+937bff91ab51387dacfef915b94cb77920f749cc a18d85fe4932db8c2391c7c56053147a07cc70d0 OyanibTech-iii <pacificooyanib@gmail.com> 1774981287 +0800	checkout: moving from certificate to main
+a18d85fe4932db8c2391c7c56053147a07cc70d0 65679f8fdd0de94dbc245f2291daace7346294e9 OyanibTech-iii <pacificooyanib@gmail.com> 1774981322 +0800	pull origin main: Fast-forward
+65679f8fdd0de94dbc245f2291daace7346294e9 078df29e84f40c05b2b2b684404d1a8dddc429aa OyanibTech-iii <pacificooyanib@gmail.com> 1774981345 +0800	merge certificate: Merge made by the 'ort' strategy.
+078df29e84f40c05b2b2b684404d1a8dddc429aa 078df29e84f40c05b2b2b684404d1a8dddc429aa OyanibTech-iii <pacificooyanib@gmail.com> 1775037936 +0800	checkout: moving from main to Revision/landingpage
+078df29e84f40c05b2b2b684404d1a8dddc429aa fa412ed22f6c9f9773c4766d055caec536014a1e OyanibTech-iii <pacificooyanib@gmail.com> 1775037992 +0800	commit: changing assets and animations
+fa412ed22f6c9f9773c4766d055caec536014a1e fa412ed22f6c9f9773c4766d055caec536014a1e OyanibTech-iii <pacificooyanib@gmail.com> 1775048488 +0800	checkout: moving from Revision/landingpage to Revision/userdashboard
+fa412ed22f6c9f9773c4766d055caec536014a1e c936d1a0bb6a67c1dbdbc38f590ecf148f5f132a OyanibTech-iii <pacificooyanib@gmail.com> 1775048522 +0800	commit: clean up and revise files
+c936d1a0bb6a67c1dbdbc38f590ecf148f5f132a b4bb4961c6bcbabcfd791dec2ea0c7e43cb88a7a OyanibTech-iii <pacificooyanib@gmail.com> 1775051947 +0800	commit: clean up and refactor
+b4bb4961c6bcbabcfd791dec2ea0c7e43cb88a7a b4bb4961c6bcbabcfd791dec2ea0c7e43cb88a7a OyanibTech-iii <pacificooyanib@gmail.com> 1775068819 +0800	checkout: moving from Revision/userdashboard to Revision/userdashboard
+b4bb4961c6bcbabcfd791dec2ea0c7e43cb88a7a 9617529bc077b1c64516e36aeef635dc0a7e5936 OyanibTech-iii <pacificooyanib@gmail.com> 1775068862 +0800	commit: implement lootie modal animation
+9617529bc077b1c64516e36aeef635dc0a7e5936 9617529bc077b1c64516e36aeef635dc0a7e5936 OyanibTech-iii <pacificooyanib@gmail.com> 1775068871 +0800	checkout: moving from Revision/userdashboard to Revision/userdashboard
+9617529bc077b1c64516e36aeef635dc0a7e5936 fa412ed22f6c9f9773c4766d055caec536014a1e OyanibTech-iii <pacificooyanib@gmail.com> 1775095894 +0800	checkout: moving from Revision/userdashboard to Revision/landingpage
+fa412ed22f6c9f9773c4766d055caec536014a1e 9617529bc077b1c64516e36aeef635dc0a7e5936 OyanibTech-iii <pacificooyanib@gmail.com> 1775099258 +0800	checkout: moving from Revision/landingpage to Revision/userdashboard
+9617529bc077b1c64516e36aeef635dc0a7e5936 52d091cbadb7d7feca2c88901c72d4effa9d25b9 OyanibTech-iii <pacificooyanib@gmail.com> 1775099382 +0800	commit: clear modal revision
+52d091cbadb7d7feca2c88901c72d4effa9d25b9 52d091cbadb7d7feca2c88901c72d4effa9d25b9 OyanibTech-iii <pacificooyanib@gmail.com> 1775100198 +0800	checkout: moving from Revision/userdashboard to Revision/userdashboard
+52d091cbadb7d7feca2c88901c72d4effa9d25b9 c62010098b573e006135793e9f661b71df663c36 OyanibTech-iii <pacificooyanib@gmail.com> 1775100227 +0800	commit: Readme update
+c62010098b573e006135793e9f661b71df663c36 c62010098b573e006135793e9f661b71df663c36 OyanibTech-iii <pacificooyanib@gmail.com> 1775100338 +0800	checkout: moving from Revision/userdashboard to Revision/userdashboard
+c62010098b573e006135793e9f661b71df663c36 c62010098b573e006135793e9f661b71df663c36 OyanibTech-iii <pacificooyanib@gmail.com> 1775101290 +0800	checkout: moving from Revision/userdashboard to Revision/userdashboard
+c62010098b573e006135793e9f661b71df663c36 8f50ad5684bdef7c27ea2e8f493b5cc122f5ce82 OyanibTech-iii <pacificooyanib@gmail.com> 1775101307 +0800	commit: Readme updated
+8f50ad5684bdef7c27ea2e8f493b5cc122f5ce82 1f56d2ab8ef3321b06028f51afc771d0065b9040 OyanibTech-iii <pacificooyanib@gmail.com> 1775135560 +0800	commit: fix path issues
+1f56d2ab8ef3321b06028f51afc771d0065b9040 1f56d2ab8ef3321b06028f51afc771d0065b9040 OyanibTech-iii <pacificooyanib@gmail.com> 1775201160 +0800	checkout: moving from Revision/userdashboard to Revision/admindashboard
+1f56d2ab8ef3321b06028f51afc771d0065b9040 bdb4fc709938988b96606471fdd3668c63e174af OyanibTech-iii <pacificooyanib@gmail.com> 1775201211 +0800	commit: font size adjustments UI/UX
+bdb4fc709938988b96606471fdd3668c63e174af bdb4fc709938988b96606471fdd3668c63e174af OyanibTech-iii <pacificooyanib@gmail.com> 1775218710 +0800	checkout: moving from Revision/admindashboard to Revision/admindashboard
+bdb4fc709938988b96606471fdd3668c63e174af cbca2e72d1dbde6fb28e715834818e0d5fa640f5 OyanibTech-iii <pacificooyanib@gmail.com> 1775218764 +0800	commit: certificate sent via email
+cbca2e72d1dbde6fb28e715834818e0d5fa640f5 cbca2e72d1dbde6fb28e715834818e0d5fa640f5 OyanibTech-iii <pacificooyanib@gmail.com> 1775219203 +0800	checkout: moving from Revision/admindashboard to Revision/admindashboard
+cbca2e72d1dbde6fb28e715834818e0d5fa640f5 433e776f8c6f3a3086b850c9c022f7a2b773f5c7 OyanibTech-iii <pacificooyanib@gmail.com> 1775219232 +0800	commit: clean up .env
+433e776f8c6f3a3086b850c9c022f7a2b773f5c7 433e776f8c6f3a3086b850c9c022f7a2b773f5c7 OyanibTech-iii <pacificooyanib@gmail.com> 1775241610 +0800	checkout: moving from Revision/admindashboard to Feature/coursefullimplementation
+433e776f8c6f3a3086b850c9c022f7a2b773f5c7 8f4d279195d3645bd5c36899f57527d6bb777e20 OyanibTech-iii <pacificooyanib@gmail.com> 1775241645 +0800	commit: full integration of courses
+8f4d279195d3645bd5c36899f57527d6bb777e20 8f4d279195d3645bd5c36899f57527d6bb777e20 OyanibTech-iii <pacificooyanib@gmail.com> 1775300101 +0800	checkout: moving from Feature/coursefullimplementation to Feature/coursefullimplementation
+8f4d279195d3645bd5c36899f57527d6bb777e20 d5c3c12d716fa9b1dc4240438fc4c22b94522a33 OyanibTech-iii <pacificooyanib@gmail.com> 1775300135 +0800	commit: accidentally purge my db
+d5c3c12d716fa9b1dc4240438fc4c22b94522a33 078df29e84f40c05b2b2b684404d1a8dddc429aa OyanibTech-iii <pacificooyanib@gmail.com> 1775300574 +0800	checkout: moving from Feature/coursefullimplementation to main
+078df29e84f40c05b2b2b684404d1a8dddc429aa 0a018d1ea44e00f91f3fc46a0c7917002931d27d OyanibTech-iii <pacificooyanib@gmail.com> 1775300599 +0800	pull origin main: Fast-forward
+0a018d1ea44e00f91f3fc46a0c7917002931d27d 0a018d1ea44e00f91f3fc46a0c7917002931d27d OyanibTech-iii <pacificooyanib@gmail.com> 1775300642 +0800	checkout: moving from main to Feature/ratingsandfeedback
+0a018d1ea44e00f91f3fc46a0c7917002931d27d d7c0e0dc79739af2cadce546c3b3c1d2aa5904c4 OyanibTech-iii <pacificooyanib@gmail.com> 1775373760 +0800	commit: payment Stripe partial
+d7c0e0dc79739af2cadce546c3b3c1d2aa5904c4 971816e5fec38ffd49e094ed9f7270394e13225f OyanibTech-iii <pacificooyanib@gmail.com> 1775407099 +0800	commit: modify notification location order
+971816e5fec38ffd49e094ed9f7270394e13225f e0b78618095372f150b3c0c86d490b04ec2b2904 OyanibTech-iii <pacificooyanib@gmail.com> 1775525932 +0800	commit: product assets addded
+e0b78618095372f150b3c0c86d490b04ec2b2904 5e7f67bea1c65c915d7cf6a7cdb1ad54e44cdba1 OyanibTech-iii <pacificooyanib@gmail.com> 1775872327 +0800	commit: forgot password functionality
+5e7f67bea1c65c915d7cf6a7cdb1ad54e44cdba1 f31a1b21d220ff4cf0f506d366267bdf56cb05dd OyanibTech-iii <pacificooyanib@gmail.com> 1776839552 +0800	commit: added fixtures
+f31a1b21d220ff4cf0f506d366267bdf56cb05dd 8060b40152d9162d90608efbec9cdd878efe5744 OyanibTech-iii <pacificooyanib@gmail.com> 1776848673 +0800	commit: fix course bugs
+8060b40152d9162d90608efbec9cdd878efe5744 9427105df09b4e0634490c472ba635d45328ecb4 OyanibTech-iii <pacificooyanib@gmail.com> 1776935548 +0800	commit: implemented cropping.js
+9427105df09b4e0634490c472ba635d45328ecb4 5e948042c26d126925d2596313ee329899de25e2 OyanibTech-iii <pacificooyanib@gmail.com> 1776960256 +0800	commit: initialized qr and chat
+5e948042c26d126925d2596313ee329899de25e2 5e948042c26d126925d2596313ee329899de25e2 OyanibTech-iii <pacificooyanib@gmail.com> 1776960448 +0800	checkout: moving from Feature/ratingsandfeedback to Feature/microservices
+5e948042c26d126925d2596313ee329899de25e2 b263f9553b1c97d6739d9bb85881c6e05280067f OyanibTech-iii <pacificooyanib@gmail.com> 1776960971 +0800	commit: fix qr-url
+b263f9553b1c97d6739d9bb85881c6e05280067f 58e04851ff502d0fd05d41fc9d7ec555fbd7b388 OyanibTech-iii <pacificooyanib@gmail.com> 1776965318 +0800	commit: implemented realtime chat
+58e04851ff502d0fd05d41fc9d7ec555fbd7b388 8cb37ba0f0c96bebbfc100a784a7e2dda8b0e7f3 OyanibTech-iii <pacificooyanib@gmail.com> 1776965992 +0800	commit: updates documentation
+8cb37ba0f0c96bebbfc100a784a7e2dda8b0e7f3 ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 OyanibTech-iii <pacificooyanib@gmail.com> 1777019755 +0800	commit: migrate to style-qr js
+ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 OyanibTech-iii <pacificooyanib@gmail.com> 1777222355 +0800	checkout: moving from Feature/microservices to Feature/ratelimiter
+ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 c01d4e2d6401bd4e4943b44fd3530705a3ee91ca OyanibTech-iii <pacificooyanib@gmail.com> 1777222517 +0800	commit: updated a personal info
+c01d4e2d6401bd4e4943b44fd3530705a3ee91ca 5d2b277ca5cfd09e64413ad5697e511bff845c24 OyanibTech-iii <pacificooyanib@gmail.com> 1777225017 +0800	commit: rate limiter initial architecture
+5d2b277ca5cfd09e64413ad5697e511bff845c24 5d2b277ca5cfd09e64413ad5697e511bff845c24 OyanibTech-iii <pacificooyanib@gmail.com> 1777225615 +0800	checkout: moving from Feature/ratelimiter to Feature/ratelimiter
+5d2b277ca5cfd09e64413ad5697e511bff845c24 0ccdd9dc3739425549d563ae593590cbd56f5eb1 OyanibTech-iii <pacificooyanib@gmail.com> 1777225615 +0800	merge origin/main: Merge made by the 'ort' strategy.
+0ccdd9dc3739425549d563ae593590cbd56f5eb1 f69b16fca4012a780e97037f8de5b2f8b55490c2 OyanibTech-iii <pacificooyanib@gmail.com> 1777537878 +0800	commit: fix: ficoBot fallback model update
+f69b16fca4012a780e97037f8de5b2f8b55490c2 6df3fc9fa25b1bc9b3790fc35a0018ba6ab8160f OyanibTech-iii <pacificooyanib@gmail.com> 1777546322 +0800	commit: feat: added typing indicator chatroom
+6df3fc9fa25b1bc9b3790fc35a0018ba6ab8160f 02dcb1b40b536a695df84b284a9cda4939136aa9 OyanibTech-iii <pacificooyanib@gmail.com> 1777551744 +0800	commit: fix: user profile image path issue
+02dcb1b40b536a695df84b284a9cda4939136aa9 77dc430eaa1cf7b200a7edd2ec0d67f63beb9d67 OyanibTech-iii <pacificooyanib@gmail.com> 1778126615 +0800	commit: fix: minor ajustments in fonts
+77dc430eaa1cf7b200a7edd2ec0d67f63beb9d67 40c3de1bb5ff8eec6ada6cbb5eb157fbbb7fa3fc OyanibTech-iii <pacificooyanib@gmail.com> 1778295276 +0800	commit: feat: add groupchat and adminchatroom avatar
+40c3de1bb5ff8eec6ada6cbb5eb157fbbb7fa3fc 9dd017ee644293dd9fa6e22072ac50bc7153d13d OyanibTech-iii <pacificooyanib@gmail.com> 1778295955 +0800	commit: fix: view user profile display url
+9dd017ee644293dd9fa6e22072ac50bc7153d13d f16a783d89d9f769c1d9326d0b922f7c42d0bd34 OyanibTech-iii <pacificooyanib@gmail.com> 1778300751 +0800	commit: doc: added screenshots
+f16a783d89d9f769c1d9326d0b922f7c42d0bd34 abf0528a5045a00dac7ba30126c866e0034230bf OyanibTech-iii <pacificooyanib@gmail.com> 1778301026 +0800	commit: doc: added certificate screenshot
+abf0528a5045a00dac7ba30126c866e0034230bf 4505b86386d3f364a609b1b0930f50958d38b7b6 OyanibTech-iii <pacificooyanib@gmail.com> 1778808819 +0800	commit: doc: added API endpoint guide
+4505b86386d3f364a609b1b0930f50958d38b7b6 e3b9306bc939ff6898f65a787e2d3b281d960245 OyanibTech-iii <pacificooyanib@gmail.com> 1778809815 +0800	commit: doc: added security documentation
+e3b9306bc939ff6898f65a787e2d3b281d960245 82f4985fdd962db4a0afef4284a23b8fa760b63d OyanibTech-iii <pacificooyanib@gmail.com> 1778810635 +0800	commit: fix: add autowiring fix to the $loginLimiter
+82f4985fdd962db4a0afef4284a23b8fa760b63d 0331c677acd741d13c0bddfa50a6e190dab1534f OyanibTech-iii <pacificooyanib@gmail.com> 1779087969 +0800	commit: feat: add image upload routes and enhance image normalization logic
+0331c677acd741d13c0bddfa50a6e190dab1534f 34c7c261d3e2fc649a8c1d4e062e53791519922b OyanibTech-iii <pacificooyanib@gmail.com> 1779149079 +0800	commit: feat: enhance project structure documentation with detailed directory descriptions
+34c7c261d3e2fc649a8c1d4e062e53791519922b 70cb33f5f5eb979d94e7d4364311485e721b46e5 OyanibTech-iii <pacificooyanib@gmail.com> 1779149451 +0800	commit: feat: add project versioning file to .gitignore
+70cb33f5f5eb979d94e7d4364311485e721b46e5 576f6adb84434f19e2611588ff0004a02bf01e3d OyanibTech-iii <pacificooyanib@gmail.com> 1779150635 +0800	commit: feat: update .gitignore and add .env.example with environment configuration
+576f6adb84434f19e2611588ff0004a02bf01e3d d3f07c3fe7d195f9847f7337951c9a88c99baae1 OyanibTech-iii <pacificooyanib@gmail.com> 1779158556 +0800	commit: feat: update security routes for public access and enhance footer links
+d3f07c3fe7d195f9847f7337951c9a88c99baae1 ae61d0c972d408fc9f3b17a2be393982fe62956e OyanibTech-iii <pacificooyanib@gmail.com> 1779199132 +0800	commit: feat: enhanced footer links for better navigation.
+ae61d0c972d408fc9f3b17a2be393982fe62956e 7bf0a6e9f5bd6a512f7dddae3db2feffbce8aabd OyanibTech-iii <pacificooyanib@gmail.com> 1779201576 +0800	commit: feat: add new sugarcane images and enhance service section with scroll animations
+7bf0a6e9f5bd6a512f7dddae3db2feffbce8aabd d20385b40272fd04fd61f124a488e00fc1f0d403 OyanibTech-iii <pacificooyanib@gmail.com> 1779203056 +0800	commit: feat: implement notification system with WebSocket support and update UI for notifications
+d20385b40272fd04fd61f124a488e00fc1f0d403 db4e59a62c9e54b7785f6c094c58845140b34cc4 OyanibTech-iii <pacificooyanib@gmail.com> 1779203879 +0800	commit: feat: add functionality to mark all notifications as read with CSRF protection
+db4e59a62c9e54b7785f6c094c58845140b34cc4 4ec9c6b93787ff8cc6f575930d097246973fe586 OyanibTech-iii <pacificooyanib@gmail.com> 1779265829 +0800	commit: feat: added stocks fixtures for backup
+4ec9c6b93787ff8cc6f575930d097246973fe586 50d8f1007bdd72d32531561c9ec640230537b2e3 OyanibTech-iii <pacificooyanib@gmail.com> 1779270181 +0800	commit: feat: added revisions
+50d8f1007bdd72d32531561c9ec640230537b2e3 5bed5795beb28ef87fee19a281eda092e78d3cb5 OyanibTech-iii <pacificooyanib@gmail.com> 1779288019 +0800	commit: refactor: enhance error handling in quiz submission, improve product detail layout, and update add-to-cart functionality with better user feedback.
+5bed5795beb28ef87fee19a281eda092e78d3cb5 f583ff8d4b846b0e3a217b6eaebb7a241e2c610c OyanibTech-iii <pacificooyanib@gmail.com> 1779293033 +0800	commit: feat: implement quantity update functionality in cart with stock validation and error handling
+f583ff8d4b846b0e3a217b6eaebb7a241e2c610c 087f78ae5f91a47e87933cefc5dfef1f12e0827e OyanibTech-iii <pacificooyanib@gmail.com> 1779295087 +0800	commit: feat: add theme toggle icon component for mobile and desktop

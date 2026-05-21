@@ -1,0 +1,95 @@
+{# Reusable lesson list for Courses overview (admin/courses) — keep course template lean. #}
+<div id="lessons-overview" class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 scroll-mt-24">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h2 class="text-lg font-semibold text-dark-forest-green">Lessons</h2>
+        <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                    <ion-icon name="search-outline"></ion-icon>
+                </span>
+                <input type="text"
+                       id="lessons-search-input"
+                       class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                       placeholder="Search lessons..."
+                       autocomplete="off"
+                       aria-label="Search lessons">
+            </div>
+            <a href="{{ path('app_admin_lesson_new') }}"
+               class="inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Add Lesson
+            </a>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table id="lessonsTable" class="w-full">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Content</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                    style="text-align: center !important;">
+                    Actions
+                </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+            {% for lesson in lessons %}
+                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-xs font-medium text-dark-forest-green dark:!text-gray-200">
+                            {{ lesson.title }}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-xs text-dark-forest-green dark:!text-gray-200">
+                            {{ lesson.course ? lesson.course.courseName : 'N/A' }}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if lesson.contentFile %}
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-amber-50 text-amber-800 border border-amber-200">PDF</span>
+                        {% else %}
+                            <span class="text-xs text-light-gray">None</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex items-center justify-center gap-2">
+                            <a href="{{ path('app_admin_lesson_show', {'id': lesson.id}) }}"
+                               class="text-bright-green hover:text-green-600 transition-colors duration-200"
+                               title="View lesson">
+                                <ion-icon name="eye-outline" class="w-4 h-4"></ion-icon>
+                            </a>
+                            <a href="{{ path('app_admin_lesson_edit', {'id': lesson.id}) }}"
+                               class="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                               title="Edit lesson">
+                                <ion-icon name="create-outline" class="w-4 h-4"></ion-icon>
+                            </a>
+                            {{ include('admin/lesson/_delete_form.html.twig', { lesson: lesson }) }}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if lessons is empty %}
+        <div class="text-center py-8 border-t border-gray-100 mt-4">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 mx-auto dark:bg-gray-700">
+                <ion-icon name="book-outline" class="w-8 h-8 text-light-gray"></ion-icon>
+            </div>
+            <h4 class="text-sm font-semibold text-dark-forest-green mb-2">No lessons yet</h4>
+            <p class="text-xs text-light-gray mb-4 max-w-sm mx-auto">
+                Add lessons and attach them to a course.
+            </p>
+            <a href="{{ path('app_admin_lesson_new') }}"
+               class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Add your first lesson
+            </a>
+        </div>
+    {% endif %}
+</div>

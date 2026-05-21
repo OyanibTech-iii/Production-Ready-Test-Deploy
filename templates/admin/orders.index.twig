@@ -1,0 +1,149 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Orders | Growfico{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+<style>
+    .toggle-icon {
+
+        transition: transform 0.2s ease-in-out;
+
+    }
+
+    .order-items-container {
+
+        min-width: 150px;
+
+    }
+
+    [id^="extra-items-"] {
+
+        animation: slideDown 0.2s ease-out;
+
+    }
+
+    @keyframes slideDown {
+
+        from {
+
+            opacity: 0;
+
+            transform: translateY(-5px);
+
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+    }
+</style>
+{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green">Orders</h2>
+<p class="text-xs text-light-gray">View sales, audit orders, and manage customer purchases</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <!-- Header with tabs and Add Order (placeholder) -->
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-center gap-2 border-b border-gray-200 -mb-px">
+                    <button type="button" data-tab="top-sellers" class="orders-tab px-4 py-2.5 text-xs font-medium rounded-t-lg transition-colors duration-200 border-b-2 -mb-0.5
+                        text-bright-green border-bright-green bg-primary-50 dark:bg-gray-700/50 ">
+                        Best Sellers
+                    </button>
+                    <button type="button" data-tab="sales-audit" class="orders-tab px-4 py-2.5 text-xs font-medium rounded-t-lg transition-colors duration-200 border-b-2 border-transparent -mb-0.5
+                        text-light-gray hover:text-dark-forest-green hover:bg-gray-50 dark:bg-gray-700/50 ">
+                        Sales Audit
+                    </button>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" id="add-order-btn"
+                        class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200"
+                        title="Add order for available products">
+                        <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                        Add Order
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Top Sellers -->
+        {% include 'admin/orders_top_sellers.html.twig' %}
+        <!-- Tab: Sales Audit -->
+        {% include 'admin/orders_sales_audit.html.twig' %}
+
+    </div>
+</div>
+
+{# Add Order Modal #}
+{% include 'admin/orders_add_modal.html.twig' %}
+
+{# Reserved: Mode of Payment Modal - placeholder for future implementation #}
+<div id="payment-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full relative z-10">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+                    <ion-icon name="card-outline" class="text-2xl text-bright-green"></ion-icon>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-dark-forest-green">Mode of Payment</h3>
+                    <p class="text-xs text-light-gray">Coming soon</p>
+                </div>
+            </div>
+            <p class="text-sm text-light-gray mb-6">Payment method selection will be available when order flow is
+                finalized.</p>
+            <button type="button" id="payment-modal-close"
+                class="w-full px-4 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-forest-green font-medium transition-colors duration-200">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+{# Status Feedback Modal #}
+<div id="status-modal" class="fixed inset-0 z-[60] hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full relative z-10 text-center">
+            <div id="status-icon-container"
+                class="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <ion-icon id="status-icon" name="" class="text-4xl"></ion-icon>
+            </div>
+            <h3 id="status-title" class="text-xl font-bold text-dark-forest-green mb-2"></h3>
+            <p id="status-message" class="text-sm text-light-gray mb-6"></p>
+            <button type="button" id="status-modal-close"
+                class="w-full px-4 py-2.5 rounded-lg font-medium transition-colors duration-200">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/admin-search.js') }}"></script>
+<script src="{{ asset('js/order-toggle.js') }}"></script>
+<script>
+    window.OrderConfig = {
+        createUrl: "{{ path('app_admin_orders_create') }}",
+        csrfToken: "{{ csrf_token('admin_orders') }}"
+    };
+</script>
+<script src="{{ asset('js/orders-admin.js') }}"></script>
+{% endblock %}
+{% endblock %}

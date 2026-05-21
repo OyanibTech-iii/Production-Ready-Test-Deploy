@@ -1,0 +1,18 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Add New Product - Admin | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Add New Product</h2>
+<p class="text-xs text-light-gray">Create a new product to add to your inventory</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="p-6">
+            {{ include('product/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

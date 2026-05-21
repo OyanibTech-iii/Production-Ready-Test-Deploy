@@ -1,0 +1,184 @@
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 p-6">
+
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-xl font-semibold text-dark-forest-green">Manage Users</h2>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </span>
+                    <input type="text" id="users-search-input"
+                        class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                        placeholder="Search users..." autocomplete="off" aria-label="Search users">
+                </div>
+                <button type="button" id="add-user-btn"
+                    class="inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add User
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Filter Tabs -->
+        <div class="mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <a href="{{ path('app_admin_users') }}"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {{ current_status is null ? 'border-bright-green text-bright-green' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        All Users
+                    </a>
+                    <a href="{{ path('app_admin_users', {'status': 'active'}) }}"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {{ current_status == 'active' ? 'border-bright-green text-bright-green' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        Active Users
+                    </a>
+                    <a href="{{ path('app_admin_users', {'status': 'inactive'}) }}"
+                        class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {{ current_status == 'inactive' ? 'border-bright-green text-bright-green' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                        Inactive Users
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="usersTable" class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                            style="text-align: center !important;">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                    {% for user in users %}
+                    <tr class="user-row hover:bg-gray-50" data-user-id="{{ user.id }}"
+                        data-user-name="{{ user.getFullName()|e('html_attr') }}"
+                        data-user-email="{{ user.email|e('html_attr') }}"
+                        data-user-phone="{{ (user.phone ?? 'No phone')|e('html_attr') }}"
+                        data-user-role="{% if 'ROLE_ADMIN' in user.roles %}Admin{% elseif 'ROLE_STAFF' in user.roles %}Staff{% else %}User{% endif %}"
+                        data-user-status="{{ user.isActive ? 'true' : 'false' }}"
+                        data-user-image="{% set profileSrc = user.getProfileImage() %}{% if profileSrc %}{% if profileSrc starts with '/' %}{{ profileSrc[1:] }}{% else %}{{ profileSrc }}{% endif %}{% endif %}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                {% set profileSrc = user.getProfileImage() %}
+                                {% if profileSrc %}
+                                {% if profileSrc starts with '/' %}
+                                {% set profileSrc = profileSrc[1:] %}
+                                {% endif %}
+                                <img src="{{ asset(profileSrc) }}" alt="{{ user.getFullName()|e('html_attr') }}"
+                                    class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                                {% else %}
+                                <div
+                                    class="w-10 h-10 bg-gradient-to-br from-bright-green to-primary-600 text-white flex items-center justify-center rounded-full font-semibold text-sm">
+                                    {{ user.firstName ? user.firstName|first|upper : user.email|first|upper }}
+                                </div>
+                                {% endif %}
+                                <div class="ml-4">
+                                    <div class="text-xs font-medium text-dark-forest-green dark:!text-gray-200">{{
+                                        user.getFullName() }}</div>
+                                    {# <div class="text-sm text-gray-500">{{ user.phone ?? 'No phone' }}</div> #}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-xs text-gray-900">{{ user.email }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% set role_label = 'User' %}
+                            {% set role_class = 'bg-white text-primary-600 dark:!text-gray-400' %}
+                            {% if 'ROLE_ADMIN' in user.roles %}
+                            {% set role_label = 'Admin' %}
+                            {% set role_class = 'bg-white text-purple-800 dark:!text-primary-300' %}
+                            {% elseif 'ROLE_STAFF' in user.roles %}
+                            {% set role_label = 'Staff' %}
+                            {% set role_class = 'bg-white text-yellow-600 dark:!text-yellow-100' %}
+                            {% endif %}
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ role_class }}">
+                                {{ role_label }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap ">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {% if user.isActive %}bg-transparent dark:bg-gray-800 text-green-800 dark:text-primary-200{% else %}bg-red-100 dark:bg-gray-700/50 text-red-800 dark:text-red-400 {% endif %}">
+                                {{ user.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center justify-center flex-wrap">
+                                <button type="button"
+                                    class="inline-flex items-center px-2 text-blue-600  transition-colors duration-200   view-user-btn dark:!text-bright-green hover:text-blue-200"
+                                    data-user-id="{{ user.id }}" title="View User">
+                                    <ion-icon name="eye-outline" class="w-4 h-4"></ion-icon>
+                                </button>
+                                <button type="button"
+                                    class="inline-flex items-center px-2 text-bright-green transition-colors duration-200  edit-user-btn dark:!text-blue-400  hover:text-primary-200"
+                                    data-user-id="{{ user.id }}" title="Edit User">
+                                    <ion-icon name="create-outline" class="w-4 h-4"></ion-icon>
+                                </button>
+                                <button type="button"
+                                    class="inline-flex items-center px-2 {% if user.isActive %} text-orange-600 dark:!text-yellow-200 hover:text-yellow-100{% else %} text-green-600 {% endif %} transition-colors duration-200  toggle-status-btn"
+                                    data-user-id="{{ user.id }}"
+                                    data-new-status="{{ user.isActive ? 'false' : 'true' }}"
+                                    data-user-role="{% if 'ROLE_ADMIN' in user.roles %}Admin{% else %}User{% endif %}"
+                                    title="{{ user.isActive ? 'Deactivate' : 'Activate' }} User">
+                                    <ion-icon name="{{ user.isActive ? 'power-outline' : 'checkmark-circle-outline' }}"
+                                        class="w-4 h-4"></ion-icon>
+                                </button>
+                                <button type="button"
+                                    class="inline-flex items-center px-2 text-red-600 rounded-full  transition-colors duration-200  delete-user-btn dark:!text-red-400 hover:text-red-200"
+                                    data-user-id="{{ user.id }}" title="Delete User">
+                                    <ion-icon name="trash-outline" class="w-4 h-4"></ion-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if users is empty %}
+        <div class="text-center py-8 border-t border-gray-100 mt-4">
+            <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <ion-icon name="people-outline" class="w-8 h-8 text-light-gray"></ion-icon>
+            </div>
+            <h4 class="text-sm font-semibold text-dark-forest-green mb-2">
+                {% if current_status == 'active' %}
+                No active users found
+                {% elseif current_status == 'inactive' %}
+                No inactive users found
+                {% else %}
+                No users yet
+                {% endif %}
+            </h4>
+            <p class="text-xs text-light-gray mb-4 max-w-sm mx-auto">
+                {% if current_status == 'active' %}
+                There are no active users in the system.
+                {% elseif current_status == 'inactive' %}
+                There are no inactive users in the system.
+                {% else %}
+                Add your first user with the button above.
+                {% endif %}
+            </p>
+            {% if current_status is null %}
+            <button type="button" id="add-first-user-btn"
+                class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-sm font-medium rounded-full hover:bg-green-600 transition-colors duration-200">
+                <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Add your first user
+            </button>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>

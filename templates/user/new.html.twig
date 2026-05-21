@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add New User{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-background py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <a href="{{ path('app_user_index') }}" 
+                   class="btn-secondary flex items-center gap-2">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    Back to Users
+                </a>
+            </div>
+            <h1 class="text-xl font-bold text-dark-forest-green mb-2">Add New User</h1>
+            <p class="text-sm text-light-gray">Create a new user account for the system</p>
+        </div>
+
+        <!-- Form Section -->
+        <div class="card">
+            <div class="card-header bg-gradient-to-r from-bright-green to-dark-forest-green">
+                <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+                    <ion-icon name="person-add-outline" class="text-sm"></ion-icon>
+                    Create User Account
+                </h2>
+            </div>
+            <div class="card-body">
+                {{ include('user/_form.html.twig', {'button_label': 'Create User', 'is_edit': false}) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

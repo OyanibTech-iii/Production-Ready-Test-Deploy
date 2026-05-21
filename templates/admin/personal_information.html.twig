@@ -1,0 +1,215 @@
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+
+<div x-data="{ open: new URLSearchParams(window.location.search).get('edit') === 'personal' }">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between mb-4 border-b border-gray-100 pb-2">
+        <h3 class="text-sm font-semibold text-dark-forest-green" x-text="open ? 'Edit Personal Information' : 'Personal Information'">Personal Information</h3>
+        <button type="button" @click="open = !open" 
+            class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors duration-200"
+            :class="{ 'bg-gray-100 dark:bg-gray-700 text-dark-forest-green dark:text-white': open }"
+            :title="open ? 'Close' : 'Edit Your Personal Information'">
+            <template x-if="!open">
+                <ion-icon name="create-outline" class="text-lg"></ion-icon>
+            </template>
+            <template x-if="open">
+                <ion-icon name="close-outline" class="text-lg"></ion-icon>
+            </template>
+        </button>
+    </div>
+
+    {% set profile = app.user.userProfile %}
+
+    <!-- Static Information Display (Visible when not editing) -->
+    <div x-show="!open" x-transition:enter="transition ease-out duration-300" class="space-y-6">
+        <div>
+            <h4 class="text-[10px] font-bold text-light-gray uppercase tracking-widest mb-2">About Me</h4>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                {{ profile and profile.bio ? profile.bio : 'No bio added yet.' }}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h4 class="text-[10px] font-bold text-light-gray uppercase tracking-widest mb-2">Location</h4>
+                <div class="flex items-center gap-2 text-xs text-gray-700">
+                    <span>{{ profile and profile.location ? profile.location : 'Not specified' }}</span>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-[10px] font-bold text-light-gray uppercase tracking-widest mb-2">Hobbies</h4>
+                <div class="flex flex-wrap gap-2">
+                    {% if profile and profile.hobbies %}
+                        {% for hobby in profile.hobbies %}
+                            <span class="px-3 py-1 bg-green-50 text-bright-green text-[10px] font-bold uppercase rounded-full border border-green-100">{{ hobby.label() }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-xs text-light-gray italic">No hobbies selected</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="text-[10px] font-bold text-light-gray uppercase tracking-widest mb-3">Connect with me</h4>
+            <div class="flex gap-3 pl-1">
+                {% if profile and profile.facebookLink %}
+                <a href="{{ profile.facebookLink }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-blue-50 hover:text-blue-600 border border-gray-100 transition-all duration-200">
+                    <ion-icon name="logo-facebook" class="text-lg"></ion-icon>
+                </a>
+                {% endif %}
+                {% if profile and profile.instagramLink %}
+                <a href="{{ profile.instagramLink }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-pink-50 hover:text-pink-600 border border-gray-100 transition-all duration-200">
+                    <ion-icon name="logo-instagram" class="text-lg"></ion-icon>
+                </a>
+                {% endif %}
+                {% if profile and profile.twitterLink %}
+                <a href="{{ profile.twitterLink }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-sky-50 hover:text-sky-500 border border-gray-100 transition-all duration-200">
+                    <ion-icon name="logo-twitter" class="text-lg"></ion-icon>
+                </a>
+                {% endif %}
+                {% if profile and profile.linkedinLink %}
+                <a href="{{ profile.linkedinLink }}" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-blue-50 hover:text-blue-700 border border-gray-100 transition-all duration-200">
+                    <ion-icon name="logo-linkedin" class="text-lg"></ion-icon>
+                </a>
+                {% endif %}
+                {% if not profile or (not profile.facebookLink and not profile.instagramLink and not profile.twitterLink and not profile.linkedinLink) %}
+                    <span class="text-xs text-light-gray italic">No social links added</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form (Visible when open is true) -->
+    <form id="profile-form-main" class="space-y-6" x-show="open" x-cloak 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 -translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="profile-first-name-main"
+                    class="block text-xs font-medium text-gray-700 mb-2">First Name</label>
+                <input type="text" id="profile-first-name-main" name="firstName" required
+                    value="{{ app.user.firstName }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+            </div>
+            <div>
+                <label for="profile-last-name-main"
+                    class="block text-xs font-medium text-gray-700 mb-2">Last Name</label>
+                <input type="text" id="profile-last-name-main" name="lastName" required
+                    value="{{ app.user.lastName }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="profile-email-main" class="block text-xs font-medium text-gray-700 mb-2">Email Address</label>
+                <input type="email" id="profile-email-main" name="email" required
+                    value="{{ app.user.email }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+            </div>
+            <div>
+                <label for="profile-phone-main" class="block text-xs font-medium text-gray-700 mb-2">Phone Number</label>
+                <input type="tel" id="profile-phone-main" name="phone"
+                    value="{{ app.user.phone }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+            </div>
+        </div>
+
+        <div>
+            <label for="profile-bio-main" class="block text-xs font-medium text-gray-700 mb-2">Bio</label>
+            <textarea id="profile-bio-main" name="bio" maxlength="101" rows="3"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm"
+                placeholder="Tell us about yourself (max 101 characters)">{{ profile ? profile.bio : '' }}</textarea>
+            <div class="text-[10px] text-right text-light-gray mt-1"><span id="bio-char-count">0</span>/101</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="profile-location-main" class="block text-xs font-medium text-gray-700 mb-2">Location</label>
+                <input type="text" id="profile-location-main" name="location"
+                    value="{{ profile ? profile.location : '' }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm"
+                    placeholder="City, Country">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-700 mb-2">Hobbies </label>
+                <div class="grid grid-cols-2 gap-2 p-3 border border-gray-300 rounded-lg bg-gray-50/30">
+                    {% for hobby in constant('App\\Enum\\Hobby::ALL') %}
+                    <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+                        <input type="checkbox" name="hobbies[]" value="{{ hobby.value }}" 
+                            {% if profile and hobby in profile.hobbies %}checked{% endif %}
+                            class="rounded border-gray-300 text-bright-green focus:ring-bright-green">
+                        <span>{{ hobby.label() }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="text-xs font-bold text-dark-forest-green mb-4 border-b border-gray-50 pb-2">Social Media Links</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-light-gray uppercase mb-2">Facebook</label>
+                    <div class="relative">
+                        <ion-icon name="logo-facebook" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></ion-icon>
+                        <input type="url" name="facebookLink" value="{{ profile ? profile.facebookLink : '' }}"
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green text-xs" placeholder="https://facebook.com/username">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-light-gray uppercase mb-2">Instagram</label>
+                    <div class="relative">
+                        <ion-icon name="logo-instagram" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></ion-icon>
+                        <input type="url" name="instagramLink" value="{{ profile ? profile.instagramLink : '' }}"
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green text-xs" placeholder="https://instagram.com/username">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-light-gray uppercase mb-2">Twitter / X</label>
+                    <div class="relative">
+                        <ion-icon name="logo-twitter" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></ion-icon>
+                        <input type="url" name="twitterLink" value="{{ profile ? profile.twitterLink : '' }}"
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green text-xs" placeholder="https://twitter.com/username">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-light-gray uppercase mb-2">LinkedIn</label>
+                    <div class="relative">
+                        <ion-icon name="logo-linkedin" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></ion-icon>
+                        <input type="url" name="linkedinLink" value="{{ profile ? profile.linkedinLink : '' }}"
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green text-xs" placeholder="https://linkedin.com/in/username">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
+            <button type="button" @click="open = false"
+                class="px-6 py-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                Cancel
+            </button>
+            <button type="submit"
+                class="px-6 py-2 text-xs font-medium text-white bg-bright-green rounded-lg hover:bg-green-600 transition-colors duration-200">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bioArea = document.getElementById('profile-bio-main');
+        const charCount = document.getElementById('bio-char-count');
+        if (bioArea && charCount) {
+            charCount.textContent = bioArea.value.length;
+            bioArea.addEventListener('input', () => {
+                charCount.textContent = bioArea.value.length;
+            });
+        }
+    });
+</script>

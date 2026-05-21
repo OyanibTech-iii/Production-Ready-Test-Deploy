@@ -1,0 +1,50 @@
+<div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm mb-8" id="my-products">
+	{% if isStaff %}
+		{# STAFF ONLY: Owned Products View #}
+		<div class="flex items-center justify-between mb-6">
+			<div>
+				<h3 class="text-lg font-semibold text-dark-forest-green">My Products</h3>
+				<p class="text-sm text-light-gray">You can manage products you own.</p>
+			</div>
+		</div>
+
+		{% if products is not empty %}
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				{% for product in products %}
+					<div class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+						<div class="flex items-start justify-between gap-3 mb-3">
+							<div class="flex-1">
+								<h4 class="text-dark-forest-green font-semibold">{{ product.name }}</h4>
+								<p class="text-xs text-light-gray">Owner: You</p>
+							</div>
+							{% set imagePath = product.getImagePath() %}
+							{% if imagePath %}
+								<img src="{{ imagePath starts with('http') ? imagePath : asset(imagePath) }}" alt="{{ product.name }}" class="w-16 h-16 rounded-lg object-cover"/>
+							{% endif %}
+						</div>
+						<p class="text-sm text-light-gray mb-4 line-clamp-2">{{ product.description }}</p>
+						
+						<div class="flex items-center gap-2 text-sm text-dark-forest-green mb-3">
+							{# <ion-icon name="cash-outline" class="text-bright-green"></ion-icon> #}
+							<span>₱{{ product.price }}</span>
+						</div>
+				
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<div class="text-center py-8">
+				<div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3 dark:bg-gray-700">
+					<ion-icon name="leaf-outline" class="w-8 h-8 text-bright-green"></ion-icon>
+				</div>
+				<p class="text-dark-forest-green font-semibold">No owned products yet</p>
+				<p class="text-sm text-light-gray">
+					Create a product to start managing your own records.
+				</p>
+			</div>
+		{% endif %}
+	{% else %}
+		{% include 'user_page/_cart_items_content.html.twig' with { products: products, isStaff: false } %}
+	{% endif %}
+</div>
+

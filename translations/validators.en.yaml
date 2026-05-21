@@ -1,0 +1,14 @@
+registration:
+  firstname:
+    blank: 'Please enter your first name'
+    invalid: 'First name can only contain letters, spaces, and hyphens'
+  lastname:
+    blank: 'Please enter your last name'
+    invalid: 'Last name can only contain letters, spaces, and hyphens'
+  email:
+    blank: 'Please enter your email'
+    invalid: 'Please enter a valid email address'
+  agree_terms: 'You should agree to our terms.'
+  password:
+    blank: 'Please enter a password'
+    too_short: 'Your password should be at least {{ limit }} characters'

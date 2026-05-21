@@ -1,0 +1,235 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Profile | Growfico{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% block page_subtitle %}Manage your account settings and personal information{% endblock %}
+
+{% block user_content %}
+<div class="space-y-6 max-w-7xl mx-auto">
+    <!-- Profile Form Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Profile Information -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+                <!-- Upload Photo Section -->
+                <div class="pb-6 border-b border-gray-100 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                        <div class="flex-1">
+                            <h3 class="text-sm font-semibold text-dark-forest-green mb-4">Profile Photo</h3>
+                            <div class="flex items-center gap-6">
+                                <div
+                                    class="w-24 h-24 bg-gradient-to-br from-bright-green to-primary-600 text-white flex items-center mb-2 justify-center rounded-xl font-semibold text-2xl overflow-hidden relative group">
+                                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                    {% if app.user.profileImage %}
+                                    {% set profileImgPath = app.user.profileImage %}
+                                    {% if profileImgPath starts with '/' %}{% set profileImgPath = profileImgPath[1:] %}{% endif %}
+                                    <img id="profile-preview-large" src="{{ asset(profileImgPath) }}"
+                                        alt="Profile" class="w-full h-full object-cover"
+                                        onerror="this.style.display='none'; document.getElementById('profile-initials-large').style.display='flex';">
+                                    <span id="profile-initials-large" class="hidden">{{ app.user.firstName ? app.user.firstName|first|upper : app.user.email|first|upper }}</span>
+                                    {% else %}
+                                    <span id="profile-initials-large">{{ app.user.firstName ?
+                                        app.user.firstName|first|upper :
+                                        app.user.email|first|upper }}</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span id="profile-initials-large">A</span>
+                                    {% endif %}
+                                    <button type="button" id="upload-photo-btn-large"
+                                        class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <ion-icon name="camera-outline" class="text-2xl text-white"></ion-icon>
+                                    </button>
+                                </div>
+                                <div>
+                                    <input type="file" id="profile-image-input-large" accept="image/*" class="hidden">
+                                    <p class="text-xs text-light-gray mb-2">JPG, PNG, GIF up to 10MB</p>
+                                    <button type="button" id="change-photo-btn"
+                                        class="px-4 py-2 bg-bright-green text-white rounded-lg hover:bg-green-600 transition-colors duration-200 text-xs font-medium">
+                                        Change Photo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-start sm:items-end">
+                            <h3 class="text-sm font-semibold text-dark-forest-green mb-4 text-right w-full">Your QR Card</h3>
+                            <div class="p-2 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                                <div class="w-24 h-24 bg-white dark:bg-gray-900 rounded-xl flex items-center justify-center overflow-hidden"
+                                     data-controller="qr"
+                                     data-qr-data-value="{% if app.user.qrCode %}{{ url('app_business_card', {identifier: app.user.qrCode.identifier}) }}{% endif %}"
+                                     data-qr-width-value="96"
+                                     data-qr-height-value="96"
+                                     data-qr-logo-value="{{ asset('logos/white-fill.png') }}">
+                                    {% if not (is_granted('IS_AUTHENTICATED_FULLY') and app.user.qrCode) %}
+                                    <div class="flex flex-col items-center gap-1">
+                                        <ion-icon name="qr-code-outline"
+                                            class="text-2xl text-gray-400 dark:text-gray-600"></ion-icon>
+                                        <span class="text-[8px] text-light-gray uppercase font-semibold">Not Set</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if app.user.qrCode %}
+                            <span class="text-[8px] text-light-gray font-mono uppercase tracking-tighter mt-2">{{ app.user.qrCode.identifier|slice(0, 12) }}...</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% include 'user_page/personal_information.html.twig' %}
+            </div>
+        </div>
+
+        <!-- Password Change Section -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-sm font-semibold text-dark-forest-green mb-4">Change Password</h3>
+                {% if app.user.provider == 'google' %}
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700 leading-relaxed">
+                            <div class="flex items-center gap-2 mb-2">
+                                <ion-icon name="information-circle" class="text-lg"></ion-icon>
+                                <span class="font-bold uppercase">Google Account</span>
+                            </div>
+                            Your account is linked with Google. For security reasons, direct password changes are restricted. You can send a request to the administrator to enable password management for your account.
+                        </div>
+                        <button type="button" id="request-password-btn" 
+                            class="w-full flex justify-center items-center gap-2 px-4 py-3 text-xs font-bold text-white bg-dark-forest-green rounded-xl hover:bg-bright-green transition-all duration-300 shadow-md">
+                            <ion-icon name="paper-plane-outline" class="text-sm"></ion-icon>
+                            Request Change
+                        </button>
+                    </div>
+                {% elseif is_granted('ROLE_STAFF') %}
+                    <form id="password-form-main" class="space-y-4">
+                        <div>
+                            <label for="current-password-main" class="block text-xs font-medium text-gray-700 mb-2">Current Password</label>
+                            <div class="relative">
+                                <input type="password" id="current-password-main" name="currentPassword"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+                                <button type="button" class="absolute inset-y-0 right-2 flex items-center text-gray-500 toggle-password" data-target="current-password-main">
+                                    <ion-icon name="eye-off-outline" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div x-data="{ 
+                            password: '', 
+                            showPassword: false,
+                            get strength() {
+                                if (this.password.length === 0) return { label: 'At least 8 characters', color: 'text-gray-400' };
+                                if (this.password.length < 6) return { label: 'Weak', color: 'text-red-500' };
+                                let score = 0;
+                                if (this.password.length >= 8) score++;
+                                if (/[A-Z]/.test(this.password)) score++;
+                                if (/[0-9]/.test(this.password)) score++;
+                                if (/[^A-Za-z0-9]/.test(this.password)) score++;
+                                if (score <= 2) return { label: 'Fair', color: 'text-orange-400' };
+                                if (score === 3) return { label: 'Strong', color: 'text-green-500' };
+                                return { label: 'Very Strong', color: 'text-bright-green font-bold' };
+                            }
+                        }">
+                            <label for="new-password-main" class="block text-xs font-medium text-gray-700 mb-2">New Password</label>
+                            <div class="relative">
+                                <input :type="showPassword ? 'text' : 'password'" id="new-password-main" name="newPassword" x-model="password"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+                                <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700">
+                                    <ion-icon :name="showPassword ? 'eye-outline' : 'eye-off-outline'" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
+                            <p class="text-xs mt-2 transition-all duration-300" :class="strength.color" x-text="strength.label"></p>
+                        </div>
+
+                        <div>
+                            <label for="confirm-password-main" class="block text-xs font-medium text-gray-700 mb-2">Confirm New Password</label>
+                            <div class="relative">
+                                <input type="password" id="confirm-password-main" name="confirmPassword"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+                                <button type="button" class="absolute inset-y-0 right-2 flex items-center text-gray-500 toggle-password" data-target="confirm-password-main">
+                                    <ion-icon name="eye-off-outline" class="text-lg"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full flex justify-center px-4 py-2 text-xs font-medium text-white bg-bright-green rounded-lg hover:bg-green-600 transition-colors duration-200">
+                            Update Password
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="p-4 bg-gray-50 border border-dashed border-gray-200 rounded-xl text-xs text-light-gray leading-relaxed">
+                        Password updates are restricted to staff accounts. If you need to reset your password, please contact support or use the recovery workflow.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password Change Confirmation Modal -->
+<div id="password-confirm-modal" class="fixed inset-0 z-50 hidden backdrop-blur-md" style="display: none;">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+    <div class="absolute inset-0 flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative z-10">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <ion-icon name="warning-outline" class="text-2xl text-yellow-600"></ion-icon>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-dark-forest-green">Confirm Password Change</h3>
+                    <p class="text-xs text-light-gray">This action cannot be undone</p>
+                </div>
+            </div>
+            <p class="text-sm text-light-gray mb-6">Are you sure you want to change your password? You'll need to log in again with your new password.</p>
+            <div class="flex gap-3">
+                <button id="password-cancel-btn" class="flex-1 px-4 py-2.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-dark-forest-green font-medium">Cancel</button>
+                <button id="password-confirm-btn" class="flex-1 px-4 py-2.5 rounded-lg bg-bright-green hover:bg-green-600 text-white font-medium">Change Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cropping Modal -->
+<div id="cropper-modal" class="fixed inset-0 z-[100] hidden backdrop-blur-md">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-2xl w-full relative z-10">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-dark-forest-green">Crop Your Photo</h3>
+                <button type="button" id="close-cropper-btn" class="text-gray-400 hover:text-gray-600">
+                    <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6">
+                <div class="w-full h-[300px] sm:h-[400px] md:h-[500px] bg-gray-100 rounded-xl overflow-hidden">
+                    <img id="cropper-image" src="" alt="To crop" class="block max-w-full">
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3">
+                <button type="button" id="cancel-crop-btn" class="px-6 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">Cancel</button>
+                <button type="button" id="apply-crop-btn" class="px-6 py-2 text-xs font-medium text-white bg-bright-green rounded-lg hover:bg-green-600">Crop & Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Result Modal -->
+<div id="result-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm result-modal-overlay"></div>
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full relative z-10 transform transition-all scale-95 opacity-0" id="result-modal-content">
+        <div class="flex justify-center mb-4">
+            <div id="lottie-container" class="w-24 h-24"></div>
+        </div>
+        <h3 id="result-title" class="text-xl font-bold text-center text-dark-forest-green mb-2"></h3>
+        <p id="result-text" class="text-sm text-center text-light-gray mb-6"></p>
+        <button id="result-close-btn" class="w-full py-3 rounded-xl font-semibold text-white transition-colors duration-200">Continue</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    
+    <script src="{{ asset('js/profile-user-management.js')}}"></script>
+    <script src="{{ asset('js/password-user-management.js')}}"></script>
+{% endblock %}

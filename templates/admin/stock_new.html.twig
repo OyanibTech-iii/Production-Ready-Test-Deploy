@@ -1,0 +1,16 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Add New Stock - Admin | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Add New Stock</h2>
+<p class="text-xs text-light-gray">Create a new stock entry for your inventory</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+        <div class="p-6">
+            {{ include('stock/_form.html.twig') }}
+        </div>
+</div>
+{% endblock %}

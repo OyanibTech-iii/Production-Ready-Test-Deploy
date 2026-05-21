@@ -1,0 +1,205 @@
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/contacts.css') }}">
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>
+
+{% endblock %}
+<main class="main">
+    <!-- Hero Section -->
+    <section class="py-20 bg-white dark:bg-gray-900 overflow-hidden" x-data="{ shown: false }" x-intersect.once="shown = true">
+
+        <div class="container max-w-7xl mx-auto px-4">
+
+            <div class="text-center mb-12 transition-all duration-1000 transform"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
+
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-6">
+                    <span class="text-dark-forest-green dark:!text-gray-200">Get in Touch with </span>
+                    <span class="text-bright-green underline decoration-wavy decoration-2 underline-offset-8">Us</span>
+                </h2>
+
+                <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                    Ready to start your growing journey? We're here to help you every step of the way.
+                    Contact us for expert advice, product inquiries, or to join our community.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 h-auto md:h-[500px]">
+
+                <div class="md:col-span-2 md:row-span-2 bg-gray-100 dark:bg-gray-800 rounded-3xl overflow-hidden shadow-xl group transition-all duration-700 delay-100 transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'">
+                    <img src="{{ asset('contacts/building.png') }}" alt="Growing Journey"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg group transition-all duration-700 delay-300 transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'">
+                    <img src="{{ asset('contacts/road view.png') }}" alt="Road View"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                </div>
+
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg group transition-all duration-700 delay-500 transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'">
+                    <img src="{{ asset('contacts/carpov.png') }}" alt="Car POV"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div id="nature-quote" class="reveal-on-scroll"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 200px; opacity: 100; transform: translateY(30px); transition: all 1s ease-out;">
+
+        <p
+            style="font-family: 'Noto Sans Tagalog', Arial !important; font-size: 32px !important; color: #16a34a !important; margin: 0 !important; width: 100%; letter-spacing: 4px;">
+            ᜋᜃᜒᜉᜄᜓᜄ᜔ᜈᜌᜈ᜔ ᜐ ᜀᜋᜒᜈ᜔
+        </p>
+
+        <p class="text-sm text-light-gray dark:text-gray-400"
+            style="margin: 10px 0 0 0; width: 100%; letter-spacing: 4px; text-transform: uppercase; font-weight: 500;">
+            Makipag-ugnayan sa amin
+        </p>
+    </div>
+    <!-- Contact Information Section -->
+    {{ include('landinpage/contactform.html.twig') }}
+
+    <section class="py-20 bg-white dark:bg-gray-900" x-data="{ shown: false }" x-intersect.once="shown = true">
+        <div class="container max-w-7xl mx-auto px-4">
+
+            <div class="text-center mb-12 transition-all duration-1000 transform"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    <span class="text-dark-forest-green dark:!text-gray-200">Our </span>
+                    <span class="text-bright-green">Branches</span>
+                </h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                    Strategic hubs designed for a sustainable tomorrow. Our branches across Negros
+                    and beyond serve as centers for agricultural excellence, providing the tools and expertise you need
+                    to thrive.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                {% for location in locations %}
+
+                {% set locationName = location.name ?? (location['name'] ?? 'Location') %}
+                {% set locationKey = locationName|lower|replace({
+                ' city': '',
+                ' district': '',
+                ' ': '',
+                '-': '',
+                '_': ''
+                }) %}
+
+                {% set staticImages = {
+                'bayawan': 'bayawan.png',
+                'daro': 'daro.png',
+                'pamplona': 'pamplona.png',
+                'sibulan': 'sibulan.png',
+                'sipalay': 'sipalay.png',
+                'bacolod': 'bacolod.png',
+                'bagacay': 'bagacay.png'
+                } %}
+
+                {% set imageFile = staticImages[locationKey]|default('') %}
+                {% set imageSrc = imageFile ? asset('uploads/locations/' ~ imageFile) : asset('contacts/building.png')
+                %}
+                {% set latStr = location.latitude ?? '' %}
+                {% set lngStr = location.longitude ?? '' %}
+                {% set hasCoords = latStr is not same as('') and latStr is not null and lngStr is not same as('') and
+                lngStr is not null %}
+                {% set branchCardClasses = 'relative group rounded-3xl overflow-hidden shadow-md bg-gray-200
+                transition-all duration-1000 transform' %}
+
+                {% if loop.index % 3 == 0 %}
+                {% set branchCardClasses = branchCardClasses ~ ' md:col-span-2' %}
+                {% endif %}
+
+                {% if loop.index % 4 == 0 %}
+                {% set branchCardClasses = branchCardClasses ~ ' md:row-span-2' %}
+                {% endif %}
+
+                {% if hasCoords %}
+                {% set branchCardClasses = branchCardClasses ~ ' js-branch-map-trigger cursor-pointer focus:outline-none
+                focus-visible:ring-2 focus-visible:ring-bright-green focus-visible:ring-offset-2' %}
+                {% endif %}
+
+                <div class="{{ branchCardClasses }} js-branch-card"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+                    data-transition-delay="{{ loop.index * 150 }}" {% if hasCoords %} role="button" tabindex="0"
+                    data-lat="{{ latStr|e('html_attr') }}" data-lng="{{ lngStr|e('html_attr') }}"
+                    data-name="{{ locationName|e('html_attr') }}"
+                    aria-label="Show {{ locationName|e('html_attr') }} on the map below" title="Click to show on map" {%
+                    endif %}>
+
+                    <img src="{{ imageSrc }}" alt="{{ locationName }}"
+                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none">
+
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 pointer-events-none">
+                        <h3 class="text-white text-xl font-bold uppercase tracking-wider">
+                            {{ locationName }}
+                        </h3>
+                        {% if hasCoords %}
+                        <p class="text-white/80 text-xs mt-1 uppercase tracking-wide">Tap to view on map</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-12">
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                        <span class="text-dark-forest-green dark:!text-gray-200">Branch Location</span>
+                        <span class="text-bright-green">Map</span>
+                    </h2>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Select a branch above to zoom in, or explore all pins on the
+                        map</p>
+                </div>
+                <div id="branch-locations-map"
+                    class="w-full h-[500px] bg-white dark:bg-gray-800 rounded-3xl shadow-md border border-gray-200 dark:border-gray-700 z-0" role="region"
+                    aria-label="Interactive map of branch locations"></div>
+            </div>
+        </div>
+    </section>
+
+    {{ include('landinpage/faq.html.twig') }}
+</main>
+
+<script>
+    function initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, .hero-content').forEach(el => {
+            observer.observe(el);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.js-branch-card[data-transition-delay]').forEach(card => {
+            card.style.transitionDelay = `${card.dataset.transitionDelay}ms`;
+        });
+
+        initScrollAnimations();
+    });
+</script>
+<script src="{{ asset('js/contactmap.js') }}"></script>
+{% include 'footer/index.html.twig' %}

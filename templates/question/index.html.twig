@@ -1,0 +1,222 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Questions | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Questions</h2>
+<p class="text-xs text-light-gray">Manage quiz questions</p>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-xl font-semibold text-dark-forest-green">Manage Questions</h2>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </span>
+                    <input type="text"
+                           id="questions-search-input"
+                           class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                           placeholder="Search questions..."
+                           autocomplete="off"
+                           aria-label="Search questions">
+                </div>
+                <a href="{{ path('app_question_new') }}"
+                   class="inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add Question
+                </a>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="questionsTable" class="w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quiz</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                        style="text-align: center !important;">
+                        Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                {% for question in questions %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-dark-forest-green">
+                                {{ question.questionText|slice(0, 80) }}{% if question.questionText|length > 80 %}...{% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-dark-forest-green">
+                                {{ question.quiz ? question.quiz.title : 'N/A' }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-semibold text-dark-forest-green">
+                                {{ question.points }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ path('app_question_show', {'id': question.id}) }}"
+                                   class="text-bright-green hover:text-green-600 transition-colors duration-200"
+                                   title="View Question">
+                                    <ion-icon name="eye-outline" class="w-4 h-4"></ion-icon>
+                                </a>
+                                <a href="{{ path('app_question_edit', {'id': question.id}) }}"
+                                   class="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                                   title="Edit Question">
+                                    <ion-icon name="create-outline" class="w-4 h-4"></ion-icon>
+                                </a>
+                                <form method="post"
+                                      action="{{ path('app_question_delete', {'id': question.id}) }}"
+                                      onsubmit="return confirm('Are you sure you want to delete this question?');"
+                                      class="inline">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('delete' ~ question.id) }}">
+                                    <button type="submit"
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                            title="Delete Question">
+                                        <ion-icon name="trash-outline" class="w-4 h-4"></ion-icon>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if questions is empty %}
+            <div class="text-center py-8 border-t border-gray-100 mt-4">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <ion-icon name="help-circle-outline" class="w-8 h-8 text-light-gray"></ion-icon>
+                </div>
+                <h4 class="text-sm font-semibold text-dark-forest-green mb-2">No questions found</h4>
+                <p class="text-xs text-light-gray mb-4 max-w-sm mx-auto">
+                    Add questions to your quizzes to assess learners.
+                </p>
+                <a href="{{ path('app_question_new') }}"
+                   class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add your first question
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/admin-search.js') }}"></script>
+<script>
+    (function () {
+        'use strict';
+        const TABLE_SELECTOR = '#questionsTable';
+        const SEARCH_INPUT_ID = 'questions-search-input';
+
+        function initQuestionsDataTable() {
+            if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) {
+                return;
+            }
+            const $table = jQuery(TABLE_SELECTOR);
+            if (!$table.length || jQuery.fn.DataTable.isDataTable(TABLE_SELECTOR)) {
+                return;
+            }
+            const table = $table.DataTable({
+                dom: 'lrtip',
+                pageLength: 10,
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { orderable: false, targets: 3 },
+                    { className: 'align-middle', targets: '_all' }
+                ],
+                autoWidth: false,
+                language: {
+                    emptyTable: 'No questions found.',
+                    zeroRecords: 'No matching questions found.',
+                    paginate: {
+                        previous: '<ion-icon name="chevron-back-outline" class="align-middle"></ion-icon>',
+                        next: '<ion-icon name="chevron-forward-outline" class="align-middle"></ion-icon>'
+                    }
+                }
+            });
+
+            const searchInput = document.getElementById(SEARCH_INPUT_ID);
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function () {
+                    table.search(this.value).draw();
+                });
+            }
+
+            if (typeof AdminSearch !== 'undefined') {
+                new AdminSearch({
+                    searchInputId: SEARCH_INPUT_ID,
+                    tableSelector: TABLE_SELECTOR
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initQuestionsDataTable);
+        } else {
+            initQuestionsDataTable();
+        }
+    })();
+</script>
+{% endblock %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Question index{% endblock %}
+
+{% block body %}
+    <h1>Question index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>QuestionText</th>
+                <th>Points</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for question in questions %}
+            <tr>
+                <td>{{ question.id }}</td>
+                <td>{{ question.questionText }}</td>
+                <td>{{ question.points }}</td>
+                <td>
+                    <a href="{{ path('app_question_show', {'id': question.id}) }}">show</a>
+                    <a href="{{ path('app_question_edit', {'id': question.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_question_new') }}">Create new</a>
+{% endblock %}

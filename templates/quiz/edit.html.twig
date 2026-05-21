@@ -1,0 +1,32 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Edit Quiz | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Edit Quiz</h2>
+<p class="text-sm text-light-gray">Update quiz settings</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="p-6">
+            {{ include('quiz/_form.html.twig', { form: form, button_label: 'Update Quiz' }) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Quiz{% endblock %}
+
+{% block body %}
+    <h1>Edit Quiz</h1>
+
+    {{ include('quiz/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_quiz_index') }}">back to list</a>
+
+    {{ include('quiz/_delete_form.html.twig') }}
+{% endblock %}

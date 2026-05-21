@@ -1,0 +1,197 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Products - Growfico{% endblock %}
+{% block page_title %}Products{% endblock %}
+{% block page_subtitle %}{{ is_granted('ROLE_STAFF') or is_granted('ROLE_ADMIN') ? 'Manage your products - edit only your own, view others as read-only' : 'Browse products (read-only)' }}{% endblock %}
+
+{% block user_content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Products Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        {% if products is not empty %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for product in products %}
+                    <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group">
+                        <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                            {% set imagePath = product.getImagePath() %}
+                            {% if imagePath %}
+                                <img src="{{ imagePath starts with('http') ? imagePath : asset(imagePath) }}"
+                                     alt="{{ product.name }}"
+                                     class="object-cover w-full h-48"
+                                     onerror="this.style.display='none'; this.parentNode.querySelector('.fallback-icon').style.display='flex';">
+                                <div class="fallback-icon hidden w-full h-48 items-center justify-center">
+                                    <ion-icon name="leaf-outline" class="w-16 h-16 text-bright-green"></ion-icon>
+                                </div>
+                            {% else %}
+                                <div class="w-full h-48 flex items-center justify-center">
+                                    <ion-icon name="leaf-outline" class="w-16 h-16 text-bright-green"></ion-icon>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Product Info -->
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-dark-forest-green font-sans line-clamp-2 group-hover:text-bright-green transition-colors ">
+                                    {{ product.name }}
+                                </h3>
+                                <span class="flex-shrink-0 ml-2">
+                                    {% if product.isAvailable %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-gray-900/10 dark:!text-bright-green">
+                                            <ion-icon name="checkmark-circle" class="w-3 h-3 mr-1.5 text-bright-green"></ion-icon>
+                                            Available
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <ion-icon name="close-circle" class="w-3 h-3 mr-1.5 "></ion-icon>
+                                            Out of Stock
+                                        </span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <!-- Owner Info Badge -->
+                            {% if product.owner and is_granted('ROLE_STAFF') %}
+                            <div class="mb-3">
+                                {% if is_granted('PRODUCT_EDIT', product) %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                        <ion-icon name="checkmark-circle" class="w-3 h-3 mr-1"></ion-icon>
+                                        Your Product
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
+                                        <ion-icon name="lock-closed-outline" class="w-3 h-3 mr-1"></ion-icon>
+                                        Owned by {{ product.owner.getFirstName() }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            <p class="text-light-gray text-xs mb-4 line-clamp-3 leading-relaxed">
+                                {{ product.description }}
+                            </p>
+                            
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="text-sm font-bold text-dark-forest-green dark:!text-gray-200">
+                                    ₱{{ product.price }}
+                                </div>
+                                {% if product.stocks is defined and product.stocks|length > 0 %}
+                                <div class="text-right">
+                                    <div class="text-sm text-light-gray">Stock</div>
+                                    <div class="text-sm font-semibold text-dark-forest-green">
+                                        {{ product.getCurrentStockQuantity() }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Stock Status -->
+                            {% if product.stocks is defined and product.stocks|length > 0 %}
+                            <div class="mb-4">
+                                {% set status = product.getStockStatus() %}
+                                {% if status == 'Out of stock' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800  dark:bg-gray-700 dark:!text-red-200">
+                                        <ion-icon name="close-circle" class="w-3 h-3 mr-1"></ion-icon>
+                                        {{ status }}
+                                    </span>
+                                {% elseif status == 'Low stock' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800  dark:bg-gray-700 dark:!text-yellow-200">
+                                        <ion-icon name="warning" class="w-3 h-3 mr-1"></ion-icon>
+                                        {{ status }}
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-gray-700 dark:!text-bright-green">
+                                        <ion-icon name="checkmark-circle" class="w-3 h-3 mr-1"></ion-icon>
+                                        {{ status }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex gap-2 mt-4">
+                                <a href="{{ path('app_product_show', {'id': product.id}) }}" 
+                                   class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gray-100 text-dark-forest-green font-medium rounded-full hover:bg-gray-200 transition-colors duration-200 text-xs  dark:bg-gray-700 dark:!text-gray-200 dark:hover:!text-gray-950">
+                                    <ion-icon name="eye-outline" class="w-4 h-4 mr-1"></ion-icon>
+                                    View
+                                </a>
+                                {% if is_granted('PRODUCT_EDIT', product) %}
+                                    <a href="{{ path('app_product_edit', {'id': product.id}) }}" 
+                                       class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white font-medium rounded-lg hover:bg-green-600 transition-colors duration-200 text-sm">
+                                        <ion-icon name="create-outline" class="w-4 h-4 mr-1"></ion-icon>
+                                        Edit
+                                    </a>
+                                {% else %}
+                                    <button type="button" disabled 
+                                       class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gray-50 text-light-gray font-medium rounded-lg border border-dashed border-gray-300 cursor-not-allowed text-sm opacity-60"
+                                       title="This product is owned by another staff member and cannot be edited">
+                                        <ion-icon name="lock-closed-outline" class="w-4 h-4 mr-1"></ion-icon>
+                                        Edit
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-16">
+                <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                    <ion-icon name="leaf-outline" class="w-12 h-12 text-light-gray"></ion-icon>
+                </div>
+                <h3 class="text-heading font-semibold text-dark-forest-green mb-2">No products found</h3>
+                <p class="text-light-gray text-base mb-8 max-w-md mx-auto">
+                    Get started by adding your first product to showcase your amazing plants and gardening supplies.
+                </p>
+                {% if is_granted('ROLE_STAFF') or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_product_new') }}" 
+                       class="inline-flex items-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+                        <ion-icon name="add-circle-outline" class="w-5 h-5 mr-2"></ion-icon>
+                        Add Your First Product
+                    </a>
+                {% else %}
+                    <span class="inline-flex items-center px-4 py-2 bg-gray-100 text-light-gray rounded-lg text-sm">
+                        <ion-icon name="lock-closed-outline" class="w-4 h-4 mr-2"></ion-icon>
+                        Creation requires staff access
+                    </span>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle product action buttons - ensure left-click navigates normally
+    const editButtons = document.querySelectorAll('a[href*="/product/"][href*="/edit"]');
+    const viewButtons = document.querySelectorAll('a[href*="/product/show"]');
+    
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // Allow normal left-click navigation, prevent middle-click from opening new tab
+            if (e.button === 1 || (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                window.location.href = this.href;
+            }
+        });
+    });
+});
+</script>
+
+<style>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

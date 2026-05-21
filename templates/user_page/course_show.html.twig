@@ -1,0 +1,132 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}{{ course.courseName }} | Growfico{% endblock %}
+{% block page_title %}{{ course.courseName }}{% endblock %}
+{% block page_subtitle %}Course details{% endblock %}
+
+{% block user_content %}
+
+<div class="max-w-7xl mx-auto">
+    <a href="{{ path('app_user_courses') }}"
+        class="mb-4 inline-flex items-center justify-center px-5 py-2.5 bg-bright-green text-gray-100 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-gray-200 dark:hover:bg-gray-400">
+        Back to courses
+    </a>
+
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="px-6 py-5 border-b border-gray-200">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                    <h3 class="text-base font-semibold text-dark-forest-green truncate">{{ course.courseName }}</h3>
+                    <p class="text-sm text-light-gray">Tier: {{ course.tier }} <br> Price: {{ course.price }}</p>
+                </div>
+                {% if enrollment %}
+                <div class="flex items-center gap-2 shrink-0">
+                    {% if quizPassed %}
+                    <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-bright-green">
+                        Course Completed
+                    </span>
+                    {% else %}
+                    <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700  dark:text-gray-700">
+                        In Progress
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {# Course Thumbnail #}
+        <div class="w-full bg-white border-b border-gray-100 flex items-center justify-center overflow-hidden">
+            {% if course.thumbnail %}
+                <div class="w-full max-h-[400px] flex items-center justify-center p-6">
+                    <img src="{{ asset(course.getThumbnailPath()) }}" 
+                         alt="{{ course.courseName }}" 
+                         class="max-w-full max-h-[350px] object-contain rounded-lg shadow-sm">
+                </div>
+            {% else %}
+                <div class="w-full h-48 flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 text-bright-green">
+                    <ion-icon name="image-outline" class="text-5xl mb-2 opacity-50"></ion-icon>
+                    <span class="text-sm font-medium opacity-50">No preview available</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="p-6">
+            <h4 class="text-base font-semibold text-dark-forest-green mb-2">Description</h4>
+            <p class="text-sm text-light-gray whitespace-pre-line mb-6">{{ course.description }}</p>
+
+            {% if lessons is not empty %}
+            <div class="mb-8">
+                <h4 class="text-base font-semibold text-dark-forest-green mb-3">Lessons</h4>
+                <div class="space-y-2">
+                    {% for lesson in lessons %}
+                    <details id="lesson-{{ lesson.id }}"
+                        class="group rounded-xl border border-gray-200 bg-white open:bg-white open:shadow-sm transition-shadow"
+                        {{ loop.first ? 'open' : '' }}>
+                        <summary
+                            class="cursor-pointer list-none flex items-center gap-2 px-4 py-3 text-sm font-semibold text-dark-forest-green rounded-xl marker:content-none [&::-webkit-details-marker]:hidden">
+                            <ion-icon name="chevron-forward-outline"
+                                class="text-lg shrink-0 transition-transform group-open:rotate-90"></ion-icon>
+                            <span class="min-w-0">{{ lesson.title }}</span>
+                        </summary>
+                        <div class="px-4 pb-4 pt-0 border-t border-transparent group-open:border-gray-100">
+                            <div class="pt-3">
+                                {% include 'user_page/_lesson_content_body.html.twig' with { lesson: lesson } %}
+                            </div>
+                        </div>
+                    </details>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if enrollment %}
+            <div class="space-y-4">
+                {% if not enrollment.isCourseTaken() %}
+                <form method="POST" action="{{ path('app_user_course_take', {'courseId': course.id}) }}"
+                    class="flex gap-2">
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-bright-green text-white text-xs font-semibold hover:bg-green-600 transition-colors">
+                        Take Course
+                    </button>
+                </form>
+                {% else %}
+                <div class="flex gap-2 flex-wrap">
+                    {% if not quizPassed %}
+                    <a href="{{ path('app_user_course_quiz', {'courseId': course.id}) }}"
+                        class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-bright-green text-white text-sm font-semibold hover:bg-green-600 transition-colors">
+                        <ion-icon name="clipboard-outline"></ion-icon>
+                        Take Quiz
+                    </a>
+                    {% endif %}
+                    {% if quizPassed %}
+                    <a href="{{ path('app_user_certificate_download', {'courseId': course.id}) }}"
+                        class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-dark-forest-green text-white text-sm font-semibold hover:bg-bright-green transition-colors">
+                        <ion-icon name="download-outline"></ion-icon>
+                        Download Certificate
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            {% if course.price is not null and (course.price + 0) <= 0 %}
+                <form method="POST" action="{{ path('app_user_course_enroll', {'courseId': course.id}) }}" class="flex gap-2">
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-bright-green text-white text-sm font-semibold hover:bg-green-600 transition-colors">
+                        <ion-icon name="school-outline"></ion-icon>
+                        Enroll Now
+                    </button>
+                </form>
+            {% else %}
+                <div class="p-4 rounded-lg bg-blue-50 border border-blue-200">
+                    <p class="text-sm text-blue-900">
+                        You need to enroll in this course first to take it.
+                    </p>
+                </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

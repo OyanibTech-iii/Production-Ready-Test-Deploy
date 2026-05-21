@@ -1,0 +1,83 @@
+<div class="max-w-lg mx-auto w-full">
+	<h2 class="text-xl font-sans font-bold text-dark-forest-green mb-2">Create your account</h2>
+	<p class="font-sans text-sm text-light-gray mb-2">
+		Already have an account?
+		<a href="{{ path('app_login') }}" class="text-bright-green font-sm hover:underline">Log in</a>
+	</p>
+
+	{% if registrationForm.firstName.vars.errors|length > 0 %}
+	<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+		<strong class="font-bold">Error:</strong>
+		<span class="block sm:inline">
+			{% for error in registrationForm.firstName.vars.errors %}
+				{{ error.message }}{% if not loop.last %}<br/>{% endif %}
+			{% endfor %}
+		</span>
+	</div>
+	{% endif %}
+
+	{{ form_start(registrationForm, {'attr': {'class': 'space-y-1 py-3'}}) }}
+
+	<div>
+		{{ form_label(registrationForm.firstName, 'First name', {'label_attr': {'class': 'block text-gray-700 text-sm font-medium'}}) }}
+		{{ form_widget(registrationForm.firstName, {'attr': {'class': 'w-full py-1 px-0 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent', 'pattern': '[a-zA-Z].*', 'title': 'First name must contain at least one letter'}}) }}
+		{{ form_errors(registrationForm.firstName) }}
+	</div>
+
+	<div>
+		{{ form_label(registrationForm.lastName, 'Last name', {'label_attr': {'class': 'block text-gray-700 text-sm font-medium'}}) }}
+		{{ form_widget(registrationForm.lastName, {'attr': {'class': 'w-full py-1 px-0 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent', 'pattern': '[a-zA-Z].*', 'title': 'Last name must contain at least one letter'}}) }}
+		{{ form_errors(registrationForm.lastName) }}
+	</div>
+
+	<div>
+		{{ form_label(registrationForm.email, 'Email address', {'label_attr': {'class': 'block text-gray-700 text-sm font-medium mb-0'}}) }}
+		{{ form_widget(registrationForm.email, {'attr': {'class': 'w-full px-0 py-1 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent'}}) }}
+		{{ form_errors(registrationForm.email) }}
+	</div>
+
+	{% set passwordId = registrationForm.plainPassword.vars.id %}
+	<div class="relative">
+		{{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'block text-gray-700 text-sm font-medium mb-0'}}) }}
+		{{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'w-full px-0 py-1 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent pr-8'}}) }}
+		{{ form_errors(registrationForm.plainPassword) }}
+		<button type="button" onclick="togglePassword('{{ passwordId }}')" class="absolute right-0 top-5 text-dark-forest-green hover:text-bright-green focus:outline-none">
+			<svg id="{{ passwordId }}-eye" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+			</svg>
+		</button>
+	</div>
+
+	{% if registrationForm.confirmPassword is defined %}
+		{% set confirmId = registrationForm.confirmPassword.vars.id %}
+		<div class="relative">
+			{{ form_label(registrationForm.confirmPassword, 'Confirm password', {'label_attr': {'class': 'block text-gray-700 text-sm font-medium mb-0'}}) }}
+			{{ form_widget(registrationForm.confirmPassword, {'attr': {'class': 'w-full px-0 py-1 border-0 border-b-2 border-gray-200 focus:border-bright-green focus:outline-none transition-colors duration-200 bg-transparent pr-8'}}) }}
+			{{ form_errors(registrationForm.confirmPassword) }}
+			<button type="button" onclick="togglePassword('{{ confirmId }}')" class="absolute right-0 top-5 text-dark-forest-green hover:text-bright-green focus:outline-none">
+				<svg id="{{ confirmId }}-eye" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+				</svg>
+			</button>
+		</div>
+	{% endif %}
+
+	<div class="flex items-start space-x-3 py-3">
+		{{ form_widget(registrationForm.agreeTerms, {'attr': {'id': 'popup-terms', 'class': 'mt-1 h-4 w-4 border-gray-300 rounded text-dark-forest-green focus:ring-dark-forest-green checked:bg-dark-forest-green checked:border-dark-forest-green'}}) }}
+		<label for="popup-terms" class="text-sm text-gray-600">
+			I agree to the
+			<a href="{{path('app_terms')}}" class="text-bright-green hover:underline">Terms</a>
+			and
+			<a href="{{path('app_privaypolicy')}}" class="text-bright-green hover:underline">Privacy Policy</a>.
+		</label>
+		{{ form_errors(registrationForm.agreeTerms) }}
+	</div>
+
+	<button type="submit" class="w-full bg-bright-green text-white py-4 px-4 rounded-2xl font-bold text-sm hover:bg-opacity-90 transition-all duration-200 mt-4">
+		CREATE ACCOUNT
+	</button>
+
+	{{ form_end(registrationForm) }}
+</div>

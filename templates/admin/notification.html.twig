@@ -1,0 +1,109 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Notifications | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green dark:text-white">Notifications</h2>
+<p class="text-xs text-light-gray dark:text-gray-400">Manage and view notifications for your Growfico platform.</p>
+{% endblock %}
+
+{% block admin_content %}
+{% for message in app.flashes('success') %}
+<div class="mb-4 p-4 bg-transparent border border-green-400 text-green-700 rounded">
+    {{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('error') %}
+<div class="mb-4 p-4 bg-transparent border border-red-400 text-red-700 rounded">
+    {{ message }}
+</div>
+{% endfor %}
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+        <div class="flex gap-4">
+            <button class="text-sm font-semibold">
+                All {{ notifications|length }}
+            </button>
+            <form method="post" action="{{ path('app_admin_notification_read_all') }}"
+                class="confirm-delete-form" data-message="Are you sure you want to mark all notifications as read?">
+                <input type="hidden" name="_token" value="{{ csrf_token('read_all_notifications') }}">
+                <button type="submit" class="text-sm text-light-gray hover:text-dark-forest-green dark:hover:text-gray-200 transition-colors">
+                    Mark all as read
+                </button>
+            </form>
+        </div>
+        <form method="post" action="{{ path('app_admin_notification_clear') }}"
+            class="confirm-delete-form" data-message="Are you sure you want to clear all notifications? This action cannot be undone.">
+            <input type="hidden" name="_token" value="{{ csrf_token('clear_notifications') }}">
+            <button type="submit" class="text-sm text-light-gray hover:text-red-500 transition-colors">
+                Clear all notifications
+            </button>
+        </form>
+    </div>
+
+    <div
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700">
+
+        {% for notification in notifications %}
+        <div
+            class="p-5 flex items-start gap-4 transition-colors hover:bg-gray-50/50 dark:hover:bg-gray-700/30 {% if not notification.isRead %}bg-bright-green/5{% endif %}">
+            <div class="mt-1 flex items-center gap-2">
+                {% if notification.priority == 'high' %}
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                {% else %}
+                <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                {% endif %}
+                <ion-icon
+                    name="{% if 'order' in notification.type|lower %}cart-outline{% elseif 'user' in notification.type|lower or notification.type == 'registration' %}person-outline{% else %}notifications-outline{% endif %}"
+                    class="text-lg text-gray-400"></ion-icon>
+            </div>
+
+            <div class="flex-1">
+                <div class="flex justify-between items-start">
+                    <h3
+                        class="text-sm font-semibold {% if not notification.isRead %}text-dark-forest-green dark:text-white{% else %}text-light-gray{% endif %}">
+                        {{ notification.title }}
+                    </h3>
+                    <span class="text-[10px] text-light-gray">
+                        {{ notification.createAt|date('M d, Y H:i') }}
+                    </span>
+                </div>
+                <p class="text-xs text-light-gray mt-1 leading-relaxed">
+                    {% if notification.type == 'registration' %}
+                    {{ notification.user.fullName }}
+                    {% else %}
+                    {{ notification.message }}
+                    {% endif %}
+                </p>
+
+                {% if notification.type == 'order' %}
+                    {% set messageParts = notification.message|split('#') %}
+                    {% if messageParts|length > 1 %}
+                        {% set orderId = messageParts[1]|split(' ')[0] %}
+                        <a href="{{ path('app_admin_order_show', {'id': orderId}) }}" class="inline-block mt-2 px-3 py-1 bg-bright-green text-white text-xs rounded hover:bg-green-600 transition-colors">View Order</a>
+                    {% endif %}
+                {% endif %}
+
+                {# <div class="mt-2">
+                    <span
+                        class="inline-block px-2 py-0.5 rounded text-[10px] bg-gray-100 dark:bg-gray-700 text-light-gray capitalize">
+                        {{ notification.type }}
+                    </span>
+                </div> #}
+            </div>
+        </div>
+        {% else %}
+        <div class="p-12 text-center">
+            <div
+                class="w-10 h-10 bg-gray-50 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ion-icon name="notifications-off-outline" class="text-lg text-gray-300"></ion-icon>
+            </div>
+            <h3 class="text-sm font-medium text-dark-forest-green dark:text-white">All caught up!</h3>
+            <p class="text-xs text-light-gray">You have no new notifications at the moment.</p>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

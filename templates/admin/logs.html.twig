@@ -1,0 +1,236 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Activity Logs | Growfico{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green">Activity Logs</h2>
+<p class="text-xs text-light-gray">View recent actions and system activity</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-lg font-semibold text-dark-forest-green">Monitor Activity Logs</h2>
+            <div class="relative w-full sm:w-auto">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                    <ion-icon name="search-outline"></ion-icon>
+                </span>
+                <input type="text"
+                    id="logs-search-input"
+                    class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                    placeholder="Search logs..."
+                    autocomplete="off"
+                    aria-label="Search activity logs">
+            </div>
+        </div>
+
+        {% if logs is not empty %}
+        <div class="overflow-x-auto">
+            <table id="logsTable" class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider no-sort">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                    {% for log in logs %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-xs text-gray-900">{{ log.userId }}</td>
+                        <td class="px-6 py-4 text-xs text-gray-900" data-order="{{ log.createdAt|date('U') }}">{{ log.createdAt|date('Y-m-d H:i:s') }}</td>
+                        <td class="px-6 py-4 text-xs text-gray-900">{{ log.username }}</td>
+                        <td class="px-6 py-4 text-xs
+                            {% if log.role == 'ROLE_ADMIN' %}
+                                font-semibold text-gray-600 dark:text-gray-200
+                            {% elseif log.role == 'ROLE_STAFF' %}
+                                text-orange-600
+                            {% else %}
+                                text-blue-600
+                            {% endif %}">
+                            {{ log.role }}
+                        </td>
+                        <td class="px-6 py-4 text-xs font-semibold
+                            {% if log.action == 'LOGOUT' %}
+                                text-red-600
+                            {% elseif log.action == 'LOGIN' %}
+                                text-bright-green
+                            {% else %}
+                                text-dark-forest-green
+                            {% endif %}">
+                            {{ log.action }}
+                        </td>
+                        <td class="px-6 py-4 text-xs text-gray-700 break-words max-w-md">{{ log.target }}</td>
+                        <td class="px-6 py-4 text-xs text-right">
+                            <button type="button"
+                                class="inline-flex text-bright-green hover:text-green-600 transition-colors duration-200 view-log-details"
+                                data-log-id="{{ log.id }}" data-log-timestamp="{{ log.createdAt|date('Y-m-d H:i:s') }}"
+                                data-log-userid="{{ log.userId }}" data-log-username="{{ log.username }}"
+                                data-log-role="{{ log.role }}" data-log-action="{{ log.action }}"
+                                data-log-target="{{ log.target }}" data-log-ip="{{ log.ip|default('') }}"
+                                data-log-changes='{{ log.changes|json_encode|e('html_attr') }}' title="View Details">
+                                <ion-icon name="eye-outline" class="w-4 h-4"></ion-icon>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-8 border-t border-gray-100">
+            <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <ion-icon name="list-outline" class="w-8 h-8 text-light-gray"></ion-icon>
+            </div>
+            <h4 class="text-sm font-semibold text-dark-forest-green mb-2">No logs found</h4>
+            <p class="text-xs text-light-gray mb-4 max-w-sm mx-auto">Try adjusting filters or check back later.</p>
+            <a href="{{ path('app_admin_logs') }}"
+                class="inline-flex items-center px-4 py-2 bg-gray-100 text-dark-forest-green text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                <ion-icon name="refresh-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Clear filters
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Log Details Modal -->
+<div id="log-details-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden">
+            <div class="px-6 py-4 bg-bright-green text-white flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Activity Log Details</h3>
+                <button id="log-modal-close" class="text-white/90 hover:text-white">
+                    <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-xs text-light-gray uppercase font-medium mb-1">Timestamp</p>
+                        <p id="ld-timestamp" class="text-sm font-semibold text-dark-forest-green"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-light-gray uppercase font-medium mb-1">User ID</p>
+                        <p id="ld-userid" class="text-sm font-semibold text-dark-forest-green"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-light-gray uppercase font-medium mb-1">Username</p>
+                        <p id="ld-username" class="text-sm font-semibold text-dark-forest-green"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-light-gray uppercase font-medium mb-1">Role</p>
+                        <p id="ld-role" class="text-sm">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-4">
+                    <div>
+                        <p class="text-xs text-light-gray uppercase font-medium mb-2">Action</p>
+                        <p id="ld-action" class="text-sm font-semibold text-dark-forest-green mb-4"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-light-gray uppercase font-medium mb-2">Target Details</p>
+                        <p id="ld-target" class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg break-words"></p>
+                    </div>
+
+                    <div class="pt-4">
+                        <p class="text-xs text-light-gray uppercase font-medium mb-2">Changes On Profile</p>
+                        <div id="ld-changes" class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg overflow-auto">
+                        </div>
+                        <div id="ld-profile-images-wrap" class="mt-3 flex gap-6 items-start">
+                            <div id="ld-old-image-wrap" class="hidden">
+                                <p class="text-xs text-light-gray uppercase font-medium mb-1">Old Image</p>
+                                <img id="ld-profile-image-old" src="" alt="Old Profile Image"
+                                    class="w-8 h-8 rounded-full object-cover border border-gray-300">
+                            </div>
+                            <div id="ld-new-image-wrap" class="hidden">
+                                <p class="text-xs text-light-gray uppercase font-medium mb-1">New Image</p>
+                                <img id="ld-profile-image-new" src="" alt="New Profile Image"
+                                    class="w-8 h-8 rounded-full object-cover border border-gray-300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/admin-search.js') }}"></script>
+<script>
+(function () {
+    'use strict';
+    const TABLE_SELECTOR = '#logsTable';
+    const SEARCH_INPUT_ID = 'logs-search-input';
+
+    function initLogsDataTable() {
+        if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) {
+            return;
+        }
+        const $table = jQuery(TABLE_SELECTOR);
+        if (!$table.length || jQuery.fn.DataTable.isDataTable(TABLE_SELECTOR)) {
+            return;
+        }
+        const table = $table.DataTable({
+            dom: 'lrtip',
+            pageLength: 10,
+            order: [[1, 'desc']],
+            columnDefs: [
+                { orderable: false, targets: 6 },
+                { className: 'align-middle', targets: '_all' }
+            ],
+            autoWidth: false,
+            language: {
+                emptyTable: 'No logs found.',
+                zeroRecords: 'No matching logs found.',
+                paginate: {
+                    previous: '<ion-icon name="chevron-back-outline" class="align-middle"></ion-icon>',
+                    next: '<ion-icon name="chevron-forward-outline" class="align-middle"></ion-icon>'
+                }
+            }
+        });
+
+        const searchInput = document.getElementById(SEARCH_INPUT_ID);
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function () {
+                table.search(this.value).draw();
+            });
+        }
+
+        if (typeof AdminSearch !== 'undefined') {
+            new AdminSearch({
+                searchInputId: SEARCH_INPUT_ID,
+                tableSelector: TABLE_SELECTOR
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLogsDataTable);
+    } else {
+        initLogsDataTable();
+    }
+})();
+</script>
+<script src="{{ asset('js/logs-admin.js') }}"></script>
+{% endblock %}
+{% endblock %}

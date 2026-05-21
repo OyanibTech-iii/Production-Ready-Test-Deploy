@@ -1,0 +1,47 @@
+<style>
+    @keyframes gf-spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .dark .dark-mode-gray-filter {
+        filter: brightness(0) invert(0.9);
+    }
+</style>
+
+<div id="loading-overlay"
+    class="fixed inset-0 bg-white bg-opacity-50 backdrop-blur-sm overflow-y-auto h-full w-full hidden z-50 dark:bg-gray-700"
+    style="backdrop-filter: blur(6px);">
+    <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-8 bg-white rounded-lg dark:bg-gray-700">
+        <div id="loading-modal"
+            class="transform transition-all duration-300 ease-out opacity-100 scale-100 bg-transparent">
+            <div class="px-4 py-4 text-center">
+                <div class="relative mx-auto mb-6 w-32 h-32">
+                    <div class="absolute inset-0 rounded-full bg-white/95 shadow flex items-center justify-center overflow-hidden dark:bg-gray-700"
+                        style="backdrop-filter: blur(4px);">
+                        <img src="{{ asset('logos/Icon- Brand.png') }}" alt="Growfico"
+                            class="w-16 h-16 object-contain dark-mode-gray-filter" />
+                    </div>
+
+                    <svg class="absolute inset-0 m-auto h-32 w-32 text-[#09b559] dark:text-gray-200" viewBox="0 0 50 50"
+                        xmlns="http://www.w3.org/2000/svg" style="animation: gf-spin 1s linear infinite;">
+                        <circle cx="25" cy="25" r="20" stroke="currentColor" stroke-width="5" stroke-opacity="0.18"
+                            fill="none"></circle>
+                        <path d="M45 25a20 20 0 00-7-15" stroke="currentColor" stroke-width="5" stroke-linecap="round"
+                            fill="none"></path>
+                    </svg>
+                </div>
+
+                <h3 class="text-xl font-bold mb-2 text-dark-forest-green dark:!text-gray-200">Signing you in…</h3>
+                <p class="text-sm sm:text-base text-light-gray dark:!text-gray-300">We are validating your credentials.
+                    This may take a few seconds.</p>
+            </div>
+        </div>
+    </div>
+</div>

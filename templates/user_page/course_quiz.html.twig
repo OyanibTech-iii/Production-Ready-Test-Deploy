@@ -1,0 +1,127 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}{{ quiz.title }} | Growfico{% endblock %}
+{% block page_title %}{{ quiz.title }}{% endblock %}
+{% block page_subtitle %}Complete this quiz to earn your certificate{% endblock %}
+
+{% block user_content %}
+<div class="max-w-7xl mx-auto">
+    <a href="{{ path('app_user_course_show', {'id': course.id}) }}"
+        class="mb-2 inline-flex items-center justify-center px-5 py-2.5 bg-gray-100 text-dark-forest-green text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-gray-200 dark:hover:bg-gray-400">
+        Back to course
+    </a>
+
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-dark-forest-green mb-2">{{ quiz.title }}</h3>
+            <p class="text-sm text-light-gray">
+                Passing score: <strong>{{ quiz.passingScore }}%</strong>
+            </p>
+        </div>
+
+        {% include 'user_page/_quiz_form.html.twig' %}
+    </div>
+
+    {# Results Modal #}
+    <div id="resultsModal" class="hidden fixed inset-0 bg-black/50 z-50"
+        style="display: none; align-items: center; justify-content: center;">
+        <div class="bg-white rounded-2xl shadow-lg max-w-md w-full mx-4">
+            <div id="resultsContent" class="p-6">
+                {# Content will be inserted here #}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if quiz.questions|length > 0 %}
+<script>
+    document.getElementById('quizForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const answers = {};
+
+        // Collect answers by examining form inputs
+        formData.forEach((value, key) => {
+            if (key.startsWith('answer_')) {
+                const questionId = key.replace('answer_', '');
+                answers[questionId] = parseInt(value);
+            }
+        });
+
+        try {
+            const response = await fetch('{{ path("app_user_quiz_submit", {"courseId": course.id}) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ answers })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showResults(result);
+            } else {
+                window.showAlertModal({
+                    title: 'Submission Error',
+                    message: result.message || 'Error submitting quiz.',
+                    confirmClass: 'bg-red-600'
+                });
+            }
+            } catch (error) {
+            console.error('Error:', error);
+            window.showAlertModal({
+                title: 'Error',
+                message: 'An error occurred while submitting the quiz. Please check your connection.',
+                confirmClass: 'bg-red-600'
+            });
+            }    });
+
+    function showResults(result) {
+        const modal = document.getElementById('resultsModal');
+        const content = document.getElementById('resultsContent');
+
+        if (result.isPassed) {
+            content.innerHTML = `
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <ion-icon name="checkmark-circle" class="text-4xl text-bright-green"></ion-icon>
+                </div>
+                <h2 class="text-2xl font-bold text-dark-forest-green mb-2">Congratulations!</h2>
+                <p class="text-gray-600 mb-4">You passed the quiz with a score of <strong>${result.score.toFixed(2)}%</strong></p>
+                <p class="text-sm text-gray-500 mb-6">
+                    Correct answers: <strong>${result.correctAnswers}/${result.totalQuestions}</strong>
+                </p>
+                <a href="{{ path('app_user_certificate', {'courseId': course.id}) }}" class="inline-flex items-center gap-2 px-6 py-3 bg-bright-green text-white rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                    <ion-icon name="document-outline"></ion-icon>
+                    View Certificate
+                </a>
+            </div>
+        `;
+        } else {
+            content.innerHTML = `
+            <div class="text-center">
+            
+                <h2 class="text-2xl font-bold text-dark-forest-green mb-2">Not Quite There</h2>
+                <p class="text-gray-600 mb-4">Your score: <strong>${result.score.toFixed(2)}%</strong></p>
+                <p class="text-sm text-gray-500 mb-6">
+                    Correct answers: <strong>${result.correctAnswers}/${result.totalQuestions}</strong><br>
+                    Passing score required: <strong>${result.passingScore}%</strong>
+                </p>
+                <button onclick="location.reload()" class="inline-flex items-center gap-2 px-6 py-3 bg-bright-green text-white rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                    <ion-icon name="refresh-outline"></ion-icon>
+                    Try Again
+                </button>
+            </div>
+        `;
+        }
+
+        // Show modal with proper display
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+    }
+</script>
+{% endif %}
+{% endblock %}

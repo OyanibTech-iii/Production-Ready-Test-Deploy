@@ -1,0 +1,18 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}New Certificate | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green">Add Certificate</h2>
+<p class="text-xs text-light-gray">Issue a new certificate</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="p-6">
+            {{ include('certificate/_form.html.twig', { form: form }) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Admin Help Center | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Help Center</h2>
+<p class="text-xs text-light-gray">Find resources and support for managing your Growfico platform.</p>
+{% endblock %}
+
+{% block admin_content %}
+{% include 'chat/index.html.twig' %}
+{% endblock %}

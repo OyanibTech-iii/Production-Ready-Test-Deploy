@@ -1,0 +1,32 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}User Dashboard | Growfico{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}{{ isStaff ? 'Manage your own records' : 'Manage your cart and courses' }}{% endblock %}
+
+{% block user_content %}
+	<div class="max-w-7xl mx-auto">
+		{% include 'user_page/_stats_cards.html.twig' with { stats: stats, isStaff: isStaff } %}
+		
+		{# Analytics Section #}
+		{% include 'user_page/_analytics.html.twig' with { stats: stats } %}
+
+		{% include 'user_page/_owned_products.html.twig' with { products: ownedProducts, isStaff: isStaff } %}
+	</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ asset('js/profile-shared.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    ProfileHandler.init({
+        uploadBtnId: 'upload-photo-btn',
+        fileInputId: 'profile-image-input',
+        previewId: 'profile-preview',
+        initialsId: 'profile-initials',
+        profileFormId: 'profile-form',
+        passwordFormId: 'password-form'
+    });
+});
+</script>
+{% endblock %}

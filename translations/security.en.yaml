@@ -1,0 +1,39 @@
+'account_not_verified': 'Verified Account is Only Allowed to Login. Make sure to verify your email address before logging in.'
+
+'Account is disabled.': 'Your account is not verified. Please check your email to verify your account before logging in.'
+
+'Account is locked.': 'This account is not verified or has been locked. Please contact support.'
+
+'An authentication exception occurred.': 'Something went wrong while signing you in. Please try again in a moment.'
+
+'Authentication credentials could not be found.': 'Please enter your email and password to continue.'
+
+'Authentication request could not be processed due to a system problem.': 'We could not complete sign-in due to a temporary problem. Please try again shortly.'
+
+'Invalid credentials.': 'Invalid credentials. The email or password you entered does not match our records. Please check both and try again.'
+
+'Cookie has already been used by someone else.': 'Your sign-in session conflicted with another request. Please refresh the page and sign in again.'
+
+'Not privileged to request the resource.': 'You do not have permission to access that. Sign in with an account that has access, or contact support.'
+
+'Invalid CSRF token.': 'This page expired or could not be verified. Refresh the page or contact administrator.'
+
+'No authentication provider found to support the authentication token.': 'Sign-in could not be completed. Please refresh the page and try again.'
+
+'No session available, it either timed out or cookies are not enabled.': 'Your session timed out or cookies are disabled. Enable cookies for this site and try signing in again.'
+
+'No token could be found.': 'Your sign-in session is missing or expired. Please sign in again.'
+
+'Username could not be found.': 'We could not find an account for that email. Check the spelling or create an account.'
+
+'Account has expired.': 'This account is no longer active. Contact support if you need help.'
+
+'Credentials have expired.': 'Your password or access has expired. Please reset your password or contact support.'
+
+'Too many failed login attempts, please try again later.': 'Too many failed sign-in attempts. Please wait a few minutes and try again.'
+
+'Invalid or expired login link.': 'That sign-in link is invalid or has expired. Request a new one and try again.'
+
+'Too many failed login attempts, please try again in %minutes% minute.': 'Too many failed sign-in attempts. Try again in %minutes% minute.'
+
+'Too many failed login attempts, please try again in %minutes% minutes.': 'Too many failed sign-in attempts. Try again in %minutes% minutes.'

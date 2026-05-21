@@ -1,0 +1,266 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Growfico E-Certificate{% endblock %}
+
+{% block body %}
+<div class=" min-h-screen flex flex-col items-center pt-8 print:p-0 print:bg-white">
+
+    <div id="certificate"
+        class="relative w-[1056px] h-[816px] bg-white shadow-2xl overflow-hidden print:shadow-none print:m-0 print:border-0"
+        style="-webkit-print-color-adjust: exact; print-color-adjust: exact;">
+
+        <img src="{{ asset('logos/monstera.png') }}"
+            class="absolute right-[-10%] top-0 w-3/4 opacity-10 rotate-12 pointer-events-none">
+
+        <div class="absolute top-0 left-0 w-full">
+            <div class="relative h-32 w-full overflow-hidden">
+                <img src="{{ asset('logos/cert header.png') }}" alt="Header Decoration"
+                    class="w-full h-full object-cover">
+
+                <div class="absolute inset-0 flex items-center px-12">
+                    <img src="{{ asset('logos/light.png') }}" alt="Growfico" class="h-8">
+                </div>
+            </div>
+        </div>
+        <div class="relative z-10 pt-48 px-20">
+            <p class="text-xs font-mono text-gray-500 mb-2 uppercase tracking-widest">
+                {{ certificate.certificateCode }}
+            </p>
+            <h1 class="text-4xl font-bold text-[#074026] tracking-[0.3em] dark:!text-gray-200">CERTIFICATE</h1>
+            <h2 class="text-lg font-semibold tracking-[0.5em] text-[#074026] mt-2 dark:!text-gray-200">OF COMPLETION
+            </h2>
+
+            <p class="mt-12 text-sm text-gray-600 font-medium">Proudly present to :</p>
+
+            <div class="mt-4 border-b-2 border-[#48a82b] w-90">
+                <span class="text-2xl font-semibold text-gray-800 italic leading-relaxed dark:text-gray-200">
+                    {{ certificate.user.firstname }} {{ certificate.user.lastname }}
+                </span>
+            </div>
+
+            <p class="mt-10 w-2/3 text-lg leading-relaxed text-gray-700">
+                This certifies that the participant has gained knowledge and practical skills in
+                <span class="font-semibold">{{ certificate.course.courseName }}</span>,
+                proper plant care, and maintenance techniques based on Growfico standards.
+            </p>
+
+            <p class="mt-6 text-sm text-gray-500">
+                Issued on: {{ certificate.issuedAt ? certificate.issuedAt|date('F d, Y') : 'N/A' }}
+            </p>
+        </div>
+
+        <div class="absolute bottom-20 left-20 flex flex-col items-center">
+            <div class="relative w-64 flex flex-col-reverse">
+
+                <img src="{{ asset('logos/e-signature.png') }}"
+                    class="absolute -top-14 left-0 w-full pointer-events-none z-50 dark:hidden">
+                <img src="{{ asset('logos/e-signature-light.png') }}"
+                    class="absolute -top-14 left-0 w-full pointer-events-none z-50 hidden dark:block print:hidden">
+
+                <p class="mt-2 px-12 text-[#074026] text-sm z-10 dark:!text-gray-200">Growfico Founder</p>
+                <div class="border-b-2 border-[#48a82b] w-full z-10"></div>
+                <p class="px-12 text-[#074026] text-lg mt-1 z-10 dark:!text-gray-200">Pacifico Oyanib III</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        {% if is_granted('ROLE_STAFF') or is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
+        <button onclick="window.print()"
+            class="mt-8 mb-8 bg-[#074026] text-xs text-white px-6 py-2 rounded-2xl hover:bg-[#0a5a36] transition-colors no-print dark:bg-gray-700 dark:!text-gray-200 dark:hover:bg-gray-400">
+            Download / Print PDF
+        </button>
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+        <button type="button" data-certificate-send-email="1"
+            data-send-url="{{ path('app_admin_certificate_send_email', {'id': certificate.id}) }}"
+            data-csrf-token="{{ csrf_token('send_certificate_pdf_' ~ certificate.id) }}"
+            data-filename="Growfico-Certificate-{{ certificate.certificateCode }}.pdf"
+            class="mt-8 mb-8 bg-[#074026] text-xs text-white px-6 py-2 rounded-2xl hover:bg-[#0a5a36] transition-colors no-print dark:bg-gray-700 dark:!text-gray-200 dark:hover:bg-gray-400">
+            <span data-certificate-send-email-text>Sent to Email</span>
+        </button>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script>
+            (function () {
+                const selector = '[data-certificate-send-email="1"]';
+
+                document.addEventListener('click', async function (event) {
+                    const button = event.target && event.target.closest ? event.target.closest(selector) : null;
+                    if (!button) return;
+
+                    event.preventDefault();
+
+                    const certificateEl = document.getElementById('certificate');
+                    if (!certificateEl) {
+                        if (window.growficoToast) window.growficoToast({ type: 'error', message: 'Certificate element not found.' });
+                        return;
+                    }
+
+                    const sendUrl = button.getAttribute('data-send-url');
+                    const csrfToken = button.getAttribute('data-csrf-token');
+                    const filename = button.getAttribute('data-filename') || 'Growfico-Certificate.pdf';
+                    const textEl = button.querySelector('[data-certificate-send-email-text]');
+                    const originalText = textEl ? textEl.textContent : button.textContent;
+
+                    // UI Feedback: Disable button
+                    button.disabled = true;
+                    if (textEl) textEl.textContent = 'Generating PDF...';
+
+                    let host = null;
+                    try {
+                        // 1. Setup a hidden container for the "Perfect" render
+                        const renderWidth = 1056;
+                        const renderHeight = 816;
+
+                        host = document.createElement('div');
+                        host.style.cssText = `
+                position: fixed;
+                left: -10000px;
+                top: 0;
+                width: ${renderWidth}px;
+                height: ${renderHeight}px;
+                background: white;
+                overflow: hidden;
+            `;
+
+                        // 2. Clone and Clean: Force Light Mode & Remove UI artifacts
+                        const clone = certificateEl.cloneNode(true);
+                        clone.removeAttribute('id');
+                        clone.style.margin = '0';
+                        clone.style.boxShadow = 'none';
+
+                        // Explicitly fix visibility for the signature and text colors seen in source [cite: 8, 17]
+                        // This prevents dark-mode users from sending a "dark" PDF
+                        clone.classList.remove('dark');
+                        clone.querySelectorAll('.dark\\:block').forEach(el => el.style.setProperty('display', 'none', 'important'));
+                        clone.querySelectorAll('.dark\\:hidden').forEach(el => el.style.setProperty('display', 'block', 'important'));
+                        clone.querySelectorAll('.dark\\:\\!text-gray-200').forEach(el => el.style.setProperty('color', '#074026', 'important'));
+
+                        host.appendChild(clone);
+                        document.body.appendChild(host);
+
+                        // 3. Configuration for High-Resolution Output
+                        const opt = {
+                            margin: 0,
+                            filename: filename,
+                            image: { type: 'jpeg', quality: 1.0 },
+                            html2canvas: {
+                                scale: 3, // High DPI for professional look [cite: 10]
+                                useCORS: true,
+                                letterRendering: true,
+                                scrollY: 0,
+                                scrollX: 0
+                            },
+                            jsPDF: {
+                                unit: 'px',
+                                format: [renderWidth, renderHeight],
+                                orientation: 'landscape',
+                                hotfixes: ['px_scaling']
+                            }
+                        };
+
+                        // 4. Generate Blob and Force Single Page [cite: 15, 16]
+                        const worker = html2pdf().set(opt).from(clone).toPdf();
+                        const pdf = await worker.get('pdf');
+
+                        // Clean up any extra pages caused by internal scaling
+                        let pageCount = pdf.internal.getNumberOfPages();
+                        while (pageCount > 1) {
+                            pdf.deletePage(pageCount);
+                            pageCount--;
+                        }
+
+                        const pdfBlob = pdf.output('blob');
+
+                        // 5. Prepare and Send AJAX Request
+                        if (textEl) textEl.textContent = 'Sending Email...';
+
+                        const formData = new FormData();
+                        formData.append('pdf', pdfBlob, filename);
+                        formData.append('_csrf_token', csrfToken);
+
+                        const response = await fetch(sendUrl, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        });
+
+                        const payload = await response.json().catch(() => ({ success: false, message: 'Invalid server response.' }));
+
+                        if (!response.ok || !payload.success) {
+                            throw new Error(payload.message || 'Failed to send certificate email.');
+                        }
+
+                        if (window.growficoToast) {
+                            window.growficoToast({ type: 'success', message: 'Certificate PDF was sent to the user.' });
+                        }
+
+                    } catch (e) {
+                        console.error('PDF Error:', e);
+                        if (window.growficoToast) {
+                            window.growficoToast({ type: 'error', message: e.message || 'An unexpected error occurred.' });
+                        }
+                    } finally {
+                        // 6. Cleanup
+                        if (host) host.remove();
+                        button.disabled = false;
+                        if (textEl) textEl.textContent = originalText;
+                    }
+                });
+            })();
+        </script>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    @media print {
+
+        html,
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 11in !important;
+            height: 8.5in !important;
+            overflow: hidden !important;
+        }
+
+        body * {
+            visibility: hidden;
+        }
+
+        #certificate,
+        #certificate * {
+            visibility: visible;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        #certificate {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 11in !important;
+            height: 8.5in !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            page-break-after: avoid !important;
+            break-after: avoid !important;
+        }
+
+        .no-print {
+            display: none !important;
+        }
+
+        @page {
+            size: 11in 8.5in;
+            margin: 0;
+        }
+    }
+</style>
+{% endblock %}

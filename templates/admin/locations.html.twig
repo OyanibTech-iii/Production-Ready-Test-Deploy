@@ -1,0 +1,159 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Locations | Growfico{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
+<link rel="stylesheet" href="{{ asset('styles/admin-location.css') }}">
+{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green">Locations</h2>
+<p class="text-xs text-light-gray">Manage storage locations used in stock inventory</p>
+{% endblock %}
+
+{% block admin_content %}
+
+<div class="max-w-7xl mx-auto">
+    <!-- Map Container (Hidden by default) -->
+    <div id="map-container" class="hidden">
+        <div id="map" class="max-w-7xl mx-auto rounded-2xl shadow-md border border-gray-200 mb-6 z-10"
+            style="height: 500px; width: 100%;" data-turbo-permanent></div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-xl font-semibold text-dark-forest-green">Manage Locations</h2>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </span>
+                    <input type="text" id="locations-search-input"
+                        class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                        placeholder="Search locations..." autocomplete="off" aria-label="Search locations">
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{{ path('admin_location_new') }}"
+                        class="inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                        <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                        Add Location
+                    </a>
+
+                    <!-- Kebab Menu for Map Controls -->
+                    <div class="relative">
+                        <button id="map-menu-toggle" type="button" 
+                            class="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                            title="Map Options">
+                            <ion-icon name="ellipsis-vertical-outline" class="w-6 h-6"></ion-icon>
+                        </button>
+                        <div id="map-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                            <button type="button" id="show-map-btn" 
+                                class="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 transition-colors duration-200">
+                                <ion-icon name="map-outline" class="w-4 h-4"></ion-icon>
+                                Show Map
+                            </button>
+                            <button type="button" id="pin-location-btn" 
+                                class="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 transition-colors duration-200">
+                                <ion-icon name="location-outline" class="w-4 h-4"></ion-icon>
+                                Pin My Location
+                            </button>
+                            <button type="button" id="nearest-branch-btn" 
+                                class="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 transition-colors duration-200">
+                                <ion-icon name="navigate-outline" class="w-4 h-4"></ion-icon>
+                                Nearest Branch to Me
+                            </button>
+                            <button type="button" id="hide-map-btn" 
+                                class="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors duration-200">
+                                <ion-icon name="close-outline" class="w-4 h-4"></ion-icon>
+                                Hide Map
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="locationsTable" class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Branch Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Latitude</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Longitude</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                            style="text-align: center !important;">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                    {% for location in locations %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-dark-forest-green dark:!text-gray-200">
+                            {{ location.name }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
+                            {{ location.latitude|default('0.0000') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
+                            {{ location.longitude|default('0.0000') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-3">
+                                <button type="button"
+                                    class="show-on-map text-bright-green hover:text-green-700 transition-colors duration-200"
+                                    data-lat="{{ location.latitude }}" data-lng="{{ location.longitude }}"
+                                    data-name="{{ location.name|e('js') }}" title="View on Map">
+                                    <ion-icon name="location-outline" class="w-5 h-5"></ion-icon>
+                                </button>
+                                <a href="{{ path('admin_location_edit', {'id': location.id}) }}"
+                                    class="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                                    title="Edit Location">
+                                    <ion-icon name="create-outline" class="w-5 h-5"></ion-icon>
+                                </a>
+                                {{ include('admin/location_delete.html.twig', {location: location}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if locations is empty %}
+        <div class="text-center py-8 border-t border-gray-100 mt-4">
+            <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <ion-icon name="location-outline" class="w-8 h-8 text-light-gray"></ion-icon>
+            </div>
+            <h4 class="text-sm font-semibold text-dark-forest-green mb-2">No locations yet</h4>
+            <p class="text-xs text-light-gray mb-4 max-w-sm mx-auto">Use &quot;Add Location&quot; to create your first
+                storage location.</p>
+            <a href="{{ path('admin_location_new') }}"
+                class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Add your first location
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/admin-search.js') }}"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.umd.js"></script>
+<script src="{{ asset('js/admin-location-datatable.js') }}"></script>
+<script src="{{ asset('js/admin-locations.js') }}"></script>
+{% endblock %}
+{% endblock %}

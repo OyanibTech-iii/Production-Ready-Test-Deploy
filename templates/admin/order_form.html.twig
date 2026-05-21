@@ -1,0 +1,166 @@
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6'}}) }}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="space-y-2">
+        {{ form_label(form.customer, 'Customer', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.customer, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green text-xs dark:bg-gray-700 dark:border-gray-500 dark:text-gray-300'}}) }}
+        {{ form_errors(form.customer) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.status, 'Status', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.status, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+        focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green text-xs
+        dark:bg-gray-700 dark:border-gray-500 dark:text-gray-300'}}) }}
+        {{ form_errors(form.status) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.paymentMethod, 'Payment Method', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.paymentMethod, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green text-xs dark:bg-gray-700 dark:border-gray-500 dark:text-gray-300'}}) }}
+        {{ form_errors(form.paymentMethod) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.total, 'Total', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.total, {'attr': {'readonly': true, 'class': 'order-total w-full px-4 py-3 border
+        border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors
+        duration-200 text-dark-forest-green text-xs', 'step': '0.01', 'min': '0'}}) }}
+        {{ form_errors(form.total) }}
+    </div>
+
+    <div class="md:col-span-2">
+            <div class="space-y-4">
+                {% for item in form.items %}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700"
+                    data-order-item-row>
+                    <div class="space-y-2">
+                        {{ form_label(item.product, 'Product', {'label_attr': {'class': 'block text-xs font-semibold
+                        text-dark-forest-green'}}) }}
+                        {{ form_widget(item.product) }}
+                        <p class="text-[11px] text-gray-500" data-stock-info></p>
+                        {{ form_errors(item.product) }}
+                    </div>
+                    <div class="space-y-2">
+                        {{ form_label(item.quantity, 'Quantity', {'label_attr': {'class': 'block text-xs font-semibold
+                        text-dark-forest-green'}}) }}
+                        {{ form_widget(item.quantity) }}
+                        {{ form_errors(item.quantity) }}
+                    </div>
+                    <div class="space-y-2">
+                        {{ form_label(item.unitPrice, 'Unit Price', {'label_attr': {'class': 'block text-xs
+                        font-semibold text-dark-forest-green'}}) }}
+                        {{ form_widget(item.unitPrice, {'attr': {'readonly': true}}) }}
+                        {{ form_errors(item.unitPrice) }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {{ form_errors(form.items) }}
+    </div>
+
+    <div class="space-y-2 md:col-span-2">
+        {{ form_label(form.createdAt, 'Created At', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.createdAt, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green text-xs dark:bg-gray-700 dark:border-gray-500 dark:text-gray-300 [color-scheme:dark]'}})
+        }}
+        {{ form_errors(form.createdAt) }}
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 justify-end mt-4">
+    <a href="{{ path('app_admin_order') }}"
+        class="inline-flex items-center text-xs justify-center px-6 py-3 bg-gray-100 text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-400 dark:hover:text-dark-forest-green">
+        Cancel
+    </a>
+    <button type="submit"
+        class="inline-flex items-center text-xs justify-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+        {{ button_label|default('Save Order') }}
+    </button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-order-item-row]').forEach(function (row) {
+            var productSelect = row.querySelector('.order-item-product');
+            var quantityInput = row.querySelector('.order-item-quantity');
+            var unitPriceInput = row.querySelector('.order-item-unit-price');
+            var stockInfo = row.querySelector('[data-stock-info]');
+
+            if (!productSelect || !quantityInput || !unitPriceInput) {
+                return;
+            }
+
+            function updateItemRow() {
+                var selectedOption = productSelect.selectedOptions[0];
+                if (!selectedOption) {
+                    unitPriceInput.value = '0.00';
+                    if (stockInfo) {
+                        stockInfo.textContent = '';
+                    }
+                    return;
+                }
+
+                var price = parseFloat(selectedOption.dataset.price || '0');
+                var stock = parseInt(selectedOption.dataset.stock || '0', 10);
+                var quantity = Math.max(1, parseInt(quantityInput.value, 10) || 1);
+
+                if (stock >= 0) {
+                    quantityInput.max = stock;
+                }
+
+                if (stock > 0 && quantity > stock) {
+                    quantity = stock;
+                    quantityInput.value = stock;
+                }
+
+                unitPriceInput.value = price.toFixed(2);
+
+                if (stockInfo) {
+                    stockInfo.textContent = stock > 0 ? 'Available stock: ' + stock : 'This product is out of stock.';
+                }
+                recalculateOrderTotal();
+            }
+
+            productSelect.addEventListener('change', function () {
+                updateItemRow();
+                recalculateOrderTotal();
+            });
+            quantityInput.addEventListener('input', function () {
+                updateItemRow();
+                recalculateOrderTotal();
+            });
+            updateItemRow();
+        });
+
+        function recalculateOrderTotal() {
+            var totalInput = document.querySelector('.order-total');
+            if (!totalInput) {
+                return;
+            }
+
+            var total = 0;
+            document.querySelectorAll('[data-order-item-row]').forEach(function (row) {
+                var unitPriceInput = row.querySelector('.order-item-unit-price');
+                var quantityInput = row.querySelector('.order-item-quantity');
+                var unitPrice = parseFloat(unitPriceInput?.value || '0');
+                var quantity = parseInt(quantityInput?.value || '0', 10) || 0;
+                if (unitPrice > 0 && quantity > 0) {
+                    total += unitPrice * quantity;
+                }
+            });
+
+            totalInput.value = total.toFixed(2);
+        }
+    });
+</script>
+{{ form_end(form) }}

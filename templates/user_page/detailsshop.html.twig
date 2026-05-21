@@ -1,0 +1,248 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}{{ product.name }} | Growfico Store{% endblock %}
+{% block page_title %}Product Detail{% endblock %}
+{% block page_subtitle %}In-depth view of our premium agricultural supplies.{% endblock %}
+
+{% block user_content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="{ 
+    quantity: 1, 
+    productId: {{ product.id }},
+    isAdding: false,
+    maxStock: {{ product.getCurrentStockQuantity() }},
+    increment() { if (this.quantity < this.maxStock) this.quantity++ },
+    decrement() { if (this.quantity > 1) this.quantity-- }
+}">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <!-- Left Column: Visuals -->
+        <div class="lg:col-span-6 lg:sticky lg:top-24">
+            <div class="relative aspect-[4/5] bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700 group">
+                {% set imagePath = product.getImagePath() %}
+                {% if imagePath %}
+                    <img src="{{ (imagePath starts with 'http') ? imagePath : asset(imagePath) }}" 
+                         alt="{{ product.name }}"
+                         class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+                {% else %}
+                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-200 dark:text-gray-700">
+                        <ion-icon name="leaf-outline" class="text-9xl mb-4"></ion-icon>
+                        <span class="text-xs font-black uppercase tracking-widest">Image Unavailable</span>
+                    </div>
+                {% endif %}
+
+                <!-- Stock Badge -->
+                <div class="absolute top-6 left-6">
+                    <span class="inline-flex items-center px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-lg border border-white/50 dark:border-gray-700 {{ product.getCurrentStockQuantity() > 0 ? 'text-emerald-600' : 'text-red-500' }}">
+                        <span class="w-1.5 h-1.5 rounded-full mr-2 animate-pulse {{ product.getCurrentStockQuantity() > 0 ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
+                        {{ product.getStockStatus() }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Info -->
+        <div class="lg:col-span-6 flex flex-col pt-4">
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="flex items-center text-amber-400">
+                        {% set avgRating = product.getAverageRating() %}
+                        <div class="flex gap-0.5 mr-2">
+                            {% for i in 1..5 %}
+                                <ion-icon name="{{ i <= avgRating ? 'star' : (i - 0.5 <= avgRating ? 'star-half' : 'star-outline') }}" class="text-lg"></ion-icon>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <span class="text-sm font-bold text-dark-forest-green dark:text-gray-200">{{ avgRating }}</span>
+                    <span class="text-[10px] font-bold text-light-gray uppercase tracking-widest ml-1">{{ product.getReviews().count() }} Reviews</span>
+                </div>
+
+                <h1 class="text-xl font-semibold text-dark-forest-green dark:text-white mb-6 leading-[1.05] tracking-tight">{{ product.name }}</h1>
+                
+                <div class="flex items-baseline gap-4 mb-8">
+                    <span class="text-xl font-semibold text-bright-green">₱{{ product.price|number_format(2) }}</span>
+                    {% if product.price > 0 %}
+                        <span class="text-sm font-bold text-light-gray line-through decoration-red-400/50">₱{{ (product.price * 1.25)|number_format(2) }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 mb-10">
+                    <h3 class="text-[10px] font-black text-light-gray dark:text-gray-400 uppercase tracking-widest mb-3">Description</h3>
+                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm font-medium italic">
+                        "{{ product.description|default('No detailed description available for this product yet. Rest assured it meets GROWFICO\'s premium quality standards.') }}"
+                    </p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row items-stretch gap-4 mb-12">
+                    <!-- Quantity -->
+                    <div class="flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-2 sm:w-40 shadow-sm">
+                        <button @click="decrement()" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-dark-forest-green dark:text-gray-300 transition-colors">
+                            <ion-icon name="remove-outline" class="text-xl"></ion-icon>
+                        </button>
+                        <span class="text-sm font-black text-dark-forest-green dark:text-white" x-text="quantity"></span>
+                        <button @click="increment()" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-dark-forest-green dark:text-gray-300 transition-colors">
+                            <ion-icon name="add-outline" class="text-xl"></ion-icon>
+                        </button>
+                    </div>
+
+                    <!-- Add to Cart -->
+                    <button @click="addToCart" 
+                            :disabled="isAdding || maxStock <= 0"
+                            class="flex-1 relative flex items-center justify-center gap-3 py-2.5 rounded-xl bg-dark-forest-green text-white font-semibold uppercase tracking-widest text-sm overflow-hidden group disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-xl shadow-dark-forest-green/10">
+                        <div class="absolute inset-0 bg-bright-green transform translate-y-full transition-transform duration-300 group-hover:translate-y-0"></div>
+                        <div class="relative flex items-center gap-2">
+                            <template x-if="!isAdding">
+                                <ion-icon name="bag-add-outline" class="text-lg"></ion-icon>
+                            </template>
+                            <template x-if="isAdding">
+                                <ion-icon name="sync-outline" class="text-lg animate-spin"></ion-icon>
+                            </template>
+                            <span x-text="isAdding ? 'Integrating...' : (maxStock > 0 ? 'Add to Cart' : 'Sold Out')"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <section class=" border-gray-100 dark:border-gray-700">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-xs font-bold text-dark-forest-green dark:text-white uppercase tracking-[0.2em]">Community Feedback</h2>
+                    <div class="h-px flex-1 bg-gray-100 dark:bg-gray-700 mx-8"></div>
+                </div>
+
+                <div class="space-y-6 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+                    {% if product.getReviews() is empty %}
+                        <div class="text-center py-16 rounded-xl bg-gray-50/50 dark:bg-gray-800/30 border-2 border-dashed border-gray-200 dark:border-gray-700">
+                            <ion-icon name="chatbubble-ellipses-outline" class="text-5xl text-gray-300 mb-4"></ion-icon>
+                            <p class="text-xs font-black text-light-gray dark:text-gray-400 uppercase tracking-widest italic">Be the first to share your thoughts</p>
+                        </div>
+                    {% else %}
+                        {% for review in product.getReviews() %}
+                            <div class="group bg-white dark:bg-gray-800 rounded-xl p-8 border border-gray-100 dark:border-gray-700 hover:border-bright-green/30 transition-all">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="relative">
+                                            {% if review.user and review.user.profileImage %}
+                                                <img src="{{ asset(review.user.profileImage) }}" 
+                                                     alt="{{ review.user.getFullName() }}"
+                                                     class="w-12 h-12 rounded-full object-cover shadow-lg shadow-bright-green/20" />
+                                            {% else %}
+                                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-bright-green to-emerald-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-bright-green/20">
+                                                    {{ review.user ? review.user.firstName|first|upper : 'A' }}
+                                                </div>
+                                            {% endif %}
+                                            <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white dark:bg-gray-900 flex items-center justify-center shadow-sm">
+                                                <ion-icon name="checkmark-circle" class="text-bright-green text-sm"></ion-icon>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-dark-forest-green dark:text-white mb-1">{{ review.user ? review.user.getFullName() : 'Anonymous' }}</div>
+                                            <div class="flex gap-0.5 text-amber-400">
+                                                {% for i in 1..5 %}
+                                                    <ion-icon name="{{ i <= review.rating ? 'star' : 'star-outline' }}" class="text-[10px]"></ion-icon>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-light-gray uppercase tracking-widest bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-xl">{{ review.createdAt|date('M d, Y') }}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed italic pl-6 group-hover:border-bright-green/20 transition-colors">
+                                    "{{ review.comment ?? 'User provided a rating without additional commentary.' }}"
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{# Success Modal #}
+<div id="add-to-cart-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all border border-gray-200 dark:border-gray-700" role="dialog" aria-modal="true">
+            <div class="p-8 text-center">
+                <div class="w-24 h-24 mx-auto mb-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center border border-emerald-100 dark:border-emerald-800/30">
+                    <dotlottie-player id="lottie-player" src="" background="transparent" speed="1.2" style="width: 80px; height: 80px;" autoplay></dotlottie-player>
+                </div>
+                <h3 id="add-to-cart-modal-title" class="text-lg font-semibold text-dark-forest-green dark:text-white mb-2">Success</h3>
+                <p id="add-to-cart-modal-message" class="text-sm text-light-gray dark:text-gray-400 mb-8 leading-relaxed">Item successfully added to your cart.</p>
+                <button type="button" id="add-to-cart-modal-close"
+                    class="w-full py-3 rounded-xl bg-bright-green text-white font-semibold text-sm hover:bg-bright-green/90 transition-all shadow-lg shadow-bright-green/10">
+                    Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+    .custom-scrollbar-thumb:hover { background: #d1d5db; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    window.growficoCartAddItemUrl = "{{ path('app_user_cart_add_item')|e('js') }}";
+
+    function addToCart() {
+        this.isAdding = true;
+        const CART_ADD_URL = window.growficoCartAddItemUrl;
+        
+        fetch(CART_ADD_URL, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                productId: this.productId,
+                quantity: this.quantity
+            })
+        })
+        .then(r => r.json().then(data => ({ ok: r.ok, data })))
+        .then(res => {
+            this.isAdding = false;
+            if (!res.ok || !res.data.success) {
+                showAddToCartModal(false, res.data.message || 'Could not complete request');
+                return;
+            }
+            showAddToCartModal(true, 'Your item has been successfully added to the cart.');
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { count: res.data.itemCount } }));
+        })
+        .catch(() => {
+            this.isAdding = false;
+            showAddToCartModal(false, 'Network authentication failed');
+        });
+    }
+
+    // Modal Helper
+    function showAddToCartModal(success, message) {
+        const modal = document.getElementById('add-to-cart-modal');
+        const player = document.getElementById('lottie-player');
+        const title = document.getElementById('add-to-cart-modal-title');
+        const msg = document.getElementById('add-to-cart-modal-message');
+        
+        const successLottie = 'https://assets5.lottiefiles.com/packages/lf20_lk80fpsm.json';
+        const failLottie = 'https://assets5.lottiefiles.com/packages/lf20_qp1spzqv.json';
+
+        player.src = success ? successLottie : failLottie;
+        title.textContent = success ? 'Confirmed' : 'Notification';
+        msg.textContent = message;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('add-to-cart-modal-close').addEventListener('click', () => {
+        document.getElementById('add-to-cart-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    });
+</script>
+{% endblock %}

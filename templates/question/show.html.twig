@@ -1,0 +1,88 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Question Details | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Question Details</h2>
+<p class="text-xs text-light-gray">View question information</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+                <p class="text-xs text-light-gray">Question</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ question.questionText }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Quiz</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ question.quiz ? question.quiz.title : 'N/A' }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Points</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ question.points }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-end pt-4 border-t border-gray-100">
+            <a href="{{ path('app_question_index') }}"
+               class="inline-flex items-center justify-center px-5 py-2.5 bg-gray-100 text-dark-forest-green text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                <ion-icon name="arrow-back-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Back to list
+            </a>
+            <a href="{{ path('app_question_edit', {'id': question.id}) }}"
+               class="inline-flex items-center justify-center px-5 py-2.5 bg-bright-green text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                <ion-icon name="create-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Edit
+            </a>
+            <form method="post"
+                  action="{{ path('app_question_delete', {'id': question.id}) }}"
+                  onsubmit="return confirm('Are you sure you want to delete this question?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ question.id) }}">
+                <button class="inline-flex items-center justify-center px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors duration-200">
+                    <ion-icon name="trash-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Question{% endblock %}
+
+{% block body %}
+    <h1>Question</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ question.id }}</td>
+            </tr>
+            <tr>
+                <th>QuestionText</th>
+                <td>{{ question.questionText }}</td>
+            </tr>
+            <tr>
+                <th>Points</th>
+                <td>{{ question.points }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_question_index') }}">back to list</a>
+
+    <a href="{{ path('app_question_edit', {'id': question.id}) }}">edit</a>
+
+    {{ include('question/_delete_form.html.twig') }}
+{% endblock %}

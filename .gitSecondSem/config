@@ -1,0 +1,120 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://github.com/OyanibTech-iii/Growfico-Official-webapp.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[lfs]
+	repositoryformatversion = 0
+[branch "main"]
+	remote = origin
+	vscode-merge-base = origin/main
+	merge = refs/heads/main
+[branch "refactoring"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/refactoring
+[branch "emailverifier"]
+	vscode-merge-base = origin/refactoring
+	remote = origin
+	merge = refs/heads/emailverifier
+[branch "API_RegistrationVerifier"]
+	vscode-merge-base = origin/emailverifier
+	remote = origin
+	merge = refs/heads/API_RegistrationVerifier
+[branch "EMAILjs"]
+	vscode-merge-base = origin/API_RegistrationVerifier
+	remote = origin
+	merge = refs/heads/EMAILjs
+[branch "LandingpageUI/UX"]
+	vscode-merge-base = origin/EMAILjs
+	remote = origin
+	merge = refs/heads/LandingpageUI/UX
+[branch "AlpineJS"]
+	vscode-merge-base = origin/LandingpageUI/UX
+	remote = origin
+	merge = refs/heads/AlpineJS
+[branch "datatable"]
+	remote = origin
+	vscode-merge-base = origin/AlpineJS
+	merge = refs/heads/datatable
+[branch "darkmode"]
+	remote = origin
+	vscode-merge-base = origin/datatable
+	merge = refs/heads/darkmode
+[branch "mobileResponsiveness"]
+	remote = origin
+	merge = refs/heads/mobileResponsiveness
+	vscode-merge-base = origin/darkmode
+[branch "errorpageCatcher"]
+	remote = origin
+	vscode-merge-base = origin/mobileResponsiveness
+	merge = refs/heads/errorpageCatcher
+[branch "staffdashboard"]
+	vscode-merge-base = origin/errorpageCatcher
+	remote = origin
+	merge = refs/heads/staffdashboard
+[branch "courseIntegration"]
+	remote = origin
+	merge = refs/heads/courseIntegration
+	vscode-merge-base = origin/staffdashboard
+[branch "ficoBotFallAI"]
+	remote = origin
+	merge = refs/heads/ficoBotFallAI
+	vscode-merge-base = origin/courseIntegration
+[branch "enrollment"]
+	vscode-merge-base = origin/ficoBotFallAI
+	remote = origin
+	merge = refs/heads/enrollment
+[branch "quiz"]
+	remote = origin
+	merge = refs/heads/quiz
+	vscode-merge-base = origin/enrollment
+[branch "question"]
+	remote = origin
+	merge = refs/heads/question
+	vscode-merge-base = origin/quiz
+[branch "answerChoices"]
+	remote = origin
+	merge = refs/heads/answerChoices
+	vscode-merge-base = origin/question
+[branch "certificate"]
+	remote = origin
+	vscode-merge-base = origin/answerChoices
+	merge = refs/heads/certificate
+[branch "Revision/landingpage"]
+	remote = origin
+	merge = refs/heads/Revision/landingpage
+	vscode-merge-base = origin/main
+[branch "Revision/userdashboard"]
+	remote = origin
+	vscode-merge-base = origin/Revision/landingpage
+	merge = refs/heads/Revision/userdashboard
+[branch "Revision/admindashboard"]
+	remote = origin
+	vscode-merge-base = origin/Revision/userdashboard
+	merge = refs/heads/Revision/admindashboard
+[branch "Feature/coursefullimplementation"]
+	remote = origin
+	vscode-merge-base = origin/Revision/admindashboard
+	merge = refs/heads/Feature/coursefullimplementation
+[branch "Feature/ratingsandfeedback"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/Feature/ratingsandfeedback
+[branch "Feature/microservices"]
+	vscode-merge-base = origin/Feature/ratingsandfeedback
+	remote = origin
+	merge = refs/heads/Feature/microservices
+[branch "Feature/ratelimiter"]
+	vscode-merge-base = origin/Feature/microservices
+	remote = origin
+	merge = refs/heads/Feature/ratelimiter
+	vscode-merge-base = origin/Feature/microservices
+[gui]
+	wmstate = normal
+	geometry = 1109x563+192+192 216 255

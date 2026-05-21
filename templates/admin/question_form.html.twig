@@ -1,0 +1,34 @@
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6'}}) }}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2 md:col-span-2">
+            {{ form_label(form.questionText, 'Question Text', {'label_attr': {'class': 'block text-xs font-semibold text-dark-forest-green'}}) }}
+            {{ form_widget(form.questionText, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green text-xs'}}) }}
+            {{ form_errors(form.questionText) }}
+        </div>
+
+        <div class="space-y-2">
+            {{ form_label(form.quiz, 'Quiz', {'label_attr': {'class': 'block text-xs font-semibold text-dark-forest-green'}}) }}
+            {{ form_widget(form.quiz, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green text-xs dark:bg-gray-800 dark:text-gray-200'}}) }}
+            {{ form_errors(form.quiz) }}
+        </div>
+
+        <div class="space-y-2">
+            {{ form_label(form.points, 'Points', {'label_attr': {'class': 'block text-xs font-semibold text-dark-forest-green'}}) }}
+            {{ form_widget(form.points, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green text-xs', 'min': 0}}) }}
+            {{ form_errors(form.points) }}
+        </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-end mt-4">
+        <a href="{{ path('app_admin_question') }}"
+           class="inline-flex items-center text-xs justify-center px-6 py-3 bg-gray-100 text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-400 dark:hover:text-dark-forest-green">
+            Cancel
+        </a>
+        <button type="submit"
+                class="inline-flex items-center text-xs justify-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+            {{ button_label|default('Save Question') }}
+        </button>
+    </div>
+{{ form_end(form) }}
+
+

@@ -1,0 +1,77 @@
+<section 
+    id="growing-techniques" 
+    x-data="{ shown: false }" 
+    x-intersect.margin.-10%="shown = true"
+    x-intersect:leave="shown = false"
+    class="py-24 overflow-hidden bg-white dark:bg-gray-950"
+>
+    <div class="container max-w-6xl mx-auto px-4">
+        <div class="text-center mb-16 transition-all duration-1000 ease-out-expo"
+             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-6 tracking-tight">
+                <span class="text-darkforest-green">Growing Techniques</span>
+                <span class="text-bright-green">We Teach</span>
+            </h2>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                Master these essential horticultural methods to transform your garden into a high-yield paradise.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+
+            <div
+                class="technique-card group text-center p-8 my-4 transition-all duration-700 ease-out-expo rounded-2xl"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+            >
+                <div class="relative w-56 h-56 mx-auto mb-8">
+                    <div class="absolute inset-0 bg-[#F7E3C1]  rounded-full scale-0 group-hover:scale-110 transition-transform duration-500 opacity-50"></div>
+                    <div class="morph-container relative w-full h-full overflow-hidden shadow-lg">
+                        <img src="{{ asset('services/Grafted.png') }}" alt="Grafting"
+                            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                </div>
+                <h3 class="dark:!text-gray-200 text-lg font-bold text-dark-forest-green mb-4 group-hover:text-green-600 transition-colors">Grafting</h3>
+                <p class="text-gray-500 dark:text-gray-400 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-300 text-sm">
+                    Learn the art of grafting to combine the best qualities of different plants and improve fruit quality.
+                </p>
+            </div>
+
+            <div
+                class="technique-card group text-center p-8 my-4 transition-all duration-700 ease-out-expo rounded-2xl"
+                style="transition-delay: 200ms;"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+            >
+                <div class="relative w-56 h-56 mx-auto mb-8">
+                    <div class="absolute inset-0 bg-[#F7E3C1]  rounded-full scale-0 group-hover:scale-110 transition-transform duration-500 opacity-50"></div>
+                    <div class="morph-container relative w-full h-full overflow-hidden shadow-lg" style="animation-delay: -2s;">
+                        <img src="{{ asset('services/Marcoted.png') }}" alt="Air Layering"
+                            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                </div>
+                <h3 class="dark:!text-gray-200 text-lg font-bold text-dark-forest-green mb-4 group-hover:text-green-600 transition-colors">Air Layering</h3>
+                <p class="text-gray-500 dark:text-gray-400 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-300 text-sm">
+                    Master air layering techniques to propagate plants while they're still attached to the parent plant.
+                </p>
+            </div>
+
+            <div
+                class="technique-card group text-center p-8 my-4 transition-all duration-700 ease-out-expo rounded-2xl"
+                style="transition-delay: 400ms;"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'"
+            >
+                <div class="relative w-56 h-56 mx-auto mb-8">
+                    <div class="absolute inset-0 bg-[#F7E3C1] rounded-full scale-0 group-hover:scale-110 transition-transform duration-500 opacity-50"></div>
+                    <div class="morph-container relative w-full h-full overflow-hidden shadow-lg" style="animation-delay: -4s;">
+                        <img src="{{ asset('services/Budding.png') }}" alt="Budding"
+                            class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                </div>
+                <h3 class="dark:!text-gray-200 text-lg font-bold text-dark-forest-green mb-4 group-hover:text-green-600 transition-colors">Budding</h3>
+                <p class="text-gray-500 dark:text-gray-400 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-300 text-sm">
+                    Learn budding techniques for precise plant propagation and creating new variety combinations.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,9 @@
+0000000000000000000000000000000000000000 0a018d1ea44e00f91f3fc46a0c7917002931d27d OyanibTech-iii <pacificooyanib@gmail.com> 1775300642 +0800	branch: Created from HEAD
+0a018d1ea44e00f91f3fc46a0c7917002931d27d d7c0e0dc79739af2cadce546c3b3c1d2aa5904c4 OyanibTech-iii <pacificooyanib@gmail.com> 1775373760 +0800	commit: payment Stripe partial
+d7c0e0dc79739af2cadce546c3b3c1d2aa5904c4 971816e5fec38ffd49e094ed9f7270394e13225f OyanibTech-iii <pacificooyanib@gmail.com> 1775407099 +0800	commit: modify notification location order
+971816e5fec38ffd49e094ed9f7270394e13225f e0b78618095372f150b3c0c86d490b04ec2b2904 OyanibTech-iii <pacificooyanib@gmail.com> 1775525932 +0800	commit: product assets addded
+e0b78618095372f150b3c0c86d490b04ec2b2904 5e7f67bea1c65c915d7cf6a7cdb1ad54e44cdba1 OyanibTech-iii <pacificooyanib@gmail.com> 1775872327 +0800	commit: forgot password functionality
+5e7f67bea1c65c915d7cf6a7cdb1ad54e44cdba1 f31a1b21d220ff4cf0f506d366267bdf56cb05dd OyanibTech-iii <pacificooyanib@gmail.com> 1776839552 +0800	commit: added fixtures
+f31a1b21d220ff4cf0f506d366267bdf56cb05dd 8060b40152d9162d90608efbec9cdd878efe5744 OyanibTech-iii <pacificooyanib@gmail.com> 1776848673 +0800	commit: fix course bugs
+8060b40152d9162d90608efbec9cdd878efe5744 9427105df09b4e0634490c472ba635d45328ecb4 OyanibTech-iii <pacificooyanib@gmail.com> 1776935548 +0800	commit: implemented cropping.js
+9427105df09b4e0634490c472ba635d45328ecb4 5e948042c26d126925d2596313ee329899de25e2 OyanibTech-iii <pacificooyanib@gmail.com> 1776960256 +0800	commit: initialized qr and chat

@@ -1,0 +1,41 @@
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6'}}) }}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2 md:col-span-2">
+            {{ form_label(form.choiceText, 'Choice Text', {'label_attr': {'class': 'block text-base font-semibold text-dark-forest-green'}}) }}
+            {{ form_widget(form.choiceText, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green'}}) }}
+            {{ form_errors(form.choiceText) }}
+        </div>
+
+        <div class="space-y-2">
+            {{ form_label(form.question, 'Question', {'label_attr': {'class': 'block text-base font-semibold text-dark-forest-green'}}) }}
+            {{ form_widget(form.question, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green'}}) }}
+            {{ form_errors(form.question) }}
+        </div>
+
+        <div class="space-y-2">
+            {{ form_label(form.isCorrect, 'Is Correct?', {'label_attr': {'class': 'block text-base font-semibold text-dark-forest-green'}}) }}
+            <div class="flex items-center gap-2">
+                {{ form_widget(form.isCorrect, {'attr': {'class': 'rounded border-gray-300 text-bright-green focus:ring-bright-green'}}) }}
+                <span class="text-sm text-light-gray">Mark as the correct answer</span>
+            </div>
+            {{ form_errors(form.isCorrect) }}
+        </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-end mt-4">
+        <a href="{{ path('app_answer_choice_index') }}"
+           class="inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:text-gray-200">
+            Cancel
+        </a>
+        <button type="submit"
+                class="inline-flex items-center justify-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+            <ion-icon name="checkmark-circle-outline" class="w-4 h-4 mr-2"></ion-icon>
+            {{ button_label|default('Save Answer Choice') }}
+        </button>
+    </div>
+{{ form_end(form) }}
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

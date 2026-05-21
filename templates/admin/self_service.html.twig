@@ -1,0 +1,101 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Self-Service Knowledge Base | Growfico{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto lg:p-8">
+
+    {# Bento Grid Container #}
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
+        
+        {# 1. Managing Products - Large Featured Card #}
+        <div class="rounded-2xl md:col-span-2 lg:col-span-2 lg:row-span-2 bg-white border border-gray-200 shadow-sm p-8 flex flex-col justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-dark-forest-green mb-4">Managing Products</h2>
+                
+                <div class="space-y-6">
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-primary-600 mb-3">A. Add New</h3>
+                        <p class="text-sm text-gray-600">Dashboard &rarr; Products &rarr; Add Product. Fill name, category, price, and stock.</p>
+                    </section>
+                    
+                    <section>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-primary-600 mb-3">B. Edit Existing</h3>
+                        <p class="text-sm text-gray-600">Locate the product in the list and use the <span class="font-semibold italic">Edit</span> button to update live values.</p>
+                    </section>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <p class="text-xs text-gray-400">Validated against database schema v2.4</p>
+            </div>
+        </div>
+
+        {# 2. Stock Management - Medium Card #}
+        <div class="rounded-2xl md:col-span-2 lg:col-span-2 lg:row-span-2 bg-white border border-gray-200 shadow-sm p-8 flex flex-col justify-between">
+            <h2 class="text-xl font-bold text-dark-forest-green mb-4">Stock Inventory</h2>
+            <div class="space-y-4">
+                <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
+                    <p class="font-semibold text-sm">Manual Update</p>
+                    <p class="text-xs text-green-200 ">Directly edit the product stock value.</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm">
+                    <p class="font-semibold text-sm">Auto-Deduction</p>
+                    <p class="text-xs text-green-200 ">Stocks reduce automatically upon order confirmation.</p>
+                </div>
+            </div>
+        </div>
+
+        {# 3. Managing Gardens - Wide Card #}
+        <div class="md:col-span-2 lg:col-span-2 bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-dark-forest-green">Garden Management</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <p class="text-sm font-semibold">Entry Data</p>
+                    <ul class="text-xs text-gray-500 space-y-1">
+                        <li>• Name & Location</li>
+                        <li>• System Type</li>
+                        <li>• Status Toggle</li>
+                    </ul>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <span class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-green-100 text-primary-600 text-center">ACTIVE</span>
+                    <span class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-dark-forest-green text-white text-center">MAINTENANCE</span>
+                    <span class="px-3 py-1.5 rounded-lg text-[10px] font-bold bg-gray-100 dark:bg-gray-700/50 text-gray-700 text-center">CLOSED</span>
+                </div>
+            </div>
+        </div>
+
+        {# 4. Security - Long/Tall Card #}
+        <div class="rounded-2xl md:col-span-1 lg:col-span-1 bg-white border-2 border-dashed border-gray-200 p-8 flex flex-col items-center justify-center text-center">
+            <h2 class="text-lg font-bold mb-6 text-dark-forest-green">Security & Scopes</h2>
+            <div class="flex-grow space-y-6">
+                <div>
+                    <p class="text-xs font-bold text-green-400 uppercase mb-2">Best Practices</p>
+                    <ul class="text-sm text-gray-400 space-y-3">
+                        <li>• Backend Validation</li>
+                        <li>• Critical Action Logs</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-green-400 uppercase mb-2">System Scopes</p>
+                    <div class="flex flex-wrap gap-2">
+                        <code class="text-[10px] bg-white/10 px-2 py-1 rounded">create_prod</code>
+                        <code class="text-[10px] bg-white/10 px-2 py-1 rounded">edit_prod</code>
+                        <code class="text-[10px] bg-white/10 px-2 py-1 rounded">manage_grdn</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 5. Quick Help / Footer Card #}
+        <div class="rounded-2xl md:col-span-1 lg:col-span-1 bg-white border-2 border-dashed border-gray-200 p-8 flex flex-col items-center justify-center text-center">
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

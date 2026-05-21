@@ -1,0 +1,56 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Edit Location | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Edit Location</h2>
+<p class="text-xs text-light-gray">Update location details</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto space-y-4">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-dark-forest-green">{{ location.name }}</h3>
+            <p class="text-sm text-light-gray">Location ID: {{ location.id }}</p>
+        </div>
+        <div class="p-6">
+            {{ form_start(form) }}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2 md:col-span-2">
+                    {{ form_label(form.name, 'Branch Name', {'label_attr': {'class': 'block text-base font-semibold text-dark-forest-green'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green placeholder-light-gray', 'placeholder': 'Enter branch name'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="space-y-2">
+                    {{ form_label(form.latitude, 'Latitude', {'label_attr': {'class': 'block text-base font-semibold text-dark-forest-green'}}) }}
+                    {{ form_widget(form.latitude, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green placeholder-light-gray'}}) }}
+                    {{ form_errors(form.latitude) }}
+                </div>
+
+                <div class="space-y-2">
+                    {{ form_label(form.longitude, 'Longitude', {'label_attr': {'class': 'block text-base font-semibold text-dark-forest-green'}}) }}
+                    {{ form_widget(form.longitude, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green placeholder-light-gray'}}) }}
+                    {{ form_errors(form.longitude) }}
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-end mt-6">
+                <a href="{{ path('app_admin_locations') }}"
+                   class="inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                    <ion-icon name="arrow-back-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Cancel
+                </a>
+                <button type="submit"
+                        class="inline-flex items-center justify-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+                    <ion-icon name="checkmark-circle-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Update Location
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

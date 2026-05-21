@@ -1,0 +1,108 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}{{ product.name }} - Growfico{% endblock %}
+
+{% block user_content %}
+
+<!-- Product Details -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Product Image -->
+        <div class="bg-gray-100 rounded-xl shadow-sm overflow-hidden">
+            {% set imgPath = product.getImagePath() %}
+            {% if imgPath %}
+            <div class="h-96 w-full overflow-hidden">
+                <img src="{{ imgPath starts with('http') ? imgPath : asset(imgPath) }}" alt="{{ product.name }}"
+                    class="object-cover w-full h-96"
+                    onerror="this.style.display='none'; this.parentNode.querySelector('.fallback-icon').style.display='flex';" />
+                <div
+                    class="fallback-icon hidden h-96 w-full items-center justify-center bg-gradient-to-br from-bright-green/10 to-dark-forest-green/10">
+                    <ion-icon name="leaf-outline" class="w-32 h-32 text-bright-green"></ion-icon>
+                </div>
+            </div>
+            {% else %}
+            <div
+                class="h-96 bg-gradient-to-br from-bright-green/10 to-dark-forest-green/10 flex items-center justify-center">
+                <ion-icon name="leaf-outline" class="w-32 h-32 text-bright-green"></ion-icon>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Product Information -->
+        <div class="space-y-6">
+            <!-- Product Description -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <!-- Product Status -->
+                <div class="flex items-center justify-between">
+                    <div class="text-lg font-bold text-dark-forest-green">
+                        ₱{{ product.price }}
+                    </div>
+                    {% if product.isAvailable %}
+                    <span
+                        class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <ion-icon name="checkmark-circle" class="w-4 h-4 mr-2"></ion-icon>
+                        In Stock
+                    </span>
+                    {% else %}
+                    <span
+                        class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                        <ion-icon name="close-circle" class="w-4 h-4 mr-2"></ion-icon>
+                        Out of Stock
+                    </span>
+                    {% endif %}
+                </div>
+                <h3 class="text-sm font-semibold text-dark-forest-green ">Description</h3>
+                <p class="text-light-gray text-sm mb-2 leading-relaxed">{{ product.description }}</p>
+
+                <!-- Product Details -->
+                <h3 class="text-sm font-semibold text-dark-forest-green ">Product Details</h3>
+                <dl class="space-y-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <dt class="text-sm font-medium text-light-gray">Availability</dt>
+                        <dd class="text-sm">
+                            {% if product.isAvailable %}
+                            <span class="text-green-600 font-medium">Available for purchase</span>
+                            {% else %}
+                            <span class="text-red-600 font-medium">Currently unavailable</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    {% if product.owner %}
+                    <div class="flex justify-between items-center ">
+                        <dt class="text-sm font-medium text-light-gray">Created By</dt>
+                        <dd class="text-sm text-dark-forest-green font-medium">
+                            {% if is_granted('PRODUCT_EDIT', product) %}
+                            <span
+                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium  text-bright-green dark:!text-gray-200">
+                                {{ product.owner.getFirstName() }} {{ product.owner.getLastName() }}
+                            </span>
+                            {% else %}
+                            <span
+                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                <ion-icon name="person-outline" class="w-3 h-3 mr-1"></ion-icon>
+                                {{ product.owner.getFirstName() }} {{ product.owner.getLastName() }}
+                            </span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    {% endif %}
+                </dl>
+
+            </div>
+            <!-- Action Buttons -->
+            <div class="flex space-x-4 mt-2">
+                {% if is_granted('PRODUCT_EDIT', product) %}
+                <a href="{{ path('app_product_edit', {'id': product.id}) }}"
+                    class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-bright-green text-white text-sm font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+                    <ion-icon name="create-outline" class="w-5 h-5 mr-2"></ion-icon>
+                    Edit Product
+                </a>
+                {% endif %}
+                <div class="flex-1">
+                    {{ include('product/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

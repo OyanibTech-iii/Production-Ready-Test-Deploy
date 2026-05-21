@@ -1,0 +1,68 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Add New Stock{% endblock %}
+{% block page_title %}Add New Stock{% endblock %}
+{% block page_subtitle %}Create a new stock entry for your inventory{% endblock %}
+
+{% block user_content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Form Section -->
+    <div class="card">
+        <div class="card-header bg-white">
+            <h2 class="text-sm font-semibold text-dark-forest flex items-center gap-2">
+                <ion-icon name="add-circle-outline" class="text-sm"></ion-icon>
+                Create Stock Entry
+            </h2>
+        </div>
+        <div class="card-body">
+            {{ include('stock/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Form page animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate form on load
+    const formCard = document.querySelector('.card');
+    if (formCard) {
+        formCard.style.opacity = '0';
+        formCard.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            formCard.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            formCard.style.opacity = '1';
+            formCard.style.transform = 'translateY(0)';
+        }, 200);
+    }
+
+    // Add focus animations to form inputs
+    const formInputs = document.querySelectorAll('.form-input');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+            this.parentElement.style.transition = 'transform 0.2s ease';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+    });
+
+    // Add button hover effects
+    const buttons = document.querySelectorAll('button, .btn-primary, .btn-secondary');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+{% endblock %}

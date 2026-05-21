@@ -1,0 +1,178 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Products | Growfico{% endblock %}
+
+{% block user_content %}
+{% set products = products ?? [] %}
+
+<div class="max-w-7xl mx-auto">
+	{% if products is not empty %}
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+		{% for product in products %}
+		{% set stockQty = product.getCurrentStockQuantity() %}
+		{% set available = (product.isAvailable ?? true) and stockQty > 0 %}
+		{% set stockStatus = product.getStockStatus() %}
+		{% set imagePath = product.getImagePath() %}
+		<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col group relative"
+			data-product-id="{{ product.id }}">
+			<div class="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+				{% if imagePath %}
+				<img src="{{ (imagePath starts with 'http') ? imagePath : asset(imagePath) }}" alt="{{ product.name }}"
+					class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+				{% else %}
+				<div class="w-full h-full flex items-center justify-center">
+					<ion-icon name="leaf-outline" class="text-4xl text-gray-300"></ion-icon>
+				</div>
+				{% endif %}
+
+		<!-- Meatball Menu Link -->
+		<a href="{{ path('app_user_shop_product_details', {id: product.id}) }}" 
+		class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-dark-forest-green shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+		title="View details">
+		<ion-icon name="ellipsis-vertical-outline" class="text-lg"></ion-icon>
+		</a>
+			</div>
+			<div class="p-4 flex-1 flex flex-col">
+				<h4 class="text-dark-forest-green text-sm font-semibold mb-1 line-clamp-2">{{ product.name }}</h4>
+				<p class="text-xs text-light-gray mb-3 line-clamp-2 flex-1">{{ product.description }}</p>
+				<div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+					<span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold {{ available ? (stockQty <= 5 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800') : 'bg-red-100 text-red-800' }}">
+						{{ stockStatus }}
+						{% if stockQty > 0 and stockQty <= 5 %}
+							<span class="ml-1 opacity-75">({{ stockQty }})</span>
+						{% endif %}
+					</span>
+				</div>
+				<div class="flex text-sm items-center gap-2 text-dark-forest-green font-semibold mb-4">
+					<span>₱{{ product.price }}</span>
+				</div>
+				<button type="button"
+					class="add-to-cart-btn w-full py-2.5 rounded-xl text-xs font-medium transition disabled:opacity-50 disabled:cursor-not-allowed
+							{{ available ? 'bg-bright-green text-white hover:bg-bright-green/90 dark:!text-gray-200' : 'bg-gray-100 text-light-gray cursor-not-allowed dark:bg-gray-700 dark:!text-gray-200' }}"
+					data-product-id="{{ product.id }}" data-product-name="{{ product.name|e('html_attr') }}"
+					data-product-price="{{ product.price }}" {{ not available ? ' disabled' : '' }}>
+					<ion-icon name="cart-outline" class="align-middle text-lg mr-1 dark:!text-gray-200"></ion-icon>
+				{{ available ? 'Add to cart' : (stockQty > 0 ? 'Unavailable' : 'Out of stock') }}
+				</button>
+			</div>
+		</div>
+		{% endfor %}
+		</div>
+		{% else %}
+		<div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+		<div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+			<ion-icon name="pricetags-outline" class="text-3xl text-light-gray"></ion-icon>
+		</div>
+		<p class="text-dark-forest-green font-semibold text-lg">No products yet</p>
+		<p class="text-sm text-light-gray mt-1">Products will appear here once they are added to the catalog.</p>
+		</div>
+		{% endif %}
+		</div>
+
+		{# Add to cart modal with Lottie animation #}
+		<div id="add-to-cart-modal" class="fixed inset-0 z-[100] flex items-center justify-center" aria-hidden="true"
+		style="display: none;">
+		<div class="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity"></div>
+		<div class="absolute inset-0 flex items-center justify-center p-4">
+		<div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all"
+			role="dialog" aria-labelledby="add-to-cart-modal-title" aria-modal="true">
+			<div class="p-6 text-center">
+				<dotlottie-player id="lottie-player" src="" background="transparent" speed="1"
+					style="width: 150px; height: 150px; margin: 0 auto;" autoplay loop></dotlottie-player>
+				<h3 id="add-to-cart-modal-title" class="text-lg font-semibold text-dark-forest-green mt-4">Success!</h3>
+				<p id="add-to-cart-modal-message" class="text-sm text-light-gray mt-2">Item added to cart</p>
+				<button type="button" id="add-to-cart-modal-close"
+					class="mt-4 px-4 py-2 rounded-xl bg-bright-green text-white font-medium hover:bg-bright-green/90 transition">
+					Close
+				</button>
+			</div>
+		</div>
+		</div>
+		</div>
+
+
+		{% endblock %}
+
+		{% block extra_scripts %}
+		<script>
+		window.growficoCartAddItemUrl = "{{ path('app_user_cart_add_item')|e('js') }}";
+		document.addEventListener('DOMContentLoaded', function () {
+		const CART_ADD_URL = window.growficoCartAddItemUrl || '';
+		const addToCartModal = document.getElementById('add-to-cart-modal');
+		const lottiePlayer = document.getElementById('lottie-player');
+		const modalTitle = document.getElementById('add-to-cart-modal-title');
+		const modalMessage = document.getElementById('add-to-cart-modal-message');
+		const modalClose = document.getElementById('add-to-cart-modal-close');
+
+		const successLottie = 'https://assets5.lottiefiles.com/packages/lf20_lk80fpsm.json'; // Success animation
+		const failLottie = 'https://assets5.lottiefiles.com/packages/lf20_qp1spzqv.json'; // Fail animation
+
+		function showAddToCartModal(success, message) {
+			if (!addToCartModal || !lottiePlayer || !modalTitle || !modalMessage) return;
+			lottiePlayer.src = success ? successLottie : failLottie;
+			modalTitle.textContent = success ? 'Success!' : 'Failed';
+			modalMessage.textContent = message;
+			addToCartModal.style.display = 'flex';
+			addToCartModal.setAttribute('aria-hidden', 'false');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeAddToCartModal() {
+			if (!addToCartModal) return;
+			addToCartModal.style.display = 'none';
+			addToCartModal.setAttribute('aria-hidden', 'true');
+			document.body.style.overflow = '';
+		}
+
+		if (modalClose) modalClose.addEventListener('click', closeAddToCartModal);
+		if (addToCartModal) {
+			addToCartModal.addEventListener('click', function (e) {
+				if (e.target === addToCartModal) closeAddToCartModal();
+			});
+		}
+		document.addEventListener('keydown', function (e) {
+			if (e.key === 'Escape' && addToCartModal && addToCartModal.style.display === 'flex') {
+				closeAddToCartModal();
+			}
+		});
+
+		document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
+			if (btn.disabled) return;
+			btn.addEventListener('click', function () {
+				const id = this.getAttribute('data-product-id');
+				if (!id || !CART_ADD_URL) return;
+				this.disabled = true;
+				this.innerHTML = '<ion-icon name="hourglass-outline" class="align-middle text-lg mr-1 animate-spin"></ion-icon> Adding...';
+				fetch(CART_ADD_URL, {
+					method: 'POST',
+					credentials: 'same-origin',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-Requested-With': 'XMLHttpRequest'
+					},
+					body: JSON.stringify({
+						productId: parseInt(id, 10),
+						quantity: 1
+					})
+				})
+					.then(function (r) { return r.json().then(function (data) { return { ok: r.ok, data: data }; }); })
+					.then(function (res) {
+						btn.disabled = false;
+						btn.innerHTML = '<ion-icon name="cart-outline" class="align-middle text-lg mr-1"></ion-icon> Add to cart';
+						if (!res.ok || !res.data.success) {
+							showAddToCartModal(false, res.data.message || 'Could not add to cart');
+							return;
+						}
+						showAddToCartModal(true, 'Item added to cart');
+						window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { count: res.data.itemCount } }));
+					})
+					.catch(function () {
+						btn.disabled = false;
+						btn.innerHTML = '<ion-icon name="cart-outline" class="align-middle text-lg mr-1"></ion-icon> Add to cart';
+						showAddToCartModal(false, 'Connection error');
+					});
+			});
+		});
+		});
+		</script>
+		{% endblock %}

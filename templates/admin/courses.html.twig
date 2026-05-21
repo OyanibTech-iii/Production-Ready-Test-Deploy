@@ -1,0 +1,176 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Courses | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg  font-semibold text-dark-forest-green">Courses</h2>
+<p class="text-xs text-light-gray">Manage training programs and educational content</p>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto space-y-6">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-semibold text-dark-forest-green">Manage Courses</h2>
+            <div class="flex gap-4">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </span>
+                    <input type="text" id="courses-search-input"
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                        placeholder="Search courses...">
+                </div>
+
+                <a href="{{ path('app_admin_course_new') }}"
+                    class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add Course
+                </a>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="coursesTable" class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tier</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                            style="text-align: center !important;">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                    {% for course in courses %}
+                    <tr>
+                        <td class="px-6 py-4">
+                            <div class="text-xs font-semibold text-dark-forest-green dark:!text-gray-300">{{ course.courseName }}</div>
+                        </td>
+                        <td class="px-6 py-4 text-xs">{{ course.tier }}</td>
+                        <td class="px-6 py-4 text-xs">₱{{ course.price }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-center gap-3">
+                                <a href="{{ path('app_admin_course_show', {'id': course.id}) }}"
+                                    class="text-bright-green hover:scale-110 transition-transform">
+                                    <ion-icon name="eye-outline" class="text-sm"></ion-icon>
+                                </a>
+                                <a href="{{ path('app_admin_course_edit', {'id': course.id}) }}"
+                                    class="text-blue-600 hover:scale-110 transition-transform">
+                                    <ion-icon name="create-outline" class="text-sm"></ion-icon>
+                                </a>
+                                {{ include('admin/course_delete_form.html.twig', {course: course}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{ include('admin/lesson/_overview.html.twig') }}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/admin-search.js') }}"></script>
+
+<script>
+    (function () {
+        function initCoursesDataTable() {
+            if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) {
+                return;
+            }
+            var tableId = '#coursesTable';
+            if (!jQuery(tableId).length || jQuery.fn.DataTable.isDataTable(tableId)) {
+                return;
+            }
+            var table = jQuery(tableId).DataTable({
+                dom: 'lrtip',
+                pageLength: 10,
+                order: [[0, 'asc']],
+                columnDefs: [{ orderable: false, targets: 3 }],
+                language: {
+                    paginate: {
+                        previous: '<ion-icon name="chevron-back-outline" class="align-middle"></ion-icon>',
+                        next: '<ion-icon name="chevron-forward-outline" class="align-middle"></ion-icon>'
+                    }
+                }
+            });
+            jQuery('#courses-search-input').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+            if (typeof AdminSearch !== 'undefined') {
+                new AdminSearch({
+                    searchInputId: 'courses-search-input',
+                    tableSelector: '#coursesTable'
+                });
+            }
+        }
+
+        function initLessonsDataTable() {
+            if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) {
+                return;
+            }
+            var sel = '#lessonsTable';
+            if (!jQuery(sel).length || jQuery.fn.DataTable.isDataTable(sel)) {
+                return;
+            }
+            var table = jQuery(sel).DataTable({
+                dom: 'lrtip',
+                pageLength: 10,
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { orderable: false, targets: 2 },
+                    { className: 'align-middle', targets: '_all' }
+                ],
+                autoWidth: false,
+                language: {
+                    emptyTable: 'No lessons found.',
+                    zeroRecords: 'No matching lessons found.',
+                    paginate: {
+                        previous: '<ion-icon name="chevron-back-outline" class="align-middle"></ion-icon>',
+                        next: '<ion-icon name="chevron-forward-outline" class="align-middle"></ion-icon>'
+                    }
+                }
+            });
+            var searchInput = document.getElementById('lessons-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function () {
+                    table.search(this.value).draw();
+                });
+            }
+            if (typeof AdminSearch !== 'undefined') {
+                new AdminSearch({
+                    searchInputId: 'lessons-search-input',
+                    tableSelector: '#lessonsTable'
+                });
+            }
+        }
+
+        function initAll() {
+            initCoursesDataTable();
+            initLessonsDataTable();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAll);
+        } else {
+            initAll();
+        }
+    })();
+</script>
+{% endblock %}

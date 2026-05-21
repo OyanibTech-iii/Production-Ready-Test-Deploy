@@ -1,0 +1,235 @@
+{% block body %}
+<div id="chat-fab" onclick="toggleChat()"
+    class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 w-12 h-12 min-w-[3rem] bg-bright-green rounded-full flex items-center justify-center text-white cursor-pointer shadow-2xl hover:scale-110 transition-all z-[9999] p-2"
+    style="bottom: max(1.5rem, env(safe-area-inset-bottom, 0px)); right: max(1.5rem, env(safe-area-inset-right, 0px));">
+    <ion-icon name="chatbubble-ellipses-outline" class="text-2xl"></ion-icon>
+</div>
+
+<div id="chat-modal"
+    class="hidden fixed bg-white rounded-2xl shadow-2xl flex-col z-[10000] overflow-hidden border border-gray-100 animate-in fade-in slide-in-from-bottom-5 duration-300"
+    style="isolation: isolate; box-sizing: border-box;">
+
+    <div id="chat-header"
+        class="shrink-0 p-4 border-b border-gray-100 flex justify-between items-center bg-white cursor-grab active:cursor-grabbing select-none shadow-sm z-[10001]">
+        <div class="flex items-center gap-3 overflow-hidden">
+            <div class="relative shrink-0">
+                <img src="{{ asset('logos/Icon- Brand.png') }}" alt="Logo" class="w-8 h-8 rounded-full object-cover">
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-bright-green border-2 border-white rounded-full"></div>
+            </div>
+            <div class="min-w-0">
+                <h3 class="font-bold text-gray-600 text-sm leading-tight truncate">Growfico Support</h3>
+                <p class="text-xs text-bright-green">Active Now</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+            <button type="button" data-ficobot-clear-open title="Clear Conversation" class="cursor-pointer text-xl text-gray-300 hover:text-orange-500 transition-colors flex items-center p-0.5 bg-transparent border-0">
+                <ion-icon name="trash-outline"></ion-icon>
+            </button>
+            <div onclick="toggleChat()" class="cursor-pointer text-2xl text-gray-300 hover:text-red-500 transition-colors flex items-center">
+                <ion-icon name="close-circle"></ion-icon>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-white w-full custom-scrollbar" style="min-height: 0;">
+        <div class="text-center my-4" id="start-label">
+            <span class="text-xs text-gray-400 uppercase tracking-widest ">Start Conversation</span>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border-t border-gray-100 shrink-0 relative">
+        <div class="flex items-center gap-2 bg-[#F0F2F5] rounded-full px-4 py-2 w-full">
+            <input type="text" id="chat-input" placeholder="Type a message..."
+                class="flex-1 min-w-0 bg-transparent border-0 outline-none focus:ring-0 focus:outline-none focus:border-0 text-sm py-1"
+                autocomplete="off">
+
+            <button onclick="sendMessage()"
+                class="text-bright-green flex items-center hover:scale-110 transition-transform shrink-0 p-1">
+                <ion-icon name="send" class="text-xl"></ion-icon>
+            </button>
+        </div>
+    </div>
+</div>
+
+{% include '_ficobot_clear_modal.html.twig' %}
+
+<style>
+    #chat-modal {
+        width: min(360px, calc(100vw - 1rem)) !important;
+        height: min(600px, calc(100dvh - 5.5rem)) !important;
+        max-height: min(85vh, 85dvh) !important;
+        left: max(1rem, env(safe-area-inset-left, 0px));
+        bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    }
+    
+    @media (min-width: 768px) {
+        #chat-modal {
+            left: max(2rem, env(safe-area-inset-left, 0px));
+            bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
+        }
+    }
+    @media (max-width: 640px) {
+        #chat-modal {
+            width: min(280px, calc(100vw - 2rem)) !important;
+            max-width: min(280px, calc(100vw - 2rem)) !important;
+            left: auto !important;
+            right: max(0.75rem, env(safe-area-inset-right, 0px)) !important;
+            bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)) !important;
+            height: min(75dvh, 620px, calc(100dvh - 6rem)) !important;
+            max-height: min(85dvh, calc(100dvh - 5rem)) !important;
+            border-radius: 1rem;
+        }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e5e7eb;
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #d1d5db;
+    }
+</style>
+
+<script>
+    const modal = document.getElementById('chat-modal');
+    const header = document.getElementById('chat-header');
+    const input = document.getElementById('chat-input');
+    const box = document.getElementById('chat-box');
+
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    function isMobileViewport() {
+        return window.innerWidth <= 640;
+    }
+
+    function resetModalPosition() {
+        modal.style.top = '';
+        if (isMobileViewport()) {
+            modal.style.left = 'auto';
+            modal.style.right = '';
+            modal.style.bottom = '';
+        } else {
+            modal.style.right = '';
+            modal.style.left = '';
+            modal.style.bottom = '';
+        }
+    }
+
+    header.addEventListener('mousedown', (e) => {
+        if (isMobileViewport()) return;
+        if (e.target.closest('div[onclick]')) return;
+        if (e.target.closest('[data-ficobot-clear-open]')) return;
+        isDragging = true;
+        const rect = modal.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        modal.style.bottom = 'auto';
+        modal.style.right = 'auto';
+        modal.style.left = rect.left + 'px';
+        modal.style.top = rect.top + 'px';
+        modal.style.transition = 'none';
+        document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        let x = e.clientX - offsetX;
+        let y = e.clientY - offsetY;
+        x = Math.max(0, Math.min(x, window.innerWidth - modal.offsetWidth));
+        y = Math.max(0, Math.min(y, window.innerHeight - modal.offsetHeight));
+        modal.style.left = x + 'px';
+        modal.style.top = y + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            modal.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            document.body.style.userSelect = 'auto';
+        }
+    });
+
+    function toggleChat() {
+        if (modal.classList.contains('hidden')) {
+            resetModalPosition();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            input.focus();
+            box.scrollTop = box.scrollHeight; // Auto-scroll to bottom on open
+        } else {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    function appendMessage(text, side, type = 'text') {
+        const isUser = side === 'user';
+        const wrapperClass = isUser ? 'self-end items-end' : 'self-start items-start';
+        const bubbleClass = isUser ? 'bg-bright-green text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none';
+        
+        let content = '';
+        if (type === 'image') {
+            content = `<img src="${text}" class="rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity" onclick="window.open('${text}', '_blank')">`;
+        } else {
+            content = `<div class="p-2 text-sm whitespace-pre-wrap" style="word-break: break-word; overflow-wrap: anywhere; display: inline-block;">${text}</div>`;
+        }
+
+        const messageHtml = `
+            <div class="flex flex-col ${wrapperClass}" style="max-width: 85%; width: auto; shrink: 0;">
+                <div class="${bubbleClass} rounded-2xl shadow-sm overflow-hidden">
+                    ${content}
+                </div>
+            </div>`;
+        
+        box.insertAdjacentHTML('beforeend', messageHtml);
+        // smooth scroll to bottom
+        box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+    }
+
+    async function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+
+        const formData = new FormData();
+        appendMessage(text, 'user');
+        formData.append('message', text);
+        input.value = '';
+
+        try {
+            const response = await fetch('/chat-api', {
+                method: 'POST',
+                body: formData
+                // No headers for FormData - browser sets it with boundary
+            });
+            const raw = await response.text();
+            let data = {};
+            try {
+                data = raw ? JSON.parse(raw) : {};
+            } catch (parseErr) {
+                console.error('chat-api: response is not JSON', parseErr);
+            }
+            const answer = typeof data.answer === 'string' && data.answer.trim() !== ''
+                ? data.answer
+                : "Sorry, I'm having trouble connecting right now.";
+            appendMessage(answer, 'bot');
+        } catch (e) { console.error("Support API Error", e); }
+    }
+
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+    window.addEventListener('resize', () => {
+        if (!modal.classList.contains('hidden')) {
+            resetModalPosition();
+        }
+    });
+</script>
+<script src="{{ asset('js/ficobot-clear-modal.js') }}"></script>
+{% endblock %}

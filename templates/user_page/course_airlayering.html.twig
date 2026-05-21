@@ -1,0 +1,13 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Air Layering (Marcoting) | Growfico Learning{% endblock %}
+{% block page_title %}Air Layering (Marcoting) and Plant Maintenance{% endblock %}
+{% block page_subtitle %}Full Technical Training Manual · Growfico Learning{% endblock %}
+
+{% block user_content %}
+<a href="{{ path('app_user_courses') }}" class="inline-flex items-center gap-2 text-sm text-bright-green hover:text-green-600 mb-6">
+    <ion-icon name="arrow-back-outline"></ion-icon>
+    Back to courses
+</a>
+{% include 'course/_airlayering_content.html.twig' %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Edit Course | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Edit Course</h2>
+<p class="text-sm text-light-gray">Update course details</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="p-6">
+            {{ include('admin/_form.html.twig', {form: form, button_label: 'Update Course'}) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/courses-admin.js') }}"></script>
+{% endblock %}
+

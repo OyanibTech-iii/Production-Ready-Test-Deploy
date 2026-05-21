@@ -1,0 +1,102 @@
+    <section class="py-20 bg-gradient-to-br from-green-50 to-gray-50 dark:from-gray-900 dark:to-gray-950 overflow-hidden" x-data="{ shown: false }"
+        x-intersect.once="shown = true">
+
+        <div class="container max-w-4xl mx-auto px-4">
+            <div class="text-center mb-16 transition-all duration-1000 transform"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                <h2 class="text-3xl md:text-4xl font-semibold mb-6">
+                    <span class="text-dark-forest-green dark:!text-gray-200">Frequently Asked </span>
+                    <span class="text-bright-green">Questions</span>
+                </h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400">Find answers to common questions about our services and products.</p>
+            </div>
+
+            <div class="space-y-4" x-data="{ active: null }">
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-700 delay-[100ms] transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                    <button @click="active = (active === 1 ? null : 1)"
+                        class="w-full text-left p-6 flex justify-between items-center hover:bg-green-50/50 dark:hover:bg-gray-700/50 transition-colors rounded-2xl">
+                        <h3 class="text-lg font-semibold text-dark-forest-green dark:!text-gray-200"
+                            :class="active === 1 ? 'text-bright-green' : ''">
+                            What growing techniques do you teach?
+                        </h3>
+                        <div class="transition-transform duration-300" :class="active === 1 ? 'rotate-180' : ''">
+                            <ion-icon name="chevron-down-outline" class="text-xl text-bright-green"></ion-icon>
+                        </div>
+                    </button>
+
+                    <div x-show="active === 1" x-collapse x-cloak>
+                        <div class="px-6 pb-6 text-gray-500 dark:text-gray-400 leading-relaxed">
+                            We teach a comprehensive range of growing techniques including grafting, air layering,
+                            budding, seed propagation, hydroponics, and sustainable gardening methods.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-700 delay-[200ms] transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                    <button @click="active = (active === 2 ? null : 2)"
+                        class="w-full text-left p-6 flex justify-between items-center hover:bg-green-50/50 dark:hover:bg-gray-700/50 transition-colors rounded-2xl">
+                        <h3 class="text-lg font-semibold text-dark-forest-green dark:!text-gray-200"
+                            :class="active === 2 ? 'text-bright-green' : ''">
+                            Do you offer online consultations?
+                        </h3>
+                        <div class="transition-transform duration-300" :class="active === 2 ? 'rotate-180' : ''">
+                            <ion-icon name="chevron-down-outline" class="text-xl text-bright-green"></ion-icon>
+                        </div>
+                    </button>
+
+                    <div x-show="active === 2" x-collapse x-cloak>
+                        <div class="px-6 pb-6 text-gray-500 dark:text-gray-400 leading-relaxed">
+                            Yes! We offer online consultations via video call or email. Our experts can help you with
+                            plant selection, pest management, and troubleshooting.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-700 delay-[300ms] transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                    <button @click="active = (active === 3 ? null : 3)"
+                        class="w-full text-left p-6 flex justify-between items-center hover:bg-green-50/50 dark:hover:bg-gray-700/50 transition-colors rounded-2xl">
+                        <h3 class="text-lg font-semibold text-dark-forest-green dark:!text-gray-200"
+                            :class="active === 3 ? 'text-bright-green' : ''">
+                            What products do you sell?
+                        </h3>
+                        <div class="transition-transform duration-300" :class="active === 3 ? 'rotate-180' : ''">
+                            <ion-icon name="chevron-down-outline" class="text-xl text-bright-green"></ion-icon>
+                        </div>
+                    </button>
+
+                    <div x-show="active === 3" x-collapse x-cloak>
+                        <div class="px-6 pb-6 text-gray-500 dark:text-gray-400 leading-relaxed">
+                            We sell a wide range of gardening supplies including seeds, fertilizers, growing tools,
+                            pots, and educational materials.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-700 delay-[400ms] transform"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+                    <button @click="active = (active === 4 ? null : 4)"
+                        class="w-full text-left p-6 flex justify-between items-center hover:bg-green-50/50 dark:hover:bg-gray-700/50 transition-colors rounded-2xl">
+                        <h3 class="text-lg font-semibold text-dark-forest-green dark:!text-gray-200"
+                            :class="active === 4 ? 'text-bright-green' : ''">
+                            How can I join your community?
+                        </h3>
+                        <div class="transition-transform duration-300" :class="active === 4 ? 'rotate-180' : ''">
+                            <ion-icon name="chevron-down-outline" class="text-xl text-bright-green"></ion-icon>
+                        </div>
+                    </button>
+
+                    <div x-show="active === 4" x-collapse x-cloak>
+                        <div class="px-6 pb-6 text-gray-500 dark:text-gray-400 leading-relaxed">
+                            Join our community by signing up for our newsletter, following us on social media, or
+                            participating in our regular workshops and webinars.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>

@@ -1,0 +1,435 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Chatroom | Growfico Admin{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(3, 166, 74, 0.1);
+        border-radius: 10px;
+    }
+
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(3, 166, 74, 0.2);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(3, 166, 74, 0.3);
+    }
+
+    /* Typing Dots Animation */
+    .typing-dots .dot {
+        animation: typing 1.4s infinite;
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        margin: 0 1px;
+        background-color: #6B7280;
+        border-radius: 50%;
+    }
+
+    .typing-dots span:nth-of-type(2) {
+        animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-of-type(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+
+        0%,
+        60%,
+        100% {
+            transform: translateY(0);
+        }
+
+        30% {
+            transform: translateY(-4px);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green dark:text-white">Admin Chatroom</h2>
+<p class="text-xs text-light-gray dark:text-gray-400">Collaborate with the Growfico team.</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto h-[calc(100vh-140px)]">
+    <div class="flex gap-6 h-full">
+        <!-- Administrators Sidebar Widget -->
+        <div
+            class="w-80 shrink-0 flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-5 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-900/35 flex items-center justify-center text-bright-green shadow-sm">
+                        {# <ion-icon name="people-outline" class="text-xl"></ion-icon> #}
+                        <img src="{{ asset('logos/adminchatroomlogo.png') }}" alt="Growfico Logo">
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-dark-forest-green dark:text-white uppercase tracking-tight">
+                            Administrators</h3>
+                        <p class="text-[10px] text-light-gray font-medium">Growfico Internal Team</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-3 space-y-1 no-scrollbar bg-gray-50/30 dark:bg-gray-900/10">
+                <!-- Main Discussion Link -->
+                <a href="{{ path('app_admin_chatroom') }}"
+                    class="flex items-center gap-3 p-3 rounded-xl transition-all {{ chatroom.name == 'Main Admin Discussion' ? 'bg-primary-50 dark:bg-primary-900/35 ring-1 ring-primary-100 dark:ring-primary-800 shadow-sm' : 'hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm border border-transparent' }}">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-bright-green shadow-sm shrink-0">
+                        {# <ion-icon name="chatbubbles-outline" class="text-xl"></ion-icon> #}
+                        <img src="{{ asset('logos/groupchatlogo.png')}}" alt="">
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-dark-forest-green dark:text-white">Main Discussion</p>
+                        <p class="text-[10px] text-light-gray truncate">Global Admin Channel</p>
+                    </div>
+                </a>
+
+                <div class="my-4 flex items-center gap-2 px-2">
+                    <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700/50"></div>
+                    <span class="text-[9px] font-bold text-light-gray uppercase tracking-widest">Private Messages</span>
+                    <div class="flex-1 h-px bg-gray-100 dark:bg-gray-700/50"></div>
+                </div>
+
+                {% for admin in admins %}
+                {% if admin != app.user %}
+                <a href="{{ path('app_admin_chatroom_private', {id: admin.id}) }}"
+                    class="flex items-center gap-3 p-3 rounded-xl transition-all border border-transparent {{ chatroom.name == 'Private Chat: ' ~ [app.user.id, admin.id]|sort|join('-') ? 'bg-primary-50 dark:bg-primary-900/35 ring-1 ring-primary-100 dark:ring-primary-800 shadow-sm' : 'hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm' }}">
+                    <div class="relative shrink-0">
+                        <div
+                            class="w-10 h-10 rounded-xl overflow-hidden border-2 border-white dark:border-gray-700 shadow-sm">
+                            {% if admin.profileImage %}
+                            <img src="{{ asset(admin.profileImage) }}" alt="{{ admin.firstName }}"
+                                class="w-full h-full object-cover">
+                            {% else %}
+                            <div
+                                class="w-full h-full bg-gradient-to-br from-bright-green to-primary-600 flex items-center justify-center text-white text-xs font-bold">
+                                {{ admin.firstName|first|upper }}{{ admin.lastName|first|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div
+                            class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-bright-green border-2 border-white dark:border-gray-800 rounded-full shadow-sm">
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-dark-forest-green dark:text-white truncate">
+                            {{ admin.firstName }} {{ admin.lastName }}
+                        </p>
+                        <p class="text-[10px] text-light-gray truncate lowercase">{{ admin.email }}</p>
+                    </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div
+            class="flex-1 flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <!-- Chat Header -->
+            <div
+                class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-900/35 flex items-center justify-center text-bright-green shadow-sm">
+                        {# <ion-icon name="chatbubbles-outline" class="text-xl"></ion-icon> #}
+                        <img src="{{ asset('logos/groupchatlogo.png')}}" alt="">
+
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3
+                                class="text-sm font-bold text-dark-forest-green dark:text-white uppercase tracking-tight">
+                                {{ chatroom.name }}</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-bright-green animate-pulse"></span>
+                            <p class="text-[10px] text-light-gray font-medium">Internal Communication Channel</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if chatroom.name == 'Main Admin Discussion' %}
+                <div class="flex items-center gap-2">
+                    <div class="flex -space-x-2 mr-4">
+                        {% for admin in admins|slice(0, 3) %}
+                        <div
+                            class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 bg-gray-100 dark:bg-gray-700 overflow-hidden shadow-sm">
+                            {% if admin.profileImage %}
+                            <img src="{{ asset(admin.profileImage) }}" class="w-full h-full object-cover">
+                            {% else %}
+                            <div
+                                class="w-full h-full flex items-center justify-center text-[10px] font-bold text-gray-500">
+                                {{ admin.firstName|first|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% if admins|length > 3 %}
+                        <div
+                            class="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-[10px] font-bold text-light-gray shadow-sm">
+                            +{{ admins|length - 3 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/30 dark:bg-gray-900/10 no-scrollbar"
+                id="chat-messages">
+                <!-- System Welcome -->
+                <div class="flex justify-center">
+                    <div
+                        class="px-4 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/35 border border-primary-100 dark:border-primary-800">
+                        <p class="text-[10px] font-bold text-bright-green uppercase tracking-widest">End-to-End
+                            Encrypted Dashboard</p>
+                    </div>
+                </div>
+
+                {% for msg in messages %}
+                {% set isMe = msg.sender == app.user %}
+                <div class="flex items-start gap-3 max-w-[80%] {{ isMe ? 'ml-auto flex-row-reverse' : '' }}">
+                    <div
+                        class="shrink-0 w-8 h-8 rounded-full {{ isMe ? 'bg-bright-green' : 'bg-gray-200 dark:bg-gray-700' }} overflow-hidden flex items-center justify-center text-[10px] font-bold {{ isMe ? 'text-white' : 'text-gray-500' }}">
+                        {% if msg.sender.profileImage %}
+                        <img src="{{ asset(msg.sender.profileImage) }}" class="w-full h-full object-cover">
+                        {% else %}
+                        {{ msg.sender.firstName|first|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 {{ isMe ? 'flex-row-reverse' : '' }}">
+                            <span class="text-[11px] font-bold text-dark-forest-green dark:text-white">{{ isMe ? 'You' :
+                                msg.sender.firstName }}</span>
+                            <span class="text-[9px] text-light-gray uppercase">{{ msg.sentAt|date('h:i A') }}</span>
+                        </div>
+                        <div
+                            class="px-4 py-2.5 rounded-2xl {{ isMe ? 'rounded-tr-none bg-bright-green text-white' : 'rounded-tl-none bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700' }} shadow-sm">
+                            {% if msg.content %}
+                            <p class="text-xs leading-relaxed">{{ msg.content }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Chat Input -->
+            <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 relative">
+                <div class="relative">
+                    <form class="flex items-center gap-3" id="chat-form">
+                        <div
+                            class="flex-1 flex items-center gap-2 bg-gray-50 dark:bg-gray-900 rounded-2xl px-4 py-1 border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-bright-green/30 focus-within:border-bright-green transition-all">
+                            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off"
+                                class="flex-1 bg-transparent border-0 outline-none focus:ring-0 focus:outline-none focus:border-0 text-sm py-2 dark:text-white">
+                        </div>
+                        <button type="submit"
+                            class="w-12 h-12 flex items-center justify-center rounded-2xl bg-transparent text-bright-green hover:bg-dark-forest-green transition-all  group shrink-0">
+                            <ion-icon name="send" class="text-xl group-hover:scale-110 transition-transform"></ion-icon>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatMessages = document.getElementById('chat-messages');
+            const chatForm = document.getElementById('chat-form');
+            const messageInput = document.getElementById('message-input');
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const userId = parseInt("{{ app.user.id|escape('js') }}");
+            const roomId = parseInt("{{ chatroom.id|escape('js') }}");
+            const userName = "{{ app.user.firstName|escape('js') }}";
+            const userImage = "{{ app.user.profileImage ? asset(app.user.profileImage)|escape('js') : '' }}";
+
+            const socket = new WebSocket(`ws://127.0.0.1:8080/ws?user_id=${userId}&room_id=${roomId}`);
+
+            let typingTimeout;
+            let lastTypingSent = 0;
+
+            socket.onopen = function () {
+                console.log('Connected to chat server');
+            };
+
+            socket.onclose = function () {
+                console.error('Disconnected from chat server');
+            };
+
+            socket.onerror = function (err) {
+                console.error('WebSocket error:', err);
+            };
+
+            socket.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                if (data.type === 'typing') {
+                    showTypingIndicator(data);
+                } else {
+                    appendMessage(data);
+                    removeTypingIndicator(data.sender_id);
+                }
+            };
+
+            messageInput.addEventListener('input', function () {
+                const now = Date.now();
+                if (now - lastTypingSent > 2000) {
+                    sendTypingStatus();
+                    lastTypingSent = now;
+                }
+            });
+
+            function sendTypingStatus() {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({
+                        chatroom_id: roomId,
+                        sender_id: userId,
+                        sender_name: userName,
+                        sender_image: userImage,
+                        type: 'typing'
+                    }));
+                }
+            }
+
+            function showTypingIndicator(data) {
+                if (data.sender_id === userId) return;
+
+                let indicator = document.getElementById(`typing-${data.sender_id}`);
+                if (indicator) {
+                    clearTimeout(indicator.dataset.timeout);
+                } else {
+                    const senderInitial = data.sender_name ? data.sender_name.charAt(0).toUpperCase() : 'A';
+                    let avatarContent = senderInitial;
+                    if (data.sender_image) {
+                        const imgPath = data.sender_image.startsWith('/') ? data.sender_image : '/' + data.sender_image;
+                        avatarContent = `<img src="${imgPath}" class="w-full h-full object-cover">`;
+                    }
+
+                    const indicatorHtml = `
+                    <div id="typing-${data.sender_id}" class="flex items-start gap-3 max-w-[80%] typing-indicator-wrapper">
+                        <div class="shrink-0 w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden flex items-center justify-center text-[10px] font-bold text-gray-500">
+                            ${avatarContent}
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-bold text-dark-forest-green dark:text-white">${data.sender_name || 'Admin'}</span>
+                            </div>
+                            <div class="px-4 py-2 rounded-2xl rounded-tl-none bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm">
+                                <div class="typing-dots flex items-center h-3 gap-1">
+                                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    chatMessages.insertAdjacentHTML('beforeend', indicatorHtml);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    indicator = document.getElementById(`typing-${data.sender_id}`);
+                }
+
+                indicator.dataset.timeout = setTimeout(() => {
+                    removeTypingIndicator(data.sender_id);
+                }, 5000);
+            }
+
+            function removeTypingIndicator(senderId) {
+                const indicator = document.getElementById(`typing-${senderId}`);
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+
+            chatForm.onsubmit = function (e) {
+                e.preventDefault();
+                handleSendMessage(messageInput.value.trim());
+            };
+
+            async function handleSendMessage(content) {
+                if (!content) return;
+
+                if (socket.readyState !== WebSocket.OPEN) {
+                    alert('Connection to chat server lost. Please refresh.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('chatroom_id', roomId);
+                formData.append('content', content);
+
+                try {
+                    const response = await fetch("{{ path('app_admin_chatroom_save')|escape('js') }}", {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        messageInput.value = '';
+                    } else {
+                        console.error('Failed to save message');
+                    }
+                } catch (err) {
+                    console.error('Error sending message:', err);
+                }
+            }
+
+            function appendMessage(data) {
+                const isMe = data.sender_id === userId;
+                const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                let messageContent = '';
+                if (data.content) {
+                    messageContent += `<p class="text-xs leading-relaxed">${data.content}</p>`;
+                }
+
+                const senderInitial = data.sender_name ? data.sender_name.charAt(0).toUpperCase() : 'A';
+                let avatarContent = senderInitial;
+
+                if (data.sender_image) {
+                    const imgPath = data.sender_image.startsWith('/') ? data.sender_image : '/' + data.sender_image;
+                    avatarContent = `<img src="${imgPath}" class="w-full h-full object-cover">`;
+                }
+
+                const msgHtml = `
+                <div class="flex items-start gap-3 max-w-[80%] ${isMe ? 'ml-auto flex-row-reverse' : ''}">
+                    <div class="shrink-0 w-8 h-8 rounded-full ${isMe ? 'bg-bright-green' : 'bg-gray-200 dark:bg-gray-700'} overflow-hidden flex items-center justify-center text-[10px] font-bold ${isMe ? 'text-white' : 'text-gray-500'}">
+                        ${avatarContent}
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 ${isMe ? 'flex-row-reverse' : ''}">
+                            <span class="text-[11px] font-bold text-dark-forest-green dark:text-white">${isMe ? 'You' : (data.sender_name || 'Admin')}</span>
+                            <span class="text-[9px] text-light-gray uppercase">${time}</span>
+                        </div>
+                        <div class="px-4 py-2.5 rounded-2xl ${isMe ? 'rounded-tr-none bg-bright-green text-white' : 'rounded-tl-none bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-600'} shadow-sm">
+                            ${messageContent}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+                chatMessages.insertAdjacentHTML('beforeend', msgHtml);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    </script>
+    {% endblock %}

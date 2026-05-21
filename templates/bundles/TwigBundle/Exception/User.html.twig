@@ -1,0 +1,79 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block page_title %}Error{% endblock %}
+{% block page_subtitle %}Something went wrong{% endblock %}
+
+{% block user_content %}
+<div class="grid grid-cols-1 gap-6">
+    {# Error Exception Display (Debug Mode) #}
+    {% if exception and app.debug %}
+    <div class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-6">
+        <div class="flex gap-4">
+       
+            <div class="flex-1">
+                <h3 class="text-lg font-semibold text-red-800 dark:text-red-300 mb-3">Error Details</h3>
+                <div class="bg-white dark:bg-gray-900 rounded-lg p-4 border border-red-100 dark:border-red-900">
+                    <p class="text-sm font-mono text-gray-700 dark:text-gray-300 break-words">
+                        <span class="block font-semibold text-red-700 dark:text-red-400 mb-2">Exception Message:</span>
+                        <code class="block text-xs whitespace-pre-wrap">{{ exception.message }}</code>
+                    </p>
+                    {% if exception.code %}
+                    <p class="text-sm font-mono text-gray-700 dark:text-gray-300 break-words mt-3">
+                        <span class="block font-semibold text-red-700 dark:text-red-400 mb-2">Error Code:</span>
+                        <code class="text-xs">{{ exception.code }}</code>
+                    </p>
+                    {% endif %}
+                </div>
+                <p class="text-xs text-red-600 dark:text-red-400 mt-4 font-medium">
+                    This error is displayed because debug mode is enabled. Share this information with developers.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# User-friendly Error Message #}
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div class="flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-950 flex items-center justify-center mb-6">
+                <ion-icon name="warning-outline" class="text-4xl text-blue-600 dark:text-blue-400"></ion-icon>
+            </div>
+
+            <h2 class="text-2xl font-semibold text-dark-forest-green dark:text-white mb-3">
+                {% if status_code == 404 %}
+                    Page Not Found
+                {% elseif status_code == 403 %}
+                    Access Denied
+                {% elseif status_code == 500 %}
+                    Server Error
+                {% else %}
+                    Something Went Wrong
+                {% endif %}
+            </h2>
+
+            <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md">
+                {% if status_code == 404 %}
+                    The page you're looking for doesn't exist or has been removed.
+                {% elseif status_code == 403 %}
+                    You don't have permission to access this resource.
+                {% elseif status_code == 500 %}
+                    An internal server error occurred. Please try again later.
+                {% else %}
+                    {{ status_text }}
+                {% endif %}
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="window.history.back()"
+                    class="px-6 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-dark-forest-green dark:text-gray-100 font-medium rounded-lg transition-colors duration-200">
+                    Go Back
+                </button>
+                <a href="{{ path('app_user_page') }}"
+                    class="px-6 py-2.5 bg-bright-green hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200 no-underline text-center">
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

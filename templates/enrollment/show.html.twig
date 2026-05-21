@@ -1,0 +1,74 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Enrollment Details | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Enrollment Details</h2>
+<p class="text-xs text-light-gray">View enrollment information</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <p class="text-xs text-light-gray">User</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ enrollment.user ? enrollment.user.getFullName() : 'N/A' }}
+                </p>
+                {% if enrollment.user %}
+                    <p class="text-xs text-light-gray">{{ enrollment.user.email }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Course</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ enrollment.course ? enrollment.course.courseName : 'N/A' }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Status</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ enrollment.status ? enrollment.status.name : 'N/A' }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Enrolled At</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ enrollment.enrolledAt ? enrollment.enrolledAt|date('M d, Y H:i') : 'N/A' }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Completed At</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ enrollment.completedAt ? enrollment.completedAt|date('M d, Y H:i') : '-' }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-end pt-4 border-t border-gray-100">
+            <a href="{{ path('app_enrollment_index') }}"
+               class="inline-flex items-center justify-center px-5 py-2.5 bg-gray-100 text-dark-forest-green text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                <ion-icon name="arrow-back-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Back to list
+            </a>
+            <a href="{{ path('app_enrollment_edit', {'id': enrollment.id}) }}"
+               class="inline-flex items-center justify-center px-5 py-2.5 bg-bright-green text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                <ion-icon name="create-outline" class="w-4 h-4 mr-2"></ion-icon>
+                Edit
+            </a>
+            <form method="post"
+                  action="{{ path('app_enrollment_delete', {'id': enrollment.id}) }}"
+                  onsubmit="return confirm('Are you sure you want to delete this enrollment?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ enrollment.id) }}">
+                <button class="inline-flex items-center justify-center px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors duration-200">
+                    <ion-icon name="trash-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

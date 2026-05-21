@@ -1,0 +1,184 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Quizzes | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green">Quizzes</h2>
+<p class="text-xs text-light-gray">Manage course quizzes and passing scores</p>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-lg font-semibold text-dark-forest-green">Manage Quizzes</h2>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </span>
+                    <input type="text"
+                           id="quizzes-search-input"
+                           class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                           placeholder="Search quizzes..."
+                           autocomplete="off"
+                           aria-label="Search quizzes">
+                </div>
+                <a href="{{ path('app_admin_quiz_new') }}"
+                   class="inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add Quiz
+                </a>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="quizzesTable" class="w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passing Score</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                        style="text-align: center !important;">
+                        Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                {% for quiz in quizzes %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-xs font-medium text-dark-forest-green dark:!text-gray-200">
+                                {{ quiz.title }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-xs text-dark-forest-green dark:!text-gray-200">
+                                {{ quiz.course ? quiz.course.courseName : 'N/A' }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-xs font-semibold text-dark-forest-green dark:!text-gray-200">
+                                {{ quiz.passingScore }}%
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ path('app_admin_quiz_show', {'id': quiz.id}) }}"
+                                   class="text-bright-green hover:text-green-600 transition-colors duration-200"
+                                   title="View Quiz">
+                                    <ion-icon name="eye-outline" class="w-4 h-4"></ion-icon>
+                                </a>
+                                <a href="{{ path('app_admin_quiz_edit', {'id': quiz.id}) }}"
+                                   class="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                                   title="Edit Quiz">
+                                    <ion-icon name="create-outline" class="w-4 h-4"></ion-icon>
+                                </a>
+                                <form method="post"
+                                      action="{{ path('app_admin_quiz_delete', {'id': quiz.id}) }}"
+                                      onsubmit="return confirm('Are you sure you want to delete this quiz?');"
+                                      class="inline">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('delete' ~ quiz.id) }}">
+                                    <button type="submit"
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                            title="Delete Quiz">
+                                        <ion-icon name="trash-outline" class="w-4 h-4"></ion-icon>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if quizzes is empty %}
+            <div class="text-center py-8 border-t border-gray-100 mt-4">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 mx-auto dark:bg-gray-700">
+                    <ion-icon name="help-circle-outline" class="w-8 h-8 text-light-gray"></ion-icon>
+                </div>
+                <h4 class="text-sm font-semibold text-dark-forest-green mb-2">No quizzes found</h4>
+                <p class="text-xs text-light-gray mb-4 max-w-sm mx-auto">
+                    Create your first quiz to evaluate learners.
+                </p>
+                <a href="{{ path('app_admin_quiz_new') }}"
+                   class="inline-flex items-center px-4 py-2 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add your first quiz
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/admin-search.js') }}"></script>
+<script>
+    (function () {
+        'use strict';
+        const TABLE_SELECTOR = '#quizzesTable';
+        const SEARCH_INPUT_ID = 'quizzes-search-input';
+
+        function initQuizzesDataTable() {
+            if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) {
+                return;
+            }
+            const $table = jQuery(TABLE_SELECTOR);
+            if (!$table.length || jQuery.fn.DataTable.isDataTable(TABLE_SELECTOR)) {
+                return;
+            }
+            const table = $table.DataTable({
+                dom: 'lrtip',
+                pageLength: 10,
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { orderable: false, targets: 3 },
+                    { className: 'align-middle', targets: '_all' }
+                ],
+                autoWidth: false,
+                language: {
+                    emptyTable: 'No quizzes found.',
+                    zeroRecords: 'No matching quizzes found.',
+                    paginate: {
+                        previous: '<ion-icon name="chevron-back-outline" class="align-middle"></ion-icon>',
+                        next: '<ion-icon name="chevron-forward-outline" class="align-middle"></ion-icon>'
+                    }
+                }
+            });
+
+            const searchInput = document.getElementById(SEARCH_INPUT_ID);
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function () {
+                    table.search(this.value).draw();
+                });
+            }
+
+            if (typeof AdminSearch !== 'undefined') {
+                new AdminSearch({
+                    searchInputId: SEARCH_INPUT_ID,
+                    tableSelector: TABLE_SELECTOR
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initQuizzesDataTable);
+        } else {
+            initQuizzesDataTable();
+        }
+    })();
+</script>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Stock Details - #{{ stock.id }}{% endblock %}
+{% block page_title %}Stock Details{% endblock %}
+{% block page_subtitle %}View and manage stock entry #{{ stock.id }}{% endblock %}
+
+{% block user_content %}
+<div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Stock Information Card -->
+            <div class="lg:col-span-2">
+                <div class="card">
+                    <div class="card-header bg-primary-600">
+                        <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <ion-icon name="cube-outline" class="text-sm"></ion-icon>
+                            Stock Information
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <dl class="grid grid-cols-1 gap-6">
+                            <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                                <dt class="text-xs font-medium text-gray-500">Stock ID</dt>
+                                <dd class="text-sm font-semibold text-gray-900">#{{ stock.id }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                                <dt class="text-xs font-medium text-gray-500">Quantity</dt>
+                                <dd class="text-sm font-semibold text-bright-green flex items-center gap-2">
+                                    {{ stock.Quantity }}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        units
+                                    </span>
+                                </dd>
+                            </div>
+                            <div class="flex items-center justify-between py-3">
+                                <dt class="text-xs font-medium text-gray-500">Associated Products</dt>
+                                <dd class="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                                    <ion-icon name="cube-outline" class="text-gray-400 text-xs"></ion-icon>
+                                    {{ stock.products|length }} products
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Products List -->
+                {% if stock.products|length > 0 %}
+                <div class="card mt-6">
+                    <div class="card-header bg-gradient-to-r from-blue-500 to-blue-600">
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <ion-icon name="list-outline" class="text-sm"></ion-icon>
+                            Associated Products
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="space-y-4">
+                            {% for product in stock.products %}
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 bg-bright-green rounded-full flex items-center justify-center">
+                                        <ion-icon name="cube-outline" class="text-white text-xs"></ion-icon>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-900">{{ product.name|default('Unnamed Product') }}</h4>
+                                        <p class="text-xs text-gray-500">Product ID: #{{ product.id }}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs font-medium text-gray-900">In Stock</div>
+                                    <div class="text-xs text-gray-500">Available</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Actions Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="card">
+                    <div class="card-header bg-gradient-to-r from-gray-600 to-gray-700">
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <ion-icon name="settings-outline" class="text-sm"></ion-icon>
+                            Actions
+                        </h3>
+                    </div>
+                    <div class="card-body space-y-4">
+                        {% if is_granted('STOCK_EDIT', stock) %}
+                            <a href="{{ path('app_stock_edit', {'id': stock.id}) }}" 
+                               class="btn-primary w-full flex items-center justify-center gap-2 text-sm">
+                                <ion-icon name="create-outline" class="text-sm"></ion-icon>
+                                Edit Stock
+                            </a>
+                        {% endif %}
+                        
+                        <a href="{{ path('app_stock_index') }}" 
+                           class="btn-secondary w-full flex items-center justify-center gap-2 text-sm">
+                            <ion-icon name="list-outline" class="text-sm"></ion-icon>
+                            View All Stock
+                        </a>
+
+                        {% if is_granted('STOCK_DELETE', stock) %}
+                            <div class="border-t border-gray-200 pt-4">
+                                <h4 class="text-xs font-medium text-gray-900 mb-3">Danger Zone</h4>
+                                {{ include('stock/_delete_form.html.twig') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card mt-6">
+                    <div class="card-header bg-gradient-to-r from-bright-green to-dark-forest-green">
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <ion-icon name="analytics-outline" class="text-sm"></ion-icon>
+                            Quick Stats
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="space-y-4">
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-bright-green">{{ stock.Quantity }}</div>
+                                <div class="text-xs text-gray-500">Total Quantity</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-bright-green">{{ stock.products|length }}</div>
+                                <div class="text-xs text-gray-500">Products</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

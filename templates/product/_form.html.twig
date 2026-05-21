@@ -1,0 +1,141 @@
+<div class="">
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6', 'enctype': 'multipart/form-data'}}) }}
+
+<div class="bg-white rounded-xl p-6 space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {# prdoduct image #}
+        <div class="space-y-2 ">
+            {{ form_label(form.image, 'Product Image', {'label_attr': {'class': 'block text-sm font-semibold
+            text-dark-forest-green'}}) }}
+
+            {# Hidden native file input - keep Symfony form for server-side handling but hide it visually #}
+            {% set file_input_id = form.image.vars.id %}
+            {{ form_widget(form.image, {'attr': {'class': 'hidden', 'id': file_input_id}}) }}
+
+            {# Custom styled file picker using TailwindCSS v4.1 classes #}
+            <div class="flex items-center space-x-4">
+                <label for="{{ file_input_id }}" role="button" tabindex="0"
+                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-dark-forest-green hover:bg-gray-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-bright-green focus:ring-offset-1">
+                    <ion-icon name="cloud-upload-outline" class="w-5 h-5 mr-2 text-gray-500"></ion-icon>
+                    Choose File
+                </label>
+
+                <span id="{{ file_input_id }}-filename" class="text-sm text-light-gray max-w-xs truncate"
+                    title="No file chosen">No file chosen</span>
+            </div>
+
+            {{ form_errors(form.image) }}
+
+            {% if form.vars.value is defined and form.vars.value.image is defined and form.vars.value.image %}
+            <div class="mt-2">
+                {% set currentImagePath = form.vars.value.getImagePath() %}
+                {% if currentImagePath %}
+                <img src="{{ currentImagePath starts with('http') ? currentImagePath : asset(currentImagePath) }}"
+                    alt="Current image" class="max-w-xs rounded" />
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {# Inline JS to update filename display when user selects a file. This is minimal and safe. #}
+            <script>
+                (function () {
+                    var input = document.getElementById('{{ file_input_id }}');
+                    var nameEl = document.getElementById('{{ file_input_id }}-filename');
+                    var label = document.querySelector('label[for="{{ file_input_id }}"]');
+                    if (!input || !nameEl) return;
+
+                    function updateName(file) {
+                        if (file) {
+                            nameEl.textContent = file.name;
+                            nameEl.title = file.name;
+                        } else {
+                            nameEl.textContent = 'No file chosen';
+                            nameEl.title = 'No file chosen';
+                        }
+                    }
+
+                    // When a file is selected via the input
+                    input.addEventListener('change', function (e) {
+                        var file = input.files && input.files[0];
+                        updateName(file);
+                    });
+
+                    // Make the label keyboard-activatable (Enter / Space)
+                    if (label) {
+                        label.addEventListener('keydown', function (e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                input.click();
+                            }
+                        });
+                    }
+                })();
+            </script>
+        </div>
+
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-2 min-w-0">
+            {{ form_label(form.name, 'Product Name', {'label_attr': {'class': 'block text-sm font-semibold
+            text-dark-forest-green'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+            focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+            text-dark-forest-green placeholder-light-gray'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+
+        <div class="space-y-2 min-w-0">
+            {{ form_label(form.price, null, {'label_attr': {'class': 'block text-sm font-semibold
+            text-dark-forest-green'}}) }}
+            {{ form_widget(form.price, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+            focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+            text-dark-forest-green placeholder-light-gray', 'step': '0.01', 'min': '0'}}) }}
+            {{ form_errors(form.price) }}
+        </div>
+    </div>
+    <!-- Description -->
+    <div class="space-y-2">
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-sm font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green placeholder-light-gray', 'rows': '4'}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Availability -->
+        <div class="space-y-2">
+            {{ form_label(form.isAvailable, 'Availability', {'label_attr': {'class': 'block text-sm font-semibold
+            text-dark-forest-green'}}) }}
+            <div class="flex items-center space-x-4">
+                {{ form_widget(form.isAvailable, {'attr': {'class': 'w-5 h-5 text-bright-green border-gray-300 rounded
+                focus:ring-bright-green focus:ring-2'}}) }}
+                <span class="text-sm text-light-gray">Available for purchase</span>
+            </div>
+            {{ form_errors(form.isAvailable) }}
+        </div>
+    </div>
+</div>
+
+<!-- Form Actions -->
+<div class="flex flex-col sm:flex-row gap-4 justify-end mt-2">
+    {% if app.request.get('_route') starts with 'app_admin_' %}
+    <a href="{{ path('app_admin_products') }}"
+        class="inline-flex items-center justify-center px-6 py-3 text-xs bg-gray-100 text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-bright-green">
+        Cancel
+    </a>
+    {% else %}
+    <a href="{{ path('app_product_index') }}"
+        class="inline-flex items-center justify-center text-xs px-6 py-3 bg-gray-100 text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-bright-green">
+        Cancel
+    </a>
+    {% endif %}
+    <button type="submit"
+        class="inline-flex text-xs items-center justify-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+        {{ button_label|default('Save Product') }}
+    </button>
+</div>
+{{ form_end(form) }}
+</div>

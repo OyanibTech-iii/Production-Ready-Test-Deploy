@@ -1,0 +1,141 @@
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Floating Image Effect */
+    @keyframes floating {
+        0% {
+            transform: translateY(0px) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(2deg);
+        }
+
+        100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+    }
+
+    /* Shimmer Effect for "Coming Soon" feel */
+    @keyframes shimmer {
+        0% {
+            background-position: -200% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    .animate-card {
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .coming-soon-shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 3s infinite linear;
+    }
+
+    /* Staggered delays */
+    .delay-1 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.6s;
+    }
+
+    /* Section Entrance */
+    @keyframes sectionFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Morphing Image Shape */
+    @keyframes morphShape {
+
+        0%,
+        100% {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+
+        50% {
+            border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+        }
+    }
+
+    .animate-section {
+        animation: sectionFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .technique-card {
+        opacity: 0;
+        animation: sectionFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Morphing effect for the image container */
+    .morph-container {
+        animation: morphShape 8s ease-in-out infinite;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .group:hover .morph-container {
+        animation-play-state: paused;
+        border-radius: 1rem;
+        transform: scale(1.05);
+    }
+
+    /* Staggered Delays for 3 Columns */
+    .delay-1 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.6s;
+    }
+
+    .section-leaf {
+        position: absolute;
+        width: 80px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 1.2s ease-out;
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.05));
+        object-fit: contain;
+    }
+
+    /* Ensure all content containers are above leaves */
+    .container,
+    .grid,
+    section>div:not(.section-leaf),
+    video {
+        position: relative;
+        z-index: 10;
+    }

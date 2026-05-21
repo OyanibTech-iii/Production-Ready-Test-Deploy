@@ -1,0 +1,132 @@
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6', 'enctype': 'multipart/form-data'}}) }}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="col-span-full pb-6">
+        <h3 class="text-sm font-semibold text-dark-forest-green mb-4">Thumbnail Image</h3>
+        <div class="flex items-center gap-6">
+            <div
+                class="w-24 h-24 bg-gradient-to-br from-bright-green to-primary-600 text-white flex items-center justify-center rounded-xl font-semibold text-2xl overflow-hidden relative group">
+                {% if form.vars.value is defined and form.vars.value.thumbnail %}
+                <img id="course-preview" src="{{ asset(form.vars.value.getThumbnailPath()) }}"
+                    class="w-full h-full object-cover">
+                {% else %}
+                <div id="placeholder-icon" class="flex items-center justify-center">
+                    <ion-icon name="cloud-upload-outline" class="text-3xl text-white/90"></ion-icon>
+                </div>
+                <img id="course-preview" src="" class="w-full h-full object-cover hidden">
+                {% endif %}
+
+                <button type="button" onclick="document.getElementById('{{ form.thumbnail.vars.id }}').click()"
+                    class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div>
+                {{ form_widget(form.thumbnail, {
+                'attr': {
+                'class': 'hidden',
+                'onchange': 'previewImage(this)'
+                }
+                }) }}
+
+                <p class="text-xs text-light-gray mb-2">JPG, PNG, GIF up to 10MB</p>
+
+                <button type="button" onclick="document.getElementById('{{ form.thumbnail.vars.id }}').click()"
+                    class="px-4 py-2 bg-bright-green text-white rounded-lg hover:bg-green-600 transition-colors duration-200 text-xs font-medium">
+                    Change Photo
+                </button>
+
+                <div class="mt-1">
+                    {{ form_errors(form.thumbnail) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space-y-2 md:col-span-2">
+        {{ form_label(form.courseName, 'Course Name', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.courseName, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green placeholder-light-gray text-xs'}}) }}
+        {{ form_errors(form.courseName) }}
+    </div>
+
+    <div class="space-y-2 md:col-span-2">
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green placeholder-light-gray text-xs', 'rows': 5}}) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.tier, 'Tier', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.tier, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+        focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green
+        placeholder-light-gray text-xs dark:bg-gray-700 dark:text-gray-200'}}) }}
+        {{ form_errors(form.tier) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.price, 'Price', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.price, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+        focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green
+        placeholder-light-gray text-xs dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600', 'step': '0.01', 'min': '0'}}) }}
+        {{ form_errors(form.price) }}
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 justify-end mt-2">
+    <a href="{{ path('app_admin_courses') }}"
+        class="inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-xs text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-gray-200 dark:hover:!text-dark-forest-green">
+        Cancel
+    </a>
+    <button type="submit"
+        class="inline-flex items-center justify-center px-6 py-3 bg-bright-green text-xs text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+        {{ button_label|default('Save Course') }}
+    </button>
+</div>
+{{ form_end(form) }}
+
+<script>
+(function () {
+    var tierEl = document.getElementById("{{ form.tier.vars.id|e('js') }}");
+    var priceEl = document.getElementById("{{ form.price.vars.id|e('js') }}");
+    var freeValue = 'Free';
+    var readOnlyClasses = ['bg-gray-100', 'cursor-not-allowed', 'opacity-90'];
+    var readOnlyDarkBg = 'dark:bg-gray-700';
+    var editableDarkBg = 'dark:bg-gray-800';
+
+    function syncPriceForTier() {
+        if (!tierEl || !priceEl) {
+            return;
+        }
+        if (tierEl.value === freeValue) {
+            priceEl.value = '0.00';
+            priceEl.readOnly = true;
+            priceEl.setAttribute('aria-readonly', 'true');
+            priceEl.classList.remove(editableDarkBg);
+            readOnlyClasses.forEach(function (c) { priceEl.classList.add(c); });
+            priceEl.classList.add(readOnlyDarkBg);
+        } else {
+            priceEl.readOnly = false;
+            priceEl.removeAttribute('aria-readonly');
+            readOnlyClasses.forEach(function (c) { priceEl.classList.remove(c); });
+            priceEl.classList.remove(readOnlyDarkBg);
+            priceEl.classList.add(editableDarkBg);
+        }
+    }
+
+    if (tierEl) {
+        tierEl.addEventListener('change', syncPriceForTier);
+    }
+    syncPriceForTier();
+})();
+</script>

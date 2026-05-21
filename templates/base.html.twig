@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-white dark:bg-gray-900">
+<head>
+	<script>
+		(function () {
+			try {
+				var t = localStorage.getItem('theme');
+				if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				document.documentElement.classList.toggle('dark', t === 'dark');
+			} catch (e) { }
+		})();
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+	<title>
+		{% block title %}Growfico | Cultivating Green Future
+		{% endblock %}
+	</title>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tagalog&family=Poppins:wght@100;400;700&display=swap"
+		rel="stylesheet">
+	<link rel="icon" href="{{asset('favicon.ico')}}">
+	{% block stylesheets %}
+	{{ encore_entry_link_tags('app') }}
+	{% endblock %}
+
+	{% block javascripts %}
+	{{ encore_entry_script_tags('app') }}
+	<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.8/dist/dotlottie-wc.js" type="module"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
+
+	<!-- Admin Search Utility -->
+	<script src="{{ asset('js/admin-search.js') }}"></script>
+	<script src="{{ asset('js/admin-header-search.js') }}"></script>
+
+	<!-- Ionicons CDN - Improved loading with better error handling -->
+	<script type="module" data-turbo-track="reload"
+		src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js?v={{ " now"|date(" u") }}"></script>
+	<script nomodule data-turbo-track="reload" src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js?v={{ "
+		now"|date(" u") }}"></script>
+
+	<script src="{{ asset('js/theme.js') }}"></script>
+	<script>
+		// Suppress WebSocket connection errors
+		window.addEventListener('error', function (e) {
+			if (e.message && e.message.includes('WebSocket connection')) {
+				e.preventDefault();
+				return false;
+			}
+		});
+
+		// Handle null reference errors in AJAX requests
+		window.addEventListener('unhandledrejection', function (e) {
+			if (e.reason && e.reason.message && e.reason.message.includes('Cannot read properties of null')) {
+				e.preventDefault();
+				return false;
+			}
+		});
+	</script>
+
+	<!-- Logout Confirmation Function -->
+	<script>
+		function confirmLogout(event) {
+			event.preventDefault();
+
+			window.showConfirmModal({
+				title: 'Logout Confirmation',
+				message: 'Are you sure you want to logout? You will need to login again to access your account.',
+				confirmText: 'Yes, logout',
+				confirmClass: 'bg-[#03A64A] hover:bg-[#0a5a36]'
+			}).then(function (result) {
+				if (!result) return;
+				window.growficoToast({ type: 'logout', message: 'Logging you out...', duration: 1500 });
+				setTimeout(function () {
+					window.location.href = '/logout';
+				}, 1500);
+			});
+		}
+	</script>
+	{% endblock %}
+</head>
+
+<body>
+	{% block body %}{% endblock %}
+
+	<div id="growfico-toast"
+		class="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl shadow-lg text-white text-sm font-medium transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none"
+		role="status" aria-live="polite">
+		<ion-icon id="growfico-toast-icon" name="checkmark-circle" class="align-middle text-lg mr-2"></ion-icon>
+		<span id="growfico-toast-msg"> </span>
+	</div>
+
+	<script>
+		(function () {
+			const toastEl = document.getElementById('growfico-toast');
+			const toastIconEl = document.getElementById('growfico-toast-icon');
+			const toastMsgEl = document.getElementById('growfico-toast-msg');
+			let hideTimer = null;
+
+			if (!toastEl || !toastIconEl || !toastMsgEl) return;
+
+			function applyToastType(type) {
+				let iconName = 'checkmark-circle';
+				let bg = '#03A64A';
+
+				if (type === 'error') {
+					iconName = 'alert-circle-outline';
+					bg = '#E11D48';
+				} else if (type === 'warning') {
+					iconName = 'warning-outline';
+					bg = '#F59E0B';
+				} else if (type === 'info') {
+					iconName = 'information-circle-outline';
+					bg = '#074026';
+				} else if (type === 'logout') {
+					iconName = 'log-out-outline';
+					bg = '#03A64A';
+				}
+
+				toastIconEl.setAttribute('name', iconName);
+				toastEl.style.backgroundColor = bg;
+			}
+
+			window.growficoToast = function (options) {
+				options = options || {};
+				const type = options.type || 'success';
+				const message = options.message || '';
+				const duration = typeof options.duration === 'number' ? options.duration : 2500;
+
+				applyToastType(type);
+				toastMsgEl.textContent = message;
+
+				toastEl.classList.remove('translate-y-24', 'opacity-0');
+				toastEl.classList.add('translate-y-0', 'opacity-100');
+
+				if (hideTimer) clearTimeout(hideTimer);
+				hideTimer = setTimeout(function () {
+					toastEl.classList.add('translate-y-24', 'opacity-0');
+					toastEl.classList.remove('translate-y-0', 'opacity-100');
+				}, duration);
+			};
+		})();
+	</script>
+
+	<div id="confirm-modal" class="fixed inset-0 z-50 hidden" style="display: none;">
+		<div class="absolute inset-0 bg-black/40 backdrop-blur-md"></div>
+		<div class="absolute inset-0 flex items-center justify-center">
+			<div
+				class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 transform transition-all relative z-10 border border-gray-100 dark:border-gray-700">
+				<div class="flex items-center gap-4 mb-3">
+					<div id="confirm-modal-icon-container"
+						class="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-950/40 flex items-center justify-center">
+						<ion-icon name="alert-circle-outline"
+							class="text-2xl text-yellow-600 dark:text-yellow-400"></ion-icon>
+					</div>
+					<div>
+						<h3 id="confirm-modal-title" class="text-lg font-semibold text-dark-forest-green">Are you sure?
+						</h3>
+						<p id="confirm-modal-sub" class="text-xs text-light-gray">This action cannot be undone.</p>
+					</div>
+				</div>
+
+				<p id="confirm-modal-message" class="text-sm text-light-gray mb-6">Please confirm this action.</p>
+
+				<div class="flex gap-3">
+					<button id="confirm-cancel-btn"
+						class="flex-1 px-4 py-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-dark-forest-green dark:text-gray-100 font-medium transition-colors duration-200">
+						Cancel
+					</button>
+					<button id="confirm-ok-btn"
+						class="flex-1 px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors duration-200">
+						Confirm
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		(function () {
+			const modal = document.getElementById('confirm-modal');
+			const msgEl = document.getElementById('confirm-modal-message');
+			const titleEl = document.getElementById('confirm-modal-title');
+			const subEl = document.getElementById('confirm-modal-sub');
+			const okBtn = document.getElementById('confirm-ok-btn');
+			const cancelBtn = document.getElementById('confirm-cancel-btn');
+			const iconContainer = document.getElementById('confirm-modal-icon-container');
+
+			let resolveFn = null;
+
+			function openConfirm(options) {
+				options = options || {};
+				titleEl.textContent = options.title || 'Are you sure?';
+				subEl.textContent = options.subtitle || '';
+				msgEl.textContent = options.message || 'This action cannot be undone.';
+				okBtn.textContent = options.confirmText || 'Confirm';
+				
+				if (options.isAlert) {
+					cancelBtn.classList.add('hidden');
+				} else {
+					cancelBtn.classList.remove('hidden');
+				}
+
+				if (options.hideIcon) {
+					iconContainer.classList.add('hidden');
+				} else {
+					iconContainer.classList.remove('hidden');
+				}
+
+				if (options.confirmClass) {
+					okBtn.className = 'flex-1 px-4 py-2.5 rounded-lg ' + options.confirmClass + ' text-white font-medium transition-colors duration-200';
+				} else {
+					okBtn.className = 'flex-1 px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors duration-200';
+				}
+
+				modal.style.display = 'flex';
+				modal.classList.remove('hidden');
+				document.documentElement.style.overflow = 'hidden';
+
+				return new Promise((resolve) => { resolveFn = resolve; });
+			}
+
+			function closeConfirm() {
+				modal.style.display = 'none';
+				modal.classList.add('hidden');
+				document.documentElement.style.overflow = '';
+				resolveFn = null;
+			}
+
+			okBtn.addEventListener('click', function () {
+				if (resolveFn) resolveFn(true);
+				closeConfirm();
+			});
+
+			cancelBtn.addEventListener('click', function () {
+				if (resolveFn) resolveFn(false);
+				closeConfirm();
+			});
+
+			modal.addEventListener('click', function (e) {
+				if (e.target === modal) { if (resolveFn) resolveFn(false); closeConfirm(); }
+			});
+
+			document.addEventListener('keydown', function (e) {
+				if (e.key === 'Escape' && modal.style.display !== 'none') { if (resolveFn) resolveFn(false); closeConfirm(); }
+			});
+
+			// Expose globally
+			window.showConfirmModal = openConfirm;
+			window.showAlertModal = function(options) {
+				if (typeof options === 'string') {
+					options = { message: options };
+				}
+				options.isAlert = true;
+				options.confirmText = options.confirmText || 'OK';
+				options.confirmClass = options.confirmClass || 'bg-[#03A64A] hover:bg-[#0a5a36]';
+				options.title = options.title || 'Notification';
+				return openConfirm(options);
+			};
+		})();
+
+		// Intercept native form submits for forms marked `.confirm-delete-form` globally
+		document.addEventListener('submit', function (e) {
+			const form = e.target;
+			if (!form || !form.classList || !form.classList.contains('confirm-delete-form')) return;
+			e.preventDefault();
+			const msg = form.getAttribute('data-message') || 'Are you sure you want to perform this action?';
+			window.showConfirmModal({ title: 'Confirm Action', message: msg, confirmText: 'Delete', confirmClass: 'bg-red-600 hover:bg-red-700' })
+				.then(function (confirmed) { if (confirmed) form.submit(); });
+		});
+	</script>
+
+</body>
+
+</html>

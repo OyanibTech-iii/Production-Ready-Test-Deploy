@@ -1,0 +1,73 @@
+<section 
+    x-data="{ shown: false }" 
+    x-intersect.margin.-10%="shown = true"
+    x-intersect:leave="shown = false"
+    class="max-w-7xl mx-auto px-4 py-20 bg-gray-50 dark:bg-gray-900"
+>
+    <div class="text-center mb-16 reveal-item transition-all duration-700"
+        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl text-dark-forest-green mt-2 font-bold">
+            <span class="text-dark-forest-green dark:!text-gray-200">Coming Soon to </span>
+            <span class="text-bright-green">Our Nursery</span>
+        </h2>
+        <p class="max-w-2xl mx-auto mt-6 text-base sm:text-lg text-gray-700 dark:text-gray-300 leading-relaxed px-4">
+            We’re currently hand-selecting a premium collection
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mt-16">
+        
+       <div class="relative w-full h-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden group border border-gray-100 dark:border-gray-700 min-h-[450px] reveal-item transition-all duration-700"
+            :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'">
+            
+            <img src="{{ asset('plants/coffee seeeds.webp') }}" alt="Coming Soon Banner"
+                class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 p-3 dark:hidden">
+            
+            <img src="{{ asset('banners/produce.png') }}" alt="Coming Soon Banner"
+                class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 p-3 hidden dark:block">
+        </div>
+
+        <div class="flex flex-col gap-10">
+            
+            <div class="relative flex items-center group reveal-item transition-all duration-700"
+                 :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
+                <div class="absolute -left-10 sm:-left-16 w-40 sm:w-56 z-20 transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-110">
+                    <img src="{{ asset('banners/mango fruit.png') }}" alt="Mango" class="drop-shadow-2xl w-full h-auto">
+                </div>
+                <div class="bg-[#fcedd4] dark:bg-gray-800 ml-2 p-6 pl-32 pr-8 rounded-2xl w-full flex flex-col justify-center shadow-md border border-white/20 dark:border-gray-600">
+                    <h3 class="text-lg font-bold text-[#4a3728] dark:text-amber-100 mb-1">Dwarf Mango</h3>
+                    <p class="text-[#6d5a4a] dark:text-amber-200/90 text-sm leading-snug">
+                        Grafted seedlings optimized for container growth. Perfectly suited for your home garden.
+                    </p>
+                </div>
+            </div>
+
+            <div class="relative flex items-center group reveal-item transition-all duration-700 delay-200 mt-7"
+                 :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
+                <div class="absolute -left-10 sm:-left-16 w-40 sm:w-56 z-20 transition-transform duration-500 group-hover:rotate-3 group-hover:scale-110">
+                    <img src="{{ asset('banners/purple.png') }}" alt="Rambutan" class="drop-shadow-2xl w-full h-auto">
+                </div>
+                <div class="bg-[#fcedd4] dark:bg-gray-800 ml-2 p-6 pl-32 pr-8 rounded-2xl w-full flex flex-col justify-center shadow-md border border-white/20 dark:border-gray-600">
+                    <h3 class="text-lg font-bold text-[#4a3728] dark:text-amber-100 mb-1">Purple Rambutan</h3>
+                    <p class="text-[#6d5a4a] dark:text-amber-200/90 text-sm leading-snug">
+                        Experience the sweetness. Disease-resistant and vibrant in color.
+                    </p>
+                </div>
+            </div>
+
+            <div class="relative flex items-center group reveal-item transition-all duration-700 delay-400 mt-7"
+                 :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'">
+                <div class="absolute -left-10 sm:-left-16 w-40 sm:w-56 z-20 transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-110">
+                    <img src="{{ asset('banners/guava fruit.png') }}" alt="Guava" class="drop-shadow-2xl w-full h-auto">
+                </div>
+                <div class="bg-[#fcedd4] dark:bg-gray-800 ml-2 p-6 pl-32 pr-8 rounded-2xl w-full flex flex-col justify-center shadow-md border border-white/20 dark:border-gray-600">
+                    <h3 class="text-lg font-bold text-[#4a3728] dark:text-amber-100 mb-1">Giant Guava</h3>
+                    <p class="text-[#6d5a4a] dark:text-amber-200/90 text-sm leading-snug">
+                        Rich in Vitamin C. Perfect for small spaces and home orchards.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

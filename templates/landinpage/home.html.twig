@@ -1,0 +1,227 @@
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/home.css') }}">
+{% endblock %}
+
+<section x-data="{ shown: false }" x-intersect.margin.-10%="shown = true" x-intersect:leave="shown = false"
+    class="max-w-7xl mx-auto py-12 px-4 bg-white dark:bg-gray-900 rounded-2xl overflow-hidden mt-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl transition-all duration-1000 ease-out"
+            :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold leading-tight">
+                <span class="text-dark-forest-green dark:!text-gray-100">Cultivate</span>
+                <span class="text-bright-green">Thriving</span>
+                <br>
+                <span class="text-bright-green">Gardens</span>
+                <span class="text-dark-forest-green dark:!text-gray-100">with Expert</span>
+                <br>
+                <span class="text-dark-forest-green dark:!text-gray-100">Guidance</span>
+            </h1>
+
+            <p class="text-lg sm:text-base text-light-gray dark:text-gray-400 leading-relaxed max-w-lg">
+                Transform your space into a productive paradise. Learn essential growing techniques like grafting, air
+                layering, and budding while getting premium seedlings and fresh fruits.
+            </p>
+
+            <div class="pt-2">
+                <a href="#growing-techniques" role="button"
+                    class="inline-flex items-center gap-2 sm:gap-3 bg-transparent border-2 border-bright-green text-bright-green px-4 sm:px-6 py-2 sm:py-3 rounded-2xl font-medium text-sm sm:text-base transition-all duration-300 ease-in-out transform hover:scale-105 hover:!bg-bright-green hover:!text-white group whitespace-nowrap">
+                    <span>Learn Our Methods</span>
+                </a>
+                {# <a href="{{ path('app_register') }}"
+                    class="inline-flex items-center ml-2 justify-center w-full sm:w-auto bg-[#7A5335] text-gray-200 text-sm sm:text-base rounded-2xl py-2 sm:py-3 px-6 sm:px-8 font-medium transition-all duration-300 transform hover:scale-105 hover:!bg-[#faf1de] hover:text-dark-forest-green dark:hover:!bg-[#faf1de] dark:hover:!text-dark-forest-green whitespace-nowrap">
+                    GET STARTED
+                </a> #}
+            </div>
+
+            <div class="space-y-8 pt-4 transition-all duration-1000 delay-300"
+                :class="shown ? 'opacity-100' : 'opacity-0'">
+                <div class="flex items-center">
+                    <div class="flex -space-x-3 overflow-hidden">
+                        {% for user in recent_users|default([]) %}
+                        {% set imagePath = user.profileImage %}
+                        <img class="inline-block h-12 w-12 rounded-full ring-2 ring-white dark:ring-gray-700 object-cover"
+                            src="{{ imagePath ? asset(imagePath) : asset('logos/white-fill.png') }}"
+                            alt="{{ user.firstName }}">
+                        {% endfor %}
+                    </div>
+                    {% if (total_users|default(0)) > 8 %}
+                    <div class="ml-4 text-sm font-medium text-gray-500 dark:text-gray-400">+{{ (total_users|default(0))
+                        - 8 }} others</div>
+                    {% endif %}
+                </div>
+
+                <div class="flex flex-wrap gap-4 sm:gap-8 md:gap-12">
+                    <div class="transition-transform duration-700 hover:scale-110">
+                        <div class="text-xl sm:text-2xl font-bold text-bright-green">{{ total_users|default(0) }}+</div>
+                        <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Growfico Users</div>
+                    </div>
+                    <div class="transition-transform duration-700 hover:scale-110">
+                        <div class="text-xl sm:text-2xl font-bold text-bright-green">{{ total_products|default(0) }}+
+                        </div>
+                        <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Products</div>
+                    </div>
+                    <div class="transition-transform duration-700 hover:scale-110">
+                        <div class="text-xl sm:text-2xl font-bold text-bright-green">{{ success_rate|default(98) }}%
+                        </div>
+                        <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative h-full transition-all duration-1000 ease-out delay-200"
+            :class="shown ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'">
+
+            <div class="rounded-2xl overflow-hidden h-full">
+
+                <img src="{{ asset('banners/organic (3).png') }}" alt="Organic Gardening"
+                    class="block dark:hidden w-full h-full object-cover transform transition-transform duration-700 hover:scale-105" />
+
+                <img src="{{ asset('banners/Banner1.png') }}" alt="Organic Gardening"
+                    class="hidden dark:block w-full h-full object-cover transform transition-transform duration-700 hover:scale-105" />
+            </div>
+
+            <div class="absolute -z-10 -bottom-6 -right-6 w-64 h-64 bg-bright-green/10 rounded-full blur-3xl"></div>
+        </div>
+    </div>
+</section>
+
+<div id="nature-quote" class="reveal-on-scroll"
+    style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 200px; opacity: 0; transform: translateY(30px); transition: all 1s ease-out;">
+
+    <p
+        style="font-family: 'Noto Sans Tagalog', Arial !important; font-size: 28px !important; color: #16a34a !important; margin: 0 !important; width: 100%;">
+        ᜋ ᜑ ᜎᜒ ᜈ᜕ ᜈ ᜆᜒ ᜈ᜕ ᜀᜅ ᜃ ᜎᜒ ᜃ ᜐ ᜈ᜕
+    </p>
+
+    <p class="text-sm text-light-gray dark:text-gray-400" style="margin: 5px 0 0 0; width: 100%; letter-spacing: 6px;">
+        Mahalin Natin Ang Kalikasan
+    </p>
+</div>
+
+<!-- Video Hero Section -->
+<section x-data="{ shown: false }" x-intersect.once="shown = true"
+    class="max-w-7xl mx-auto px-4 py-12 transition-all duration-1000 ease-out transform"
+    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
+    <div class="relative w-full overflow-hidden rounded-xl" style="height: 800px;">
+        <div class="absolute inset-0 w-full h-full ">
+            <video class="w-full h-full object-cover opacity-90" style="mix-blend-mode: luminosity;" autoplay loop muted
+                playsinline>
+                <source src="{{ asset('videos/hero_background.mp4') }}" type="video/mp4" />
+            </video>
+            <div class="absolute inset-0 z-20 pointer-events-none"
+                style="background-color: rgba(164, 239, 217, 0.574); mix-blend-mode: multiply;">
+            </div>
+        </div>
+    </div>
+</section>
+{# New Arrivals Section #}
+{% include 'landinpage/homecarousel.html.twig' %}
+{% include 'landinpage/growingtechnique.html.twig' %}
+
+<!-- Our Mission -->
+<section x-data="{ shown: false }" x-intersect.margin.-10%="shown = true" x-intersect:leave="shown = false"
+    class="scroll-section py-20 bg-gradient-to-br from-green-50 to-gray-50 dark:from-gray-900 dark:to-gray-950 mb-24 overflow-hidden">
+    <div class="container max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <div class="scroll-content transition-all duration-1000 ease-out-expo"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold leading-tight">
+                    <span class="text-dark-forest-green dark:!text-gray-200 ">Our </span>
+                    <span class="text-bright-green">Mission</span>
+                </h2>
+
+                <p class="text-lg text-light-gray dark:text-gray-400 leading-relaxed mb-6 mt-4 transition-all duration-700 delay-300"
+                    :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-50'">
+                    We believe that everyone deserves access to fresh, healthy produce. Our mission is to
+                    empower individuals and communities to grow their own food sustainably, creating a
+                    greener future for generations to come.
+                </p>
+            </div>
+
+            <div class="scroll-image-container transition-all duration-1000 ease-out-expo delay-300"
+                :class="shown ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-90 -rotate-3'">
+                <img src="{{ asset('me/myimage.png') }}" alt="Our Mission"
+                    class="w-full h-full object-contain rounded-2xl transform transition-transform duration-700 hover:scale-105">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section x-data="{ shown: false }" x-intersect.margin.-10%="shown = true" x-intersect:leave="shown = false"
+    class="scroll-section py-20 bg-white dark:bg-gray-900 overflow-hidden">
+    <div class="container max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <div class="scroll-image-container order-2 lg:order-1 transition-all duration-1000 ease-out-expo"
+                :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-16'">
+                <img src="{{ asset('me/mesideview.png') }}" alt="Our Impact"
+                    class="w-full h-full object-contain rounded-2xl transition-transform duration-700 hover:scale-105">
+            </div>
+
+            <div class="scroll-content order-1 lg:order-2 transition-all duration-1000 ease-out-expo delay-200"
+                :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-16'">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold leading-tight">
+                    <span class="text-dark-forest-green dark:!text-gray-200">Making a </span>
+                    <span class="text-bright-green">Difference</span>
+                </h2>
+
+                <p class="text-lg text-light-gray dark:text-gray-400 leading-relaxed mb-6 mt-4">
+                    Through our innovative growing techniques and community programs, we've helped
+                    transform thousands of spaces into productive gardens. See the real impact we're
+                    making in communities worldwide.
+                </p>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="text-center transition-all duration-700 delay-300"
+                        :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-50'">
+                        <div class="text-3xl font-bold text-bright-green mb-2">2,500+</div>
+                        <div class="text-sm text-light-gray dark:text-gray-400">Gardens Created</div>
+                    </div>
+
+                    <div class="text-center transition-all duration-700 delay-500"
+                        :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-50'">
+                        <div class="text-3xl font-bold text-bright-green mb-2">15,000+</div>
+                        <div class="text-sm text-light-gray dark:text-gray-400">Lives Impacted</div>
+                    </div>
+
+                    <div class="text-center transition-all duration-700 delay-700"
+                        :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-50'">
+                        <div class="text-3xl font-bold text-bright-green mb-2">50+</div>
+                        <div class="text-sm text-light-gray dark:text-gray-400">Communities</div>
+                    </div>
+
+                    <div class="text-center transition-all duration-700 delay-[900ms]"
+                        :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-50'">
+                        <div class="text-3xl font-bold text-bright-green mb-2">95%</div>
+                        <div class="text-sm text-light-gray dark:text-gray-400">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    const observerOptions = {
+        threshold: 0.2
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // When scrolling down into view
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+            } else {
+                entry.target.style.opacity = "0";
+                entry.target.style.transform = "translateY(30px)";
+            }
+        });
+    }, observerOptions);
+
+    observer.observe(document.querySelector('#nature-quote'));
+</script>
+<script src="{{ asset('js/home-endpoint.js') }}"></script>
+{% include 'footer/index.html.twig' %}

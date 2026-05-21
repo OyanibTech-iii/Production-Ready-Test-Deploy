@@ -1,0 +1,62 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green dark:text-white">Error</h2>
+<p class="text-xs text-light-gray dark:text-gray-400">Something went wrong</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="flex items-center justify-center min-h-[70vh] px-4">
+    <div
+        class="w-full max-w-2xl bg-[#F7FAFC] dark:bg-gray-900 p-10 text-center">
+
+        <div class="mb-8 flex justify-center items-center">
+            {% if status_code == 404 %}
+            <img src="{{ asset('logos/404.png') }}" alt="Not Found" class="w-full max-w-[320px] h-auto">
+            {% elseif status_code == 403 %}
+            <img src="{{ asset('logos/403.png') }}" alt="Forbidden" class="w-full max-w-[320px] h-auto">
+            {% elseif status_code == 500 %}
+            <img src="{{ asset('logos/500.png') }}" alt="Server Error" class="w-full max-w-[320px] h-auto">
+            {% else %}
+            <div class="w-24 h-24 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center">
+                <ion-icon name="alert-circle-outline" class="text-5xl text-red-600 dark:text-red-400"></ion-icon>
+            </div>
+            {% endif %}
+        </div>
+
+        <p class="text-gray-700 dark:text-gray-300 mb-8 text-smfont-medium">
+            {% if status_code == 404 %}
+            The page you're looking for was not found.
+            {% elseif status_code == 403 %}
+            You don't have permission to access this resource.
+            {% elseif status_code == 500 %}
+            An internal server error occurred. Please try again later.
+            {% else %}
+            {{ status_text }}
+            {% endif %}
+        </p>
+
+        {% if exception and app.debug %}
+        <div
+            class="mb-8 text-left bg-white dark:bg-gray-900 p-5 rounded-lg border border-gray-200 dark:border-gray-600">
+            <p class="text-sm font-mono text-gray-600 dark:text-gray-400 break-words">
+                <span class=" text-dark-forest-green uppercase text-sm dark:!text-gray-200">Exception:</span><br>
+                <span class="text-xs">{{ exception.message }}</span>
+
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button onclick="window.history.back()"
+                class="inline-flex items-center justify-center px-5 py-2.5 bg-gray-200 text-dark-forest-green text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-gray-200 dark:hover:bg-gray-400">
+                <span>Go Back</span>
+            </button>
+            <a href="{{ path('app_admin_dashboard') }}"
+                class="inline-flex items-center justify-center px-5 py-2.5 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                <span>Dashboard</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

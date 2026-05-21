@@ -1,0 +1,110 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Order Details | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Order Details</h2>
+<p class="text-xs text-light-gray">View order information</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+                <p class="text-xs text-light-gray">Order Number</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    #{{ order.id }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Date Created</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ order.createdAt|date('M d, Y H:i') }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Customer</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ order.customer ? order.customer.getFullName() : 'Guest' }}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Status</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full
+                        {% if order.status == 'completed' %}bg-green-100 text-green-800
+                        {% elseif order.status == 'pending' %}bg-yellow-100 text-yellow-800
+                        {% elseif order.status == 'cancelled' %}bg-red-100 text-red-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ order.status|title }}
+                    </span>
+                </p>
+            </div>
+            <div>
+                <p class="text-xs text-light-gray">Payment Method</p>
+                <p class="text-sm font-medium text-dark-forest-green">
+                    {{ order.paymentMethod ?: 'N/A' }}
+                </p>
+            </div>
+            <div class="md:col-span-2">
+                <p class="text-xs text-light-gray">Total</p>
+                <p class="text-lg font-semibold text-dark-forest-green">
+                    ₱{{ order.total }}
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <p class="text-xs text-light-gray mb-3">Order Items</p>
+            <div class="space-y-2">
+                {% for item in order.items %}
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                            {% set imagePath = item.product.getImagePath() %}
+                            {% if imagePath %}
+                            <img src="{{ asset(imagePath) }}" alt="{{ item.product.name }}"
+                                class="w-full h-full object-cover">
+                            {% else %}
+                            <div class="w-full h-full flex items-center justify-center">
+                                <ion-icon name="leaf-outline" class="w-5 h-5 text-bright-green"></ion-icon>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-dark-forest-green">{{ item.product.name }}</p>
+                            <p class="text-xs text-light-gray">₱{{ item.product.price }} each</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-dark-forest-green">× {{ item.quantity }}</p>
+                        <p class="text-xs text-light-gray">₱{{ (item.product.price * item.quantity)|number_format(2) }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-end pt-4 border-t border-gray-100">
+            <a href="{{ path('app_admin_order') }}"
+                class="inline-flex items-center justify-center px-5 py-2.5 bg-gray-100 text-dark-forest-green text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-400">
+                Back to list
+            </a>
+            <a href="{{ path('app_admin_order_edit', {'id': order.id}) }}"
+                class="inline-flex items-center justify-center px-5 py-2.5 bg-bright-green text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                Edit
+            </a>
+            <form method="post"
+                  action="{{ path('app_admin_order_delete', {'id': order.id}) }}"
+                  onsubmit="return confirm('Are you sure you want to delete this order?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
+                <button
+                    class="inline-flex items-center justify-center px-5 py-2.5 bg-red-600 text-white text-xs font-medium rounded-lg hover:bg-red-700 transition-colors duration-200">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

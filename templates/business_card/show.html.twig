@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.firstName }} {{ user.lastName }} - Business Card{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all hover:scale-[1.02] duration-300">
+        <!-- Top Decorative Section -->
+        <div class="h-32 bg-gradient-to-br from-bright-green to-primary-600 relative">
+            <div class="absolute -bottom-12 left-1/2 -translate-x-1/2">
+                <div class="w-24 h-24 rounded-2xl border-4 border-white overflow-hidden shadow-lg bg-white">
+                    {% if user.profileImage %}
+                        <img src="{{ asset(user.profileImage) }}" alt="{{ user.firstName }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100 text-primary-600 text-3xl font-bold">
+                            {{ user.firstName|first|upper }}{{ user.lastName|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="pt-16 pb-8 px-8 text-center">
+            <h1 class="text-2xl font-bold text-dark-forest-green mb-1">
+                {{ user.firstName }} {{ user.lastName }}
+            </h1>
+            <p class="text-sm font-medium text-bright-green mb-6 uppercase tracking-wider">
+                Growfico Member
+            </p>
+
+            <div class="space-y-4 text-left border-t border-gray-100 pt-6">
+                <div class="flex items-center gap-4 text-gray-600">
+                    <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600">
+                        <ion-icon name="mail-outline"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-light-gray uppercase font-bold tracking-tighter">Email Address</p>
+                        <p class="text-sm font-medium">{{ user.email }}</p>
+                    </div>
+                </div>
+
+                {% if user.phone %}
+                <div class="flex items-center gap-4 text-gray-600">
+                    <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600">
+                        <ion-icon name="call-outline"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-light-gray uppercase font-bold tracking-tighter">Phone Number</p>
+                        <p class="text-sm font-medium">{{ user.phone }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="flex items-center gap-4 text-gray-600">
+                    <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600">
+                        <ion-icon name="calendar-outline"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-light-gray uppercase font-bold tracking-tighter">Member Since</p>
+                        <p class="text-sm font-medium">{{ user.createdAt|date('F d, Y') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <div class="flex items-center justify-center gap-2 mb-4">
+                    <img src="{{ asset('logos/Icon- Brand.png') }}" alt="Growfico" class="w-6 h-6">
+                    <span class="text-lg font-bold text-dark-forest-green tracking-tight">Growfico</span>
+                </div>
+                <p class="text-xs text-light-gray">
+                    Connecting you to a greener future.
+                </p>
+            </div>
+            
+            <div class="mt-8">
+                <a href="{{ path('app_landinpage') }}" class="inline-flex items-center gap-2 px-6 py-2.5 bg-dark-forest-green text-white rounded-xl text-sm font-semibold hover:bg-opacity-90 transition-all">
+                    Visit Website
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

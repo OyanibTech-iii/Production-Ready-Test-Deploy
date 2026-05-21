@@ -1,0 +1,404 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Admin Dashboard | Growfico{% endblock %}
+
+{% block header_title %}
+<div class="flex items-center gap-4">
+	<div class="relative">
+		{% if user.profileImage %}
+		{% set headerProfileSrc = user.profileImage %}
+		{% if headerProfileSrc starts with '/' %}{% set headerProfileSrc = headerProfileSrc[1:] %}{% endif %}
+		<img src="{{ asset(headerProfileSrc) }}" alt="{{ user.firstName }}"
+			class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm">
+		{% else %}
+		<div
+			class="w-12 h-12 rounded-full bg-gradient-to-br from-bright-green to-primary-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+			{{ user.firstName ? user.firstName|first|upper : user.email|first|upper }}
+		</div>
+		{% endif %}
+	</div>
+	<div>
+		<h2 class="text-lg font-semibold text-dark-forest-green">Dashboard</h2>
+		{% set role_display = 'USER' %}
+		{% if 'ROLE_ADMIN' in user.roles %}
+		{% set role_display = 'ADMIN' %}
+		{% elseif 'ROLE_STAFF' in user.roles %}
+		{% set role_display = 'STAFF' %}
+		{% endif %}
+		<p class="text-xs text-light-gray">Welcome back, {{ user.firstName }}! {{ role_display }} Here's what's
+			happening with your platform.</p>
+	</div>
+</div>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+	<!-- Stats Cards Grid -->
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 admin-app">
+
+		<div
+			class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm transition-all duration-200">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-light-gray dark:text-gray-400 mb-1">Total Users</p>
+					<p class="text-2xl font-bold text-dark-forest-green dark:text-white">{{ total_users|number_format }}
+					</p>
+					<p class="text-xs text-light-gray dark:text-gray-500">Registered users</p>
+				</div>
+				<div class="w-12 h-12 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center">
+					<ion-icon name="people-outline" class="text-2xl text-bright-green"></ion-icon>
+				</div>
+			</div>
+			<div class="flex items-center mt-4">
+				<span
+					class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-50 dark:bg-forest-500/10 text-bright-green">
+					<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd"
+							d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
+							clip-rule="evenodd"></path>
+					</svg>
+					+12%
+				</span>
+				<span class="text-xs text-light-gray dark:text-gray-500 ml-2">vs last week</span>
+			</div>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-light-gray dark:text-gray-400 mb-1">Products</p>
+					<p class="text-2xl font-bold text-dark-forest-green dark:text-white">{{ total_products|number_format
+						}}</p>
+					<p class="text-xs text-light-gray dark:text-gray-500">Active listings</p>
+				</div>
+				<div class="w-12 h-12 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center">
+					<ion-icon name="bag-handle-outline" class="text-2xl text-bright-green"></ion-icon>
+				</div>
+			</div>
+			<div class="flex items-center mt-4">
+				<span
+					class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-50 dark:bg-forest-500/10 text-bright-green">
+					<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd"
+							d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
+							clip-rule="evenodd"></path>
+					</svg>
+					+8%
+				</span>
+				<span class="text-xs text-light-gray dark:text-gray-500 ml-2">vs last month</span>
+			</div>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-light-gray dark:text-gray-400 mb-1">Revenue</p>
+					<p class="text-2xl font-bold text-dark-forest-green dark:text-white">₱{{ total_revenue|number_format
+						}}</p>
+					<p class="text-xs text-light-gray dark:text-gray-500">Total earnings</p>
+				</div>
+				<div class="w-12 h-12 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center">
+					<ion-icon name="diamond-outline" class="text-2xl text-bright-green"></ion-icon>
+				</div>
+			</div>
+			<div class="flex items-center mt-4">
+				<span
+					class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-50 dark:bg-forest-500/10 text-bright-green">
+					<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd"
+							d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
+							clip-rule="evenodd"></path>
+					</svg>
+					+23%
+				</span>
+				<span class="text-xs text-light-gray dark:text-gray-500 ml-2">vs last month</span>
+			</div>
+		</div>
+
+		<div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-light-gray dark:text-gray-400 mb-1">Courses</p>
+					<p class="text-2xl font-bold text-dark-forest-green dark:text-white">{{ total_courses }}</p>
+					<p class="text-xs text-light-gray dark:text-gray-500">Published courses</p>
+				</div>
+				<div class="w-12 h-12 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center">
+					<ion-icon name="book-outline" class="text-2xl text-bright-green"></ion-icon>
+				</div>
+			</div>
+			<div class="flex items-center mt-4">
+				<span
+					class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-50 dark:bg-forest-500/10 text-bright-green">
+					<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd"
+							d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
+							clip-rule="evenodd"></path>
+					</svg>
+					+5%
+				</span>
+				<span class="text-xs text-light-gray dark:text-gray-500 ml-2">vs last month</span>
+			</div>
+		</div>
+	</div>
+	<div id="dashboard-charts-container">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+			<!-- Stock Bar Chart -->
+			<div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+				<div class="flex items-center justify-between mb-4">
+					<div>
+						<h3 class="text-lg font-semibold text-dark-forest-green">Stock by Type</h3>
+						<p class="text-xs text-light-gray">Overview of total quantities per stock type</p>
+					</div>
+				</div>
+				<canvas id="stock-bar-chart" class="w-full h-80"
+					data-labels="{{ stock_type_labels|default([])|json_encode|e('html_attr') }}"
+					data-values="{{ stock_type_data|default([])|json_encode|e('html_attr') }}">
+				</canvas>
+			</div>
+
+			<!-- Product Status Pie Chart -->
+			<div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+				<div class="flex items-center justify-between mb-4">
+					<div>
+						<h3 class="text-lg font-semibold text-dark-forest-green">Product Stock Status</h3>
+						<p class="text-xs text-light-gray">Distribution of products by stock level</p>
+					</div>
+				</div>
+				<canvas id="product-pie-chart" class="w-full h-80"
+					data-labels="{{ product_status_labels|default([])|json_encode|e('html_attr') }}"
+					data-values="{{ product_status_data|default([])|json_encode|e('html_attr') }}">
+				</canvas>
+			</div>
+		</div>
+
+		<!-- Chart Section -->
+		<div
+			class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm mb-8">
+			<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+
+				<div>
+					<h3 class="text-lg font-semibold text-dark-forest-green dark:text-white">User Growth</h3>
+					<p class="text-xs text-light-gray dark:text-gray-400">Track your user acquisition over time</p>
+				</div>
+
+				<div class="flex flex-wrap items-center gap-3">
+					<div
+						class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-1">
+						<button type="button"
+							class="timeframe-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-dark-forest-green dark:text-white bg-white dark:bg-gray-600 shadow-sm rounded-md transition-all duration-200"
+							data-range="7">7d</button>
+						<button type="button"
+							class="timeframe-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-light-gray dark:text-gray-400 hover:text-dark-forest-green dark:hover:text-white"
+							data-range="30">30d</button>
+						<button type="button"
+							class="timeframe-btn px-3 py-1.5 text-xs sm:text-sm font-medium text-light-gray dark:text-gray-400 hover:text-dark-forest-green dark:hover:text-white"
+							data-range="90">90d</button>
+					</div>
+
+					<button id="download-chart-btn" type="button"
+						class="flex items-center px-3 py-2 text-xs sm:text-sm font-medium text-bright-green hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors duration-200 border border-transparent hover:border-primary-100">
+						{# <span class="hidden xs:inline">Download Chart</span>
+						<span class="xs:hidden">Download</span>
+						<ion-icon name="download-outline" class="ml-1.5 text-sm"></ion-icon> #}
+					</button>
+				</div>
+			</div>
+
+			<div class="relative w-full h-[300px] sm:h-[350px] md:h-[400px]">
+				<canvas id="area-chart" data-total-users="{{ total_users|default(0) }}"
+					data-growth="{{ user_growth|default([])|json_encode|e('html_attr') }}"
+					data-dates="{{ user_growth_dates|default([])|json_encode|e('html_attr') }}">
+				</canvas>
+			</div>
+		</div>
+	</div>
+	<div id="chart-settings" data-authorize-url="{{ path('app_admin_dashboard_authorize') }}"
+		data-csrf-token="{{ csrf_token('admin_dashboard_download') }}">
+	</div>
+
+	<script>
+		const settingsEl = document.getElementById('chart-settings');
+		window.dashboardAuthorizeUrl = settingsEl.dataset.authorizeUrl;
+		window.dashboardCsrfToken = settingsEl.dataset.csrfToken;
+	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+	<script src="{{ asset('js/dashboard-chart.js') }}"></script>
+
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+		<!-- Products Section -->
+		<div class="lg:col-span-2 bg-white rounded-2xl border border-gray-200 p-4 sm:p-8 shadow-sm">
+			<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+				<div>
+					<h3 class="text-lg font-semibold text-dark-forest-green tracking-tight">Recent Products</h3>
+					<p class="text-xs text-light-gray">Managing {{ total_products }} total items in your catalog</p>
+				</div>
+				<div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+					<a href="{{ path('app_admin_products') }}"
+						class="flex-1 sm:flex-none text-center px-4 py-2 text-xs font-semibold text-light-gray hover:text-dark-forest-green hover:bg-gray-100 rounded-xl transition-all duration-200 border border-transparent hover:border-gray-200">
+						View All
+					</a>
+					<a href="{{ path('app_admin_product_new') }}"
+						class="flex-1 sm:flex-none text-center px-4 py-2 text-xs font-semibold bg-bright-green text-white hover:bg-dark-forest-green rounded-xl transition-all duration-200 shadow-sm shadow-bright-green/20">
+						<ion-icon name="add-outline" class="mr-1 align-middle"></ion-icon>
+						Add Product
+					</a>
+				</div>
+			</div>
+
+			{% if recent_products is not empty %}
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+				{% for product in recent_products %}
+				<div
+					class="group bg-white rounded-2xl p-4 sm:p-5 hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-bright-green/30 ">
+					<div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+						<div
+							class="w-full sm:w-28 h-46 sm:h-24 bg-gray-200 dark:bg-gray-700 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden group-hover:scale-105 transition-transform duration-300">
+							{% set imagePath = product.getImagePath() %}
+							{% if imagePath %}
+							<img src="{{ asset(imagePath) }}" alt="{{ product.name }}"
+								class="w-full h-full object-cover"
+								onerror="this.style.display='none'; this.parentNode.querySelector('.fallback-icon').style.display='flex';">
+							<div class="fallback-icon hidden w-full h-full items-center justify-center">
+								<ion-icon name="leaf-outline" class="w-6 h-6 text-bright-green/40"></ion-icon>
+							</div>
+							{% else %}
+							<ion-icon name="leaf-outline" class="w-10 h-10 text-bright-green/40"></ion-icon>
+							{% endif %}
+						</div>
+
+						<div class="flex-1 min-w-0 w-full text-center sm:text-left">
+							<div class="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-1">
+								<h4
+									class="text-sm font-bold text-dark-forest-green truncate w-full group-hover:text-bright-green transition-colors">
+									{{ product.name }}
+								</h4>
+							</div>
+
+							<p class="text-xs text-light-gray mb-4 line-clamp-2 sm:line-clamp-1 italic">
+								{{ product.description|default('No description provided.') }}
+							</p>
+
+							<div
+								class="flex items-center justify-between border-t border-gray-50 pt-4 sm:border-0 sm:pt-0">
+								<div class="flex flex-col items-start">
+									<span class="text-xs text-light-gray  tracking-wider font-semibold">Price</span>
+									<span class="text-sm font-semibold text-dark-forest-green">₱{{
+										product.price|number_format(2) }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+			{% else %}
+			<div class="text-center py-12 sm:py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 px-4">
+				<div
+					class="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
+					<ion-icon name="leaf-outline" class="w-8 h-8 sm:w-10 sm:h-10 text-gray-300"></ion-icon>
+				</div>
+				<h4 class="text-xl font-bold text-dark-forest-green mb-2">Inventory is empty</h4>
+				<p class="text-sm text-light-gray mb-8 max-w-xs mx-auto">
+					Your recent products will appear here once you start adding to your catalog.
+				</p>
+				<a href="{{ path('app_admin_product_new') }}"
+					class="inline-flex items-center px-6 py-3 bg-dark-forest-green text-white text-sm font-bold rounded-xl hover:bg-bright-green transition-all duration-300 shadow-lg shadow-dark-forest-green/20">
+					<ion-icon name="add-outline" class="w-5 h-5 mr-2"></ion-icon>
+					Create Your First Product
+				</a>
+			</div>
+			{% endif %}
+		</div>
+
+		<!-- Recent Users Widget -->
+		<div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+			<div class="flex items-center justify-between mb-8">
+				<div>
+					<h3 class="text-lg font-semibold text-dark-forest-green tracking-tight">Recent Users</h3>
+					<p class="text-xs text-light-gray">Latest {{ recent_users|length }} members</p>
+				</div>
+				<a href="{{ path('app_admin_users') }}"
+					class="text-xs font-semibold text-light-gray hover:text-dark-forest-green transition-colors">
+					View All
+				</a>
+			</div>
+
+			<div class="space-y-6">
+				{% for user_item in recent_users %}
+				<div class="flex items-center gap-4 group">
+					<div class="relative">
+						{% if user_item.profileImage %}
+						{% set recentUserProfileSrc = user_item.profileImage %}
+						{% if recentUserProfileSrc starts with '/' %}{% set recentUserProfileSrc =
+						recentUserProfileSrc[1:] %}{% endif %}
+						<img src="{{ asset(recentUserProfileSrc) }}" alt="{{ user_item.firstName }}"
+							class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm group-hover:border-bright-green/30 transition-colors">
+						{% else %}
+						<div
+							class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border-2 border-white shadow-sm group-hover:border-bright-green/30 transition-colors">
+							<span class="text-xs font-bold text-dark-forest-green">
+								{{ user_item.firstName|first|upper }}{{ user_item.lastName|first|upper }}
+							</span>
+						</div>
+						{% endif %}
+						{% if user_item.isActive %}
+						<span
+							class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-bright-green border-2 border-white rounded-full"></span>
+						{% endif %}
+					</div>
+					<div class="flex-1 min-w-0">
+						<p class="text-sm font-bold text-dark-forest-green truncate">
+							{{ user_item.firstName }} {{ user_item.lastName }}
+						</p>
+						<p class="text-xs text-light-gray truncate italic">{{ user_item.email }}</p>
+					</div>
+					<div class="text-right">
+						<p class="text-[10px] font-semibold text-light-gray uppercase tracking-wider">Joined</p>
+						<p class="text-xs font-medium text-dark-forest-green">
+							{{ user_item.createdAt|date('M d') }}
+						</p>
+					</div>
+				</div>
+				{% else %}
+				<div class="text-center py-10">
+					<p class="text-sm text-light-gray italic">No recent users found.</p>
+				</div>
+				{% endfor %}
+			</div>
+
+			<div class="mt-8 pt-6 border-t border-gray-50">
+				<div class="bg-gray-50 rounded-xl p-4">
+					<div class="flex items-center justify-between mb-2">
+						<span class="text-xs font-medium text-light-gray">Growth this month</span>
+						<span
+							class="text-xs font-bold {% if user_growth_percentage >= 0 %}text-bright-green{% else %}text-red-500{% endif %}">
+							{{ user_growth_percentage >= 0 ? '+' : '' }}{{ user_growth_percentage|number_format(1) }}%
+						</span>
+					</div>
+					<div class="w-full bg-gray-200 rounded-full h-1.5">
+						{% set progress_width = user_growth_percentage|abs %}
+						{% set bar_width = (progress_width > 100 ? 100 : progress_width)|number_format(0) ~ '%' %}
+						<div class="bg-bright-green h-1.5 rounded-full" style="width: {{ bar_width }}"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Custom styles for line-clamp -->
+<style>
+	.line-clamp-2 {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	#area-chart {
+		transition: all 200ms ease;
+	}
+</style>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6', 'enctype': 'multipart/form-data'}}) }}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="space-y-2 md:col-span-2">
+        {{ form_label(form.title, 'Title', {'label_attr': {'class': 'block text-xs font-semibold text-dark-forest-green'}}) }}
+        {{ form_widget(form.title, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green text-xs'}}) }}
+        {{ form_errors(form.title) }}
+    </div>
+
+    <div class="space-y-2 md:col-span-2">
+        {{ form_label(form.course, 'Course', {'label_attr': {'class': 'block text-xs font-semibold text-dark-forest-green'}}) }}
+        {{ form_widget(form.course, {'attr': {'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green dark:bg-gray-800 text-xs'}}) }}
+        {{ form_errors(form.course) }}
+    </div>
+
+    <div class="space-y-2 md:col-span-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            {{ form_label(form.content, 'Content', {'label_attr': {'class': 'block text-xs font-semibold text-dark-forest-green'}}) }}
+            <button type="button" id="lesson-content-browse-btn"
+                class="text-xs font-medium text-bright-green hover:underline">
+                Browse files…
+            </button>
+        </div>
+        {% if lesson is defined and lesson.contentFile %}
+            <p class="text-xs text-light-gray mb-1">
+                Current PDF:
+                <a href="{{ asset('uploads/lessons/' ~ lesson.contentFile) }}" target="_blank" rel="noopener"
+                    class="text-bright-green hover:underline">{{ lesson.contentFile }}</a>
+                — upload a new file to replace it.
+            </p>
+        {% endif %}
+        <p class="text-xs text-light-gray mb-2">Allowed: <strong>.twig</strong>, <strong>.html</strong> / <strong>.htm</strong>, <strong>.pdf</strong>. Drop a file anywhere in the box below.</p>
+
+        <div id="lesson-content-dropzone"
+             data-textarea-id="{{ form.content.vars.id }}"
+             data-file-id="{{ form.contentUpload.vars.id }}"
+             class="rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-3 transition-colors duration-200">
+            {{ form_widget(form.content, {'attr': {'class': 'w-full min-h-[220px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200 text-dark-forest-green text-xs bg-white dark:bg-gray-900'}}) }}
+            {{ form_widget(form.contentUpload) }}
+            <p class="text-[11px] text-center text-light-gray mt-2 pointer-events-none">Drop .twig / .html / .pdf here</p>
+            <p id="lesson-content-drop-msg" class="text-xs text-center min-h-[1.25rem] mt-1" role="status"></p>
+        </div>
+        {{ form_errors(form.content) }}
+        {{ form_errors(form.contentUpload) }}
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 justify-end mt-4">
+    <a href="{{ path('app_admin_courses') }}#lessons-overview"
+       class="inline-flex items-center justify-center px-5 py-2.5 bg-gray-100 text-dark-forest-green text-xs font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-gray-200 dark:hover:bg-gray-400">
+        Cancel
+    </a>
+    <button type="submit"
+            class="inline-flex text-xs items-center justify-center px-6 py-3 bg-bright-green text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+        {{ button_label|default('Save Lesson') }}
+    </button>
+</div>
+{{ form_end(form) }}
+
+<script src="{{ asset('js/lesson-content-dropzone.js') }}" defer></script>

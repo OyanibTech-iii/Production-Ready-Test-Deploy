@@ -1,0 +1,13 @@
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+        emailjs_public_key: '%env(EMAILJS_PUBLIC_KEY)%'
+        emailjs_service_id: '%env(EMAILJS_SERVICE_ID)%'
+        emailjs_template_id: '%env(EMAILJS_TEMPLATE_ID)%'
+        ACTIVATION_PUBLIC_KEY: '%env(ACTIVATION_PUBLIC_KEY)%'
+        ACTIVATION_SERVICE_ID: '%env(ACTIVATION_SERVICE_ID)%'
+        ACTIVATION_TEMPLATE_ID: '%env(ACTIVATION_TEMPLATE_ID)%'
+
+when@test:
+    twig:
+        strict_variables: true

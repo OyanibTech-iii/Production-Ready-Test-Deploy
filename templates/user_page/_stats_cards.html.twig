@@ -1,0 +1,69 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between">
+            {% if is_granted('ROLE_STAFF') %}
+                {# Staff View #}
+                <div>
+                    <p class="text-sm font-medium text-light-gray mb-1">My Products</p>
+                    <p class="text-3xl font-bold text-dark-forest-green">{{ stats.ownedProducts ?? 0 }}</p>
+                    <p class="text-sm text-light-gray">Owned records</p>
+                </div>
+                <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center dark:bg-gray-700">
+                    <ion-icon name="pricetags-outline" class="text-2xl text-bright-green"></ion-icon>
+                </div>
+            {% else %}
+                {# User View #}
+                <div>
+                    <p class="text-sm font-medium text-light-gray mb-1">My Cart</p>
+                    <p class="text-3xl font-bold text-dark-forest-green">{{ stats.cartCount ?? 0 }}</p>
+                    <p class="text-sm text-light-gray">Items to checkout</p>
+                </div>
+                <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center dark:bg-gray-700">
+                    <ion-icon name="cart-outline" class="text-2xl text-bright-green"></ion-icon>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-light-gray mb-1">All Products</p>
+                <p class="text-3xl font-bold text-dark-forest-green">{{ stats.totalProducts ?? 0 }}</p>
+                <p class="text-sm text-light-gray">Read only catalog</p>
+            </div>
+            <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center dark:bg-gray-700">
+                <ion-icon name="grid-outline" class="text-2xl text-bright-green"></ion-icon>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-light-gray mb-1">Courses Enrolled</p>
+                <p class="text-3xl font-bold text-dark-forest-green">{{ stats.enrolledCourses ?? 0 }}</p>
+                <p class="text-sm text-light-gray">Active learning</p>
+            </div>
+            <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center dark:bg-gray-700">
+                <ion-icon name="book-outline" class="text-2xl text-bright-green"></ion-icon>
+            </div>
+        </div>
+    </div>
+
+    {# Updated: Role replaced with Certificates #}
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-light-gray mb-1">Certificates</p>
+                <p class="text-3xl font-bold text-dark-forest-green">{{ stats.certificates ?? 0 }}</p>
+                <p class="text-sm text-light-gray">Earned rewards</p>
+            </div>
+            <div class="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center dark:bg-gray-700">
+                <ion-icon name="medal-outline" class="text-2xl text-bright-green"></ion-icon>
+            </div>
+        </div>
+    </div>
+
+</div>

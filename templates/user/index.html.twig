@@ -1,0 +1,248 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Management{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Flowbite CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.2.1/dist/flowbite.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-background py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold text-dark-forest-green mb-2">User Management</h1>
+                    <p class="text-sm text-light-gray">Manage system users and their permissions</p>
+                </div>
+                <a href="{{ path('app_user_new') }}" 
+                   class="btn-primary flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+                    <ion-icon name="person-add-outline" class="text-xl"></ion-icon>
+                    Add New User
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="card hover:shadow-lg transition-all duration-300">
+                <div class="card-body text-center">
+                    <div class="text-3xl font-bold text-bright-green mb-2">{{ users|length }}</div>
+                    <div class="text-xs text-light-gray">Total Users</div>
+                </div>
+            </div>
+            <div class="card hover:shadow-lg transition-all duration-300">
+                <div class="card-body text-center">
+                    <div class="text-3xl font-bold text-bright-green mb-2">
+                        {{ users|filter(u => u.isActive)|length }}
+                    </div>
+                    <div class="text-xs text-light-gray">Active Users</div>
+                </div>
+            </div>
+            <div class="card hover:shadow-lg transition-all duration-300">
+                <div class="card-body text-center">
+                    <div class="text-3xl font-bold text-bright-green mb-2">
+                        {{ users|filter(u => 'ROLE_ADMIN' in u.roles)|length }}
+                    </div>
+                    <div class="text-xs text-light-gray">Admin Users</div>
+                </div>
+            </div>
+            <div class="card hover:shadow-lg transition-all duration-300">
+                <div class="card-body text-center">
+                    <div class="text-3xl font-bold text-bright-green mb-2">
+                        {{ users|filter(u => u.lastLoginAt is not null)|length }}
+                    </div>
+                    <div class="text-xs text-light-gray">Logged In</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table with Flowbite -->
+        <div class="card overflow-hidden">
+            <div class="card-header bg-gradient-to-r from-bright-green to-dark-forest-green">
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                    <ion-icon name="people-outline" class="text-lg"></ion-icon>
+                    Users List
+                </h2>
+            </div>
+            <div class="card-body p-0">
+                <div class="relative overflow-x-auto">
+                    <table id="usersTable" class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">User</th>
+                                <th scope="col" class="px-6 py-3">Email</th>
+                                <th scope="col" class="px-6 py-3">Phone</th>
+                                <th scope="col" class="px-6 py-3">Role</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Last Login</th>
+                                <th scope="col" class="px-6 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-bright-green rounded-full flex items-center justify-center text-white font-semibold">
+                                            {{ user.firstName|first|upper }}{{ user.lastName|first|upper }}
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">{{ user.fullName }}</div>
+                                            <div class="text-xs text-gray-500">ID: #{{ user.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ user.email }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ user.phone ?? 'N/A' }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap gap-1">
+                                        {% for role in user.roles %}
+                                            {% if role != 'ROLE_USER' %}
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    {{ role|replace({'ROLE_': ''}) }}
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if user.isActive %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <ion-icon name="checkmark-circle" class="w-3 h-3 mr-1"></ion-icon>
+                                            Active
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <ion-icon name="close-circle" class="w-3 h-3 mr-1"></ion-icon>
+                                            Inactive
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">
+                                        {% if user.lastLoginAt %}
+                                            {{ user.lastLoginAt|date('M d, Y H:i') }}
+                                        {% else %}
+                                            Never
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <a href="{{ path('app_user_show', {'id': user.id}) }}" 
+                                           class="text-bright-green hover:text-dark-forest-green transition-colors duration-200 flex items-center gap-1 text-xs">
+                                            <ion-icon name="eye-outline" class="text-xs"></ion-icon>
+                                            View
+                                        </a>
+                                        <a href="{{ path('app_user_edit', {'id': user.id}) }}" 
+                                           class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center gap-1 text-xs">
+                                            <ion-icon name="create-outline" class="text-xs"></ion-icon>
+                                            Edit
+                                        </a>
+                                        <button onclick="confirmDelete({{ user.id }})" 
+                                                class="text-red-600 hover:text-red-800 transition-colors duration-200 flex items-center gap-1 text-xs">
+                                            <ion-icon name="trash-outline" class="text-xs"></ion-icon>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <ion-icon name="people-outline" class="text-4xl text-gray-300 mb-3"></ion-icon>
+                                        <h3 class="text-sm font-medium text-gray-900 mb-2">No users found</h3>
+                                        <p class="text-xs text-gray-500 mb-4">Get started by adding your first user.</p>
+                                        <a href="{{ path('app_user_new') }}" 
+                                           class="btn-primary inline-flex items-center gap-2 text-sm">
+                                            <ion-icon name="person-add-outline"></ion-icon>
+                                            Add First User
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <ion-icon name="warning-outline" class="h-6 w-6 text-red-600"></ion-icon>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mt-2">Delete User</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">Are you sure you want to delete this user? This action cannot be undone.</p>
+            </div>
+            <div class="items-center px-4 py-3">
+                <form id="deleteForm" method="post" action="">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+                    <div class="flex gap-3 justify-center">
+                        <button type="button" onclick="closeDeleteModal()" 
+                                class="btn-secondary px-4 py-2 text-sm">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="btn-danger px-4 py-2 text-sm">
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- Flowbite JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.2.1/dist/flowbite.min.js"></script>
+    
+    <script>
+    // Initialize DataTable
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.getElementById('usersTable');
+        if (table) {
+            // Simple table initialization - you can enhance this with more features
+            console.log('Users table initialized');
+        }
+    });
+
+    // Delete confirmation
+    function confirmDelete(userId) {
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteForm');
+        form.action = '/admin/users/' + userId;
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+    </script>
+{% endblock %}

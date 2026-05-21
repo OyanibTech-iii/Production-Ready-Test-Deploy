@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fallback Page - Growfico{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+	<div class="text-center py-8 bg-green p-8 ">
+		{% include 'footer/_fallback_inner.html.twig' %}
+		<button type="button" onclick="window.history.back()"
+			class="group relative inline-flex items-center justify-center px-8 py-3 font-semibold text-white transition-all duration-300 bg-primary-600 rounded-full hover:bg-primary-700 hover:shadow-xl hover:-translate-y-1 active:scale-95 focus:outline-none focus:ring-4 focus:ring-primary-500/30">
+			<span>Go Back</span>
+		</button>
+	</div>
+</div>
+{% endblock %}

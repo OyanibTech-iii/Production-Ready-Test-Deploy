@@ -1,0 +1,37 @@
+<nav class="flex-1 px-4 py-6 space-y-1">
+	{% set current_route = app.request.get('_route') %}
+	{% for item in links %}
+		{% set is_active = current_route == item.route_name or (item.route_prefix|default(false) and current_route starts with item.route_prefix) %}
+		{% set show_link = true %}
+		
+		{% if item.roles|default(false) %}
+			{% set show_link = false %}
+			{% for role in item.roles %}
+				{% if is_granted(role) %}
+					{% set show_link = true %}
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+		
+		{% if show_link %}
+			<a href="{{ item.route }}" 
+				{% if item.is_action|default(false) %}data-action="{{ item.label|lower }}"{% endif %}
+				class="group flex items-center gap-3 {{ item.indent|default(false) ? 'pl-10' : 'px-3' }} py-2.5 rounded-xl text-sm font-medium transition-all duration-200 
+				{{ is_active 
+					? 'bg-primary-50 dark:bg-primary-900/35 text-bright-green shadow-sm ring-1 ring-primary-200 dark:ring-primary-700' 
+					: 'text-light-gray hover:bg-gray-50 dark:hover:bg-gray-700/80 hover:text-dark-forest-green dark:hover:text-gray-100' 
+				}}">
+				<ion-icon name="{{ item.icon }}" 
+					class="text-lg transition-colors duration-200
+					{{ is_active ? 'text-bright-green' : 'text-gray-400 dark:text-gray-500 group-hover:text-light-gray dark:group-hover:text-gray-300' }}"></ion-icon>
+				<span class="flex-1">{{ item.label }}</span>
+				{% if is_active %}
+					<div class="w-1.5 h-1.5 rounded-full bg-bright-green -mr-1"></div>
+				{% endif %}
+			</a>
+		{% endif %}
+		
+	{% endfor %}
+	
+</nav>
+

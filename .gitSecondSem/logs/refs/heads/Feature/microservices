@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 5e948042c26d126925d2596313ee329899de25e2 OyanibTech-iii <pacificooyanib@gmail.com> 1776960448 +0800	branch: Created from HEAD
+5e948042c26d126925d2596313ee329899de25e2 b263f9553b1c97d6739d9bb85881c6e05280067f OyanibTech-iii <pacificooyanib@gmail.com> 1776960971 +0800	commit: fix qr-url
+b263f9553b1c97d6739d9bb85881c6e05280067f 58e04851ff502d0fd05d41fc9d7ec555fbd7b388 OyanibTech-iii <pacificooyanib@gmail.com> 1776965318 +0800	commit: implemented realtime chat
+58e04851ff502d0fd05d41fc9d7ec555fbd7b388 8cb37ba0f0c96bebbfc100a784a7e2dda8b0e7f3 OyanibTech-iii <pacificooyanib@gmail.com> 1776965992 +0800	commit: updates documentation
+8cb37ba0f0c96bebbfc100a784a7e2dda8b0e7f3 ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 OyanibTech-iii <pacificooyanib@gmail.com> 1777019755 +0800	commit: migrate to style-qr js

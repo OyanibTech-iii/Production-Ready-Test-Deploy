@@ -1,0 +1,108 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6" id="profile-section">
+	<!-- Profile card -->
+	<div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 space-y-6">
+		<div class="flex items-center justify-between gap-4">
+			<div class="flex items-center gap-4">
+				<div class="w-24 h-24 bg-gradient-to-br from-bright-green to-primary-600 text-white flex items-center justify-center rounded-full font-semibold text-2xl overflow-hidden relative">
+					{% if app.user.profileImage %}
+						<img id="profile-preview" src="{{ asset(app.user.profileImage) }}" alt="Profile" class="w-full h-full object-cover">
+					{% else %}
+						<span id="profile-initials">{{ app.user.firstName ? app.user.firstName|first|upper : app.user.email|first|upper }}</span>
+					{% endif %}
+					<button type="button" id="upload-photo-btn" class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200">
+						<ion-icon name="cloud-upload-outline" class="text-white text-2xl"></ion-icon>
+					</button>
+				</div>
+				<div>
+					<p class="text-sm text-light-gray mb-1">Role: {{ isStaff ? 'Staff' : 'User' }}</p>
+					<h3 class="text-xl font-semibold text-dark-forest-green">{{ app.user.getFullName() ?? 'User' }}</h3>
+					<p class="text-sm text-light-gray">{{ app.user.email }}</p>
+				</div>
+			</div>
+			
+			{% if app.user.qrCode %}
+				<div class="flex flex-col items-center gap-1">
+					<div class="w-24 h-24 bg-white p-1 border border-gray-200 rounded-lg shadow-sm flex items-center justify-center" 
+						 data-controller="qr"
+						 data-qr-data-value="{{ url('app_business_card', {identifier: app.user.qrCode.identifier}) }}"
+						 data-qr-width-value="80"
+						 data-qr-height-value="80"
+						 data-qr-logo-value="{{ asset('logos/LOGO-Brand.png') }}">
+					</div>
+					<span class="text-[10px] text-light-gray font-mono uppercase">{{ app.user.qrCode.identifier|slice(0, 8) }}...</span>
+				</div>
+			{% endif %}
+		</div>
+
+		<form id="profile-form" action="{{ path('app_user_profile_update') }}" method="post" enctype="multipart/form-data" data-turbo="false" class="space-y-4 mt-2">
+			<input type="file" id="profile-image-input" name="profileImage" accept="image/*" class="hidden">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div>
+					<label for="profile-first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+					<input type="text" id="profile-first-name" name="firstName" required
+						   value="{{ app.user.firstName }}"
+						   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors">
+				</div>
+				<div>
+					<label for="profile-last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+					<input type="text" id="profile-last-name" name="lastName" required
+						   value="{{ app.user.lastName }}"
+						   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors">
+				</div>
+			</div>
+
+			<div>
+				<label for="profile-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+				<input type="email" id="profile-email" name="email" required
+					   value="{{ app.user.email }}"
+					   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors">
+			</div>
+
+			<div>
+				<label for="profile-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+				<input type="tel" id="profile-phone" name="phone"
+					   value="{{ app.user.phone }}"
+					   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors">
+			</div>
+
+			<div class="flex items-center justify-between gap-3 pt-4 flex-wrap">
+				<p id="profile-status" data-profile-status class="text-sm text-light-gray"></p>
+				<div class="flex items-center gap-3">
+					<button type="reset" class="px-6 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200  dark:bg-gray-700 dark:!text-bright-green">
+						Reset
+					</button>
+					<button type="submit" class="px-6 py-2 text-sm font-medium text-white bg-bright-green rounded-lg hover:bg-green-600 transition-colors duration-200">
+						Save Changes
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Password -->
+	<div class="bg-white rounded-2xl shadow-lg p-6 space-y-4" id="password">
+		<h3 class="text-lg font-semibold text-dark-forest-green">Change Password</h3>
+		{% if isStaff %}
+			<form id="password-form" action="{{ path('app_user_profile_password') }}" method="post" data-turbo="false" class="space-y-4">
+				<div>
+					<label for="current-password" class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+					<input type="password" id="current-password" name="currentPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+				</div>
+				<div>
+					<label for="new-password" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+					<input type="password" id="new-password" name="newPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors text-sm">
+					<p class="text-xs text-light-gray mt-1">Minimum 8 characters. Staff can only change their own password.</p>
+				</div>
+				<p id="password-status" data-password-status class="text-sm text-light-gray"></p>
+				<button type="submit" class="w-full px-4 py-2 text-sm font-medium text-white bg-bright-green rounded-lg hover:bg-green-600 transition-colors duration-200">
+					Update Password
+				</button>
+			</form>
+		{% else %}
+			<div class="p-3 bg-gray-50 border border-dashed border-gray-200 rounded-lg text-sm text-light-gray">
+				Password updates are available to staff accounts. If you need access changes, contact an administrator.
+			</div>
+		{% endif %}
+	</div>
+</div>
+

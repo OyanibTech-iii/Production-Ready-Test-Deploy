@@ -1,0 +1,29 @@
+0000000000000000000000000000000000000000 ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 OyanibTech-iii <pacificooyanib@gmail.com> 1777222355 +0800	branch: Created from HEAD
+ab9ab6c90d77bdba70a6991b91e067ac9f9faed3 c01d4e2d6401bd4e4943b44fd3530705a3ee91ca OyanibTech-iii <pacificooyanib@gmail.com> 1777222517 +0800	commit: updated a personal info
+c01d4e2d6401bd4e4943b44fd3530705a3ee91ca 5d2b277ca5cfd09e64413ad5697e511bff845c24 OyanibTech-iii <pacificooyanib@gmail.com> 1777225017 +0800	commit: rate limiter initial architecture
+5d2b277ca5cfd09e64413ad5697e511bff845c24 0ccdd9dc3739425549d563ae593590cbd56f5eb1 OyanibTech-iii <pacificooyanib@gmail.com> 1777225615 +0800	merge origin/main: Merge made by the 'ort' strategy.
+0ccdd9dc3739425549d563ae593590cbd56f5eb1 f69b16fca4012a780e97037f8de5b2f8b55490c2 OyanibTech-iii <pacificooyanib@gmail.com> 1777537878 +0800	commit: fix: ficoBot fallback model update
+f69b16fca4012a780e97037f8de5b2f8b55490c2 6df3fc9fa25b1bc9b3790fc35a0018ba6ab8160f OyanibTech-iii <pacificooyanib@gmail.com> 1777546322 +0800	commit: feat: added typing indicator chatroom
+6df3fc9fa25b1bc9b3790fc35a0018ba6ab8160f 02dcb1b40b536a695df84b284a9cda4939136aa9 OyanibTech-iii <pacificooyanib@gmail.com> 1777551744 +0800	commit: fix: user profile image path issue
+02dcb1b40b536a695df84b284a9cda4939136aa9 77dc430eaa1cf7b200a7edd2ec0d67f63beb9d67 OyanibTech-iii <pacificooyanib@gmail.com> 1778126615 +0800	commit: fix: minor ajustments in fonts
+77dc430eaa1cf7b200a7edd2ec0d67f63beb9d67 40c3de1bb5ff8eec6ada6cbb5eb157fbbb7fa3fc OyanibTech-iii <pacificooyanib@gmail.com> 1778295276 +0800	commit: feat: add groupchat and adminchatroom avatar
+40c3de1bb5ff8eec6ada6cbb5eb157fbbb7fa3fc 9dd017ee644293dd9fa6e22072ac50bc7153d13d OyanibTech-iii <pacificooyanib@gmail.com> 1778295955 +0800	commit: fix: view user profile display url
+9dd017ee644293dd9fa6e22072ac50bc7153d13d f16a783d89d9f769c1d9326d0b922f7c42d0bd34 OyanibTech-iii <pacificooyanib@gmail.com> 1778300751 +0800	commit: doc: added screenshots
+f16a783d89d9f769c1d9326d0b922f7c42d0bd34 abf0528a5045a00dac7ba30126c866e0034230bf OyanibTech-iii <pacificooyanib@gmail.com> 1778301026 +0800	commit: doc: added certificate screenshot
+abf0528a5045a00dac7ba30126c866e0034230bf 4505b86386d3f364a609b1b0930f50958d38b7b6 OyanibTech-iii <pacificooyanib@gmail.com> 1778808819 +0800	commit: doc: added API endpoint guide
+4505b86386d3f364a609b1b0930f50958d38b7b6 e3b9306bc939ff6898f65a787e2d3b281d960245 OyanibTech-iii <pacificooyanib@gmail.com> 1778809815 +0800	commit: doc: added security documentation
+e3b9306bc939ff6898f65a787e2d3b281d960245 82f4985fdd962db4a0afef4284a23b8fa760b63d OyanibTech-iii <pacificooyanib@gmail.com> 1778810635 +0800	commit: fix: add autowiring fix to the $loginLimiter
+82f4985fdd962db4a0afef4284a23b8fa760b63d 0331c677acd741d13c0bddfa50a6e190dab1534f OyanibTech-iii <pacificooyanib@gmail.com> 1779087969 +0800	commit: feat: add image upload routes and enhance image normalization logic
+0331c677acd741d13c0bddfa50a6e190dab1534f 34c7c261d3e2fc649a8c1d4e062e53791519922b OyanibTech-iii <pacificooyanib@gmail.com> 1779149079 +0800	commit: feat: enhance project structure documentation with detailed directory descriptions
+34c7c261d3e2fc649a8c1d4e062e53791519922b 70cb33f5f5eb979d94e7d4364311485e721b46e5 OyanibTech-iii <pacificooyanib@gmail.com> 1779149451 +0800	commit: feat: add project versioning file to .gitignore
+70cb33f5f5eb979d94e7d4364311485e721b46e5 576f6adb84434f19e2611588ff0004a02bf01e3d OyanibTech-iii <pacificooyanib@gmail.com> 1779150635 +0800	commit: feat: update .gitignore and add .env.example with environment configuration
+576f6adb84434f19e2611588ff0004a02bf01e3d d3f07c3fe7d195f9847f7337951c9a88c99baae1 OyanibTech-iii <pacificooyanib@gmail.com> 1779158556 +0800	commit: feat: update security routes for public access and enhance footer links
+d3f07c3fe7d195f9847f7337951c9a88c99baae1 ae61d0c972d408fc9f3b17a2be393982fe62956e OyanibTech-iii <pacificooyanib@gmail.com> 1779199132 +0800	commit: feat: enhanced footer links for better navigation.
+ae61d0c972d408fc9f3b17a2be393982fe62956e 7bf0a6e9f5bd6a512f7dddae3db2feffbce8aabd OyanibTech-iii <pacificooyanib@gmail.com> 1779201576 +0800	commit: feat: add new sugarcane images and enhance service section with scroll animations
+7bf0a6e9f5bd6a512f7dddae3db2feffbce8aabd d20385b40272fd04fd61f124a488e00fc1f0d403 OyanibTech-iii <pacificooyanib@gmail.com> 1779203056 +0800	commit: feat: implement notification system with WebSocket support and update UI for notifications
+d20385b40272fd04fd61f124a488e00fc1f0d403 db4e59a62c9e54b7785f6c094c58845140b34cc4 OyanibTech-iii <pacificooyanib@gmail.com> 1779203879 +0800	commit: feat: add functionality to mark all notifications as read with CSRF protection
+db4e59a62c9e54b7785f6c094c58845140b34cc4 4ec9c6b93787ff8cc6f575930d097246973fe586 OyanibTech-iii <pacificooyanib@gmail.com> 1779265829 +0800	commit: feat: added stocks fixtures for backup
+4ec9c6b93787ff8cc6f575930d097246973fe586 50d8f1007bdd72d32531561c9ec640230537b2e3 OyanibTech-iii <pacificooyanib@gmail.com> 1779270181 +0800	commit: feat: added revisions
+50d8f1007bdd72d32531561c9ec640230537b2e3 5bed5795beb28ef87fee19a281eda092e78d3cb5 OyanibTech-iii <pacificooyanib@gmail.com> 1779288019 +0800	commit: refactor: enhance error handling in quiz submission, improve product detail layout, and update add-to-cart functionality with better user feedback.
+5bed5795beb28ef87fee19a281eda092e78d3cb5 f583ff8d4b846b0e3a217b6eaebb7a241e2c610c OyanibTech-iii <pacificooyanib@gmail.com> 1779293033 +0800	commit: feat: implement quantity update functionality in cart with stock validation and error handling
+f583ff8d4b846b0e3a217b6eaebb7a241e2c610c 087f78ae5f91a47e87933cefc5dfef1f12e0827e OyanibTech-iii <pacificooyanib@gmail.com> 1779295087 +0800	commit: feat: add theme toggle icon component for mobile and desktop

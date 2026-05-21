@@ -1,0 +1,43 @@
+{{ form_start(form, {'attr': {'class': 'w-full space-y-6'}}) }}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="space-y-2 md:col-span-2">
+        {{ form_label(form.choiceText, 'Choice Text', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.choiceText, {'attr': {'class': 'w-full px-4 py-3 text-xs border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green'}}) }}
+        {{ form_errors(form.choiceText) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.question, 'Question', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        {{ form_widget(form.question, {'attr': {'class': 'w-full px-4 py-3 text-xs border border-gray-300 rounded-lg
+        focus:ring-2 focus:ring-bright-green focus:border-transparent transition-colors duration-200
+        text-dark-forest-green'}}) }}
+        {{ form_errors(form.question) }}
+    </div>
+
+    <div class="space-y-2">
+        {{ form_label(form.isCorrect, 'Is Correct?', {'label_attr': {'class': 'block text-xs font-semibold
+        text-dark-forest-green'}}) }}
+        <div class="flex items-center gap-2">
+            {{ form_widget(form.isCorrect, {'attr': {'class': 'text-xs rounded border-gray-300 text-bright-green
+            focus:ring-bright-green'}}) }}
+            <span class="text-xs text-light-gray">Mark as the correct answer</span>
+        </div>
+        {{ form_errors(form.isCorrect) }}
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 justify-end mt-4">
+    <a href="{{ path('app_admin_answer_choice') }}"
+        class="inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-xs text-dark-forest-green font-semibold rounded-lg hover:bg-gray-200 transition-colors duration-200 dark:bg-gray-700 dark:!text-gray-200 dark:hover:!text-dark-forest-green">
+        Cancel
+    </a>
+    <button type="submit"
+        class="inline-flex items-center justify-center px-6 py-3 bg-bright-green text-xs text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-md hover:shadow-lg">
+        {{ button_label|default('Save Answer Choice') }}
+    </button>
+</div>
+{{ form_end(form) }}

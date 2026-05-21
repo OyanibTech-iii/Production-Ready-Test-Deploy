@@ -1,0 +1,220 @@
+    :root {
+        --routing-bg: #ffffff;
+        --routing-text: #1f2937;
+        --routing-text-secondary: #6b7280;
+        --routing-border: #e5e7eb;
+        --routing-hover: #f9fafb;
+        --routing-accent: #03A64A;
+        --routing-accent-hover: #0a5a36;
+        --routing-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --routing-icon-filter: grayscale(1) contrast(1.2);
+    }
+
+    .dark {
+        --routing-bg: #1f2937;
+        --routing-text: #f3f4f6;
+        --routing-text-secondary: #9ca3af;
+        --routing-border: #374151;
+        --routing-hover: #374151;
+        --routing-accent: #03A64A;
+        --routing-accent-hover: #0a5a36;
+        --routing-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        --routing-icon-filter: grayscale(1) invert(1) brightness(1.5) contrast(1.2);
+    }
+
+    /* Leaflet Routing Machine modern UI */
+    .leaflet-routing-container {
+        background-color: var(--routing-bg) !important;
+        color: var(--routing-text) !important;
+        border: 1px solid var(--routing-border) !important;
+        border-radius: 1rem !important;
+        box-shadow: var(--routing-shadow) !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        font-family: 'Poppins', sans-serif !important;
+        width: 320px !important;
+        max-width: 90vw !important;
+        margin: 10px !important;
+    }
+
+    .leaflet-routing-container h2 {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        padding: 1rem !important;
+        margin: 0 !important;
+        background: var(--routing-accent) !important;
+        color: white !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+    }
+
+    .leaflet-routing-container h3 {
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+        color: var(--routing-text) !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    .leaflet-routing-alt {
+        padding: 0 !important;
+        max-height: 400px !important;
+        overflow-y: auto !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important;  /* IE and Edge */
+    }
+
+    .leaflet-routing-alt::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari and Opera */
+    }
+
+    .leaflet-routing-summary {
+        padding: 1rem !important;
+        border-bottom: 1px solid var(--routing-border) !important;
+        background-color: var(--routing-hover) !important;
+    }
+
+    .leaflet-routing-summary h2 {
+        background: transparent !important;
+        color: var(--routing-accent) !important;
+        padding: 0 !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    .leaflet-routing-summary h3 {
+        margin: 0 !important;
+        color: var(--routing-text-secondary) !important;
+        font-weight: 400 !important;
+    }
+
+    .leaflet-routing-instruction-list {
+        padding: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+
+    .leaflet-routing-instruction {
+        padding: 0.875rem 1rem !important;
+        border-bottom: 1px solid var(--routing-border) !important;
+        transition: all 200ms ease !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+        background-color: var(--routing-bg) !important;
+        cursor: default !important;
+    }
+
+    .leaflet-routing-instruction:last-child {
+        border-bottom: none !important;
+    }
+
+    .leaflet-routing-instruction:hover {
+        background-color: var(--routing-hover) !important;
+    }
+
+    /* Remove flag icons (waypoints) and arrow up (continue) icons */
+    .leaflet-routing-icon-waypoint,
+    .leaflet-routing-icon-continue,
+    .leaflet-routing-icon-straight {
+        display: none !important;
+    }
+
+    /* Remove redundant routing containers at the bottom or left */
+    .leaflet-bottom .leaflet-routing-container,
+    .leaflet-left .leaflet-routing-container {
+        display: none !important;
+    }
+
+    /* Ensure the main container is visible (usually in top-right) */
+    .leaflet-top.leaflet-right .leaflet-routing-container {
+        display: block !important;
+    }
+
+    /* Style turn/direction icons */
+    .leaflet-routing-icon,
+    .leaflet-routing-instruction-icon {
+        filter: var(--routing-icon-filter) !important;
+        flex-shrink: 0 !important;
+        margin-top: 2px !important;
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* Hide redundant images if any, to prevent doubling */
+    .leaflet-routing-instruction-icon img,
+    .leaflet-routing-instruction-icon svg {
+        display: none !important;
+    }
+
+    .leaflet-routing-instruction > .leaflet-routing-instruction-text {
+        font-size: 0.8125rem !important;
+        line-height: 1.4 !important;
+        color: var(--routing-text) !important;
+    }
+
+    .leaflet-routing-instruction-distance {
+        display: block !important;
+        font-size: 0.75rem !important;
+        color: var(--routing-text-secondary) !important;
+        margin-top: 0.25rem !important;
+    }
+
+    .leaflet-routing-collapse-toggle {
+        top: 10px !important;
+        right: 10px !important;
+        background-color: white !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+
+    .dark .leaflet-routing-collapse-toggle {
+        background-color: var(--routing-bg) !important;
+        color: white !important;
+    }
+
+    /* Custom markers */
+    .pinned-location-marker {
+        background-color: var(--routing-accent);
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    /* Map Zoom Controls theme adaptation */
+    .leaflet-control-zoom a, 
+    .leaflet-control-layers-toggle {
+        background-color: var(--routing-bg) !important;
+        color: var(--routing-text) !important;
+        border-bottom-color: var(--routing-border) !important;
+    }
+
+    .leaflet-control-layers {
+        background-color: var(--routing-bg) !important;
+        color: var(--routing-text) !important;
+        border-radius: 0.75rem !important;
+        border: 1px solid var(--routing-border) !important;
+        box-shadow: var(--routing-shadow) !important;
+    }
+
+    /* Popup theme adaptation */
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+        background-color: var(--routing-bg) !important;
+        color: var(--routing-text) !important;
+        border-radius: 1rem !important;
+    }
+
+    .leaflet-popup-content {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 0.875rem !important;
+        margin: 1rem !important;
+    }
+
+    /* Alert fixes */
+    .fixed-alert {
+        animation: slideIn 0.3s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }

@@ -1,0 +1,12 @@
+framework:
+    rate_limiter:
+        login_limiter:
+            policy: sliding_window
+            limit: 5
+            interval: '1 minute'
+            cache_pool: cache.rate_limiter
+        global_limiter:
+            policy: sliding_window
+            limit: 100
+            interval: '1 minute'
+            cache_pool: cache.rate_limiter

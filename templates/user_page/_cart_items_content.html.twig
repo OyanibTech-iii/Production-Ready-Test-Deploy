@@ -1,0 +1,106 @@
+{# USER ONLY: Recently Added to Cart View #}
+<div id="cart-items-wrapper" data-cart-endpoint="{{ path('app_user_cart_items_fragment') }}">
+	<div class="flex items-center justify-between mb-6">
+		<div>
+			<h3 class="text-lg font-semibold text-dark-forest-green">Recently Added to Cart</h3>
+			<p class="text-sm text-light-gray">Items you recently added for purchase.</p>
+		</div>
+	</div>
+
+	{% if products is not empty %}
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+		{% set totalAmount = 0 %}
+		{% for product in products %}
+			{% set totalAmount = totalAmount + product.price %}
+			<div class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+				<div class="flex items-start justify-between gap-3 mb-3">
+					<div class="flex-1">
+						<h4 class="text-dark-forest-green font-semibold">{{ product.name }}</h4>
+						<p class="text-xs text-light-gray">Ready to purchase</p>
+					</div>
+					{% set imagePath = product.getImagePath() %}
+					{% if imagePath %}
+						<img src="{{ imagePath starts with('http') ? imagePath : asset(imagePath) }}" alt="{{ product.name }}" class="w-16 h-16 rounded-lg object-cover"/>
+					{% endif %}
+				</div>
+				<p class="text-sm text-light-gray mb-4 line-clamp-2">{{ product.description }}</p>
+				
+				<div class="flex items-center gap-2 text-sm text-dark-forest-green mb-3">
+					<ion-icon name="cash-outline" class="text-bright-green"></ion-icon>
+					<span>₱{{ product.price }}</span>
+				</div>
+		
+			</div>
+		{% endfor %}
+	</div>
+	
+	{# Total Amount Section #}
+	<div class="bg-gradient-to-r from-bright-green/10 to-dark-forest-green/10 rounded-xl p-6 border border-bright-green/30">
+		<div class="flex items-center justify-between">
+			<div>
+				<p class="text-sm text-light-gray mb-1">Total Amount to Pay</p>
+				<p class="text-2xl font-bold text-dark-forest-green">₱{{ totalAmount }}</p>
+			</div>
+			<button class="px-6 py-2 bg-bright-green text-white rounded-lg font-medium hover:bg-dark-forest-green transition">
+				Proceed to Checkout
+			</button>
+		</div>
+	</div>
+	{% else %}
+		<div class="text-center py-8">
+			<div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3 dark:bg-gray-700">
+				<ion-icon name="leaf-outline" class="w-8 h-8 text-bright-green"></ion-icon>
+			</div>
+			<p class="text-dark-forest-green font-semibold">Cart is empty</p>
+			<p class="text-sm text-light-gray">
+				Browse the catalog and add items to your cart.
+			</p>
+		</div>
+	{% endif %}
+</div>
+
+<script>
+	// Dynamic cart updates handler
+	document.addEventListener('DOMContentLoaded', function() {
+		const cartWrapper = document.getElementById('cart-items-wrapper');
+		
+		if (!cartWrapper) return;
+		
+		// Function to refresh cart section
+		async function refreshCartSection() {
+			try {
+				const response = await fetch(cartWrapper.dataset.cartEndpoint || window.location.href, {
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest'
+					}
+				});
+				
+				if (response.ok) {
+					const html = await response.text();
+					const parser = new DOMParser();
+					const doc = parser.parseFromString(html, 'text/html');
+					const newCartSection = doc.getElementById('cart-items-wrapper');
+					
+					if (newCartSection) {
+						cartWrapper.innerHTML = newCartSection.innerHTML;
+					}
+				}
+			} catch (error) {
+				console.error('Error refreshing cart:', error);
+			}
+		}
+		
+		// Listen for custom cart update events
+		window.addEventListener('cartItemAdded', refreshCartSection);
+		window.addEventListener('cartItemRemoved', refreshCartSection);
+		window.addEventListener('cartUpdated', refreshCartSection);
+		
+		// Also listen for native storage changes (in case using localStorage)
+		window.addEventListener('storage', function(e) {
+			if (e.key === 'cart_updated') {
+				refreshCartSection();
+			}
+		});
+	});
+</script>
+

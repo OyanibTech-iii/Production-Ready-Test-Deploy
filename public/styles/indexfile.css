@@ -1,0 +1,175 @@
+	.typing-dots .dot {
+		animation: typing 1.4s infinite;
+		display: inline-block;
+		width: 6px;
+		height: 6px;
+		margin: 0 1px;
+		background-color: #6B7280;
+		/* Gray-500 */
+		border-radius: 50%;
+	}
+
+	/* nth-of-type: nth-child breaks when whitespace text nodes sit between spans */
+	.typing-dots span:nth-of-type(2) {
+		animation-delay: 0.2s;
+	}
+
+	.typing-dots span:nth-of-type(3) {
+		animation-delay: 0.4s;
+	}
+
+	@keyframes typing {
+
+		0%,
+		60%,
+		100% {
+			transform: translateY(0);
+		}
+
+		30% {
+			transform: translateY(-4px);
+		}
+	}
+
+	.hero {
+		animation: slowZoom 20s ease-in-out infinite;
+	}
+
+	.reveal-item {
+		transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.ease-out-expo {
+		transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+	}
+
+	.content-section {
+		display: none;
+		opacity: 0;
+		transform: translateY(20px);
+		transition: all 0.6s ease-out;
+	}
+
+	.content-section.active {
+		display: block;
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	/* Active nav link styling */
+	.nav-link.active a {
+		color: var(--color-bright-green);
+	}
+
+	.nav-link a[aria-current="page"] {
+		font-weight: 600;
+	}
+
+	/* Ensure icon containers always show something */
+	.w-8,
+	.w-10,
+	.w-12,
+	.w-16 {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Ensure animated elements inside active sections are visible */
+	.content-section.active .scroll-fade-in,
+	.content-section.active .scroll-image,
+	.content-section.active .morph-image,
+	.content-section.active .slide-reveal {
+		opacity: 1 !important;
+		transform: none !important;
+		visibility: visible !important;
+	}
+
+	/* Make sure images inside active sections render */
+	.content-section.active img {
+		opacity: 1 !important;
+		visibility: visible !important;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: #e5e7eb;
+		border-radius: 10px;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: #d1d5db;
+	}
+
+	html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+		background: #4b5563;
+	}
+
+	html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: #6b7280;
+	}
+
+	/* Landing Tagalog quote: soften inline green in dark mode */
+	html.dark #nature-quote > p:first-of-type {
+		color: #4ade80 !important;
+	}
+
+	#ficobot-launcher {
+		bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
+		right: max(0.75rem, env(safe-area-inset-right, 0px)) !important;
+	}
+
+	#chat-modal {
+		width: min(360px, calc(100vw - 1rem)) !important;
+		height: min(600px, calc(100dvh - 5.5rem)) !important;
+		max-height: min(85vh, 85dvh) !important;
+		left: max(1rem, env(safe-area-inset-left, 0px));
+		bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+	}
+
+	@media (min-width: 768px) {
+		#chat-modal {
+			left: max(2rem, env(safe-area-inset-left, 0px));
+			bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
+		}
+	}
+
+	@media (max-width: 640px) {
+		#chat-modal {
+			width: min(280px, calc(100vw - 2rem)) !important;
+			max-width: min(280px, calc(100vw - 2rem)) !important;
+			left: auto !important;
+			right: max(0.75rem, env(safe-area-inset-right, 0px)) !important;
+			bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)) !important;
+			height: min(75dvh, 620px, calc(100dvh - 6rem)) !important;
+			max-height: min(85dvh, calc(100dvh - 5rem)) !important;
+			border-radius: 1rem;
+		}
+	}
+
+	#chat-suggestions {
+		flex-shrink: 0;
+		padding-left: 0.75rem;
+		padding-right: 0.75rem;
+		overflow-x: auto;
+		overflow-y: hidden;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: thin;
+	}
+
+	@media (min-width: 640px) {
+		#chat-suggestions {
+			flex-wrap: wrap;
+			justify-content: center;
+			overflow-x: visible;
+		}
+	}

@@ -1,0 +1,29 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Payment Cancelled | Growfico{% endblock %}
+{% block page_title %}Payment Cancelled{% endblock %}
+{% block page_subtitle %}Your payment was cancelled. You can try again anytime.{% endblock %}
+
+{% block user_content %}
+<div class="w-full max-w-4xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 p-12 text-center dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+        <div class="mx-auto w-20 h-20 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mb-6">
+            <ion-icon name="close-circle" class="text-4xl text-yellow-600 dark:text-yellow-400"></ion-icon>
+        </div>
+        <h1 class="text-2xl font-bold text-dark-forest-green dark:text-white mb-4">Payment Cancelled</h1>
+        <p class="text-lg text-light-gray dark:text-gray-400 mb-8">
+            Your payment was cancelled. No charges were made to your account.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ path('app_user_cart') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-bright-green text-white font-medium hover:bg-green-600 transition-colors no-underline">
+                <ion-icon name="bag-outline" class="text-lg"></ion-icon>
+                Back to Cart
+            </a>
+            <a href="{{ path('app_user_home') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors no-underline">
+                <ion-icon name="cart-outline" class="text-lg"></ion-icon>
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div class="card">
+        <div class="card-header bg-gradient-to-r from-bright-green to-dark-forest-green">
+            <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                <ion-icon name="person-outline" class="text-sm"></ion-icon>
+                User Information
+            </h3>
+        </div>
+        <div class="card-body space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-group">
+                    {{ form_label(form.firstName, 'First Name', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.firstName, {'attr': {'class': 'form-input'}}) }}
+                    {{ form_errors(form.firstName) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.lastName, 'Last Name', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.lastName, {'attr': {'class': 'form-input'}}) }}
+                    {{ form_errors(form.lastName) }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                {{ form_label(form.email, 'Email Address', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-input'}}) }}
+                {{ form_errors(form.email) }}
+            </div>
+            
+            <div class="form-group">
+                {{ form_label(form.phone, 'Phone Number', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.phone, {'attr': {'class': 'form-input'}}) }}
+                {{ form_errors(form.phone) }}
+            </div>
+            
+            <div class="form-group">
+                {{ form_label(form.password, 'Password', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.password, {'attr': {'class': 'form-input'}}) }}
+                {{ form_errors(form.password) }}
+                {% if is_edit %}
+                    <p class="text-xs text-gray-500 mt-1">Leave blank to keep current password</p>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form_label(form.roles, 'User Roles', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.roles) }}
+                {{ form_errors(form.roles) }}
+            </div>
+            
+            <div class="form-group">
+                <div class="flex items-center">
+                    {{ form_widget(form.isActive, {'attr': {'class': 'w-4 h-4 text-bright-green bg-gray-100 border-gray-300 rounded focus:ring-bright-green'}}) }}
+                    {{ form_label(form.isActive, 'Active User', {'label_attr': {'class': 'ml-2 text-sm font-medium text-gray-700'}}) }}
+                </div>
+                {{ form_errors(form.isActive) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between pt-6">
+        <a href="{{ path('app_user_index') }}" 
+           class="btn-secondary flex items-center gap-2">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+            Back to Users
+        </a>
+        <button type="submit" class="btn-primary flex items-center gap-2 px-6 py-3">
+            <ion-icon name="checkmark-outline"></ion-icon>
+            {{ button_label|default('Save User') }}
+        </button>
+    </div>
+{{ form_end(form) }}

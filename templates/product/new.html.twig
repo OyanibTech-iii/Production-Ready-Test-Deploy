@@ -1,0 +1,17 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Add New Product - Growfico{% endblock %}
+
+{% block page_title_heading_class %}text-xl font-semibold text-dark-forest-green dark:text-gray-100 leading-tight{% endblock %}
+{% block page_title %}Add New Product{% endblock %}
+{% block page_subtitle %}Create a new product to add to your inventory{% endblock %}
+
+{% block user_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+        <div class="p-6">
+            {{ include('product/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+<div class="card">
+
+    <div class="card-body space-y-6">
+        <!-- Products Selection (Full Width) -->
+        <div class="form-group pb-4">
+            {{ form_label(form.products, null, {'label_attr': {'class': 'form-label'}}) }}
+            <div class="relative products-dropdown-wrapper "
+                data-prefill-url="{{ app.request.get('_route') starts with 'app_admin_' ? path('app_admin_stock_prefill') : path('app_stock_prefill') }}">
+                {{ form_widget(form.products, {'attr': {
+                'class': 'hidden products-select',
+                'size': '1',
+                'aria-hidden': 'true',
+                'tabindex': '-1'
+                }}) }}
+            </div>
+            {{ form_errors(form.products) }}
+            <p class="text-sm text-gray-500 mt-2">Select a product to associate with this stock entry</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Current Quantity -->
+            <div class="form-group">
+                {{ form_label(form.Quantity, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="relative">
+                    {{ form_widget(form.Quantity, {'attr': {
+                    'id': 'stock_quantity',
+                    'class': 'form-input pl-10',
+                    'placeholder': 'Enter current stock quantity',
+                    'min': '10',
+                    'max': '500'
+                    }}) }}
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ion-icon name="cube-outline" class="text-gray-400"></ion-icon>
+                    </div>
+                </div>
+                {{ form_errors(form.Quantity) }}
+            </div>
+
+            <!-- Stock Type -->
+            <div class="form-group">
+                {{ form_label(form.stockType, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="relative">
+                    {{ form_widget(form.stockType, {'attr': {
+                    'class': 'form-input pl-10'
+                    }}) }}
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ion-icon name="pricetag-outline" class="text-gray-400"></ion-icon>
+                    </div>
+                </div>
+                {{ form_errors(form.stockType) }}
+            </div>
+
+            <!-- Minimum Quantity -->
+            <div class="form-group">
+                {{ form_label(form.minimumQuantity, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="relative">
+                    {{ form_widget(form.minimumQuantity, {'attr': {
+                    'id': 'stock_minimum_quantity',
+                    'class': 'form-input pl-10',
+                    'placeholder': 'Enter minimum stock level',
+                    'value': '10'
+                    }}) }}
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ion-icon name="trending-down-outline" class="text-gray-400"></ion-icon>
+                    </div>
+                </div>
+                {{ form_errors(form.minimumQuantity) }}
+            </div>
+
+            <!-- Maximum Quantity -->
+            <div class="form-group">
+                {{ form_label(form.maximumQuantity, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="relative">
+                    {{ form_widget(form.maximumQuantity, {'attr': {
+                    'id': 'stock_maximum_quantity',
+                    'class': 'form-input pl-10',
+                    'placeholder': 'Enter maximum stock level',
+                    'value': '500'
+                    }}) }}
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <ion-icon name="trending-up-outline" class="text-gray-400"></ion-icon>
+                    </div>
+                </div>
+                {{ form_errors(form.maximumQuantity) }}
+            </div>
+        </div>
+
+        <!-- Storage Location (Full Width) -->
+        <div class="form-group">
+            {{ form_label(form.location_rel, null, {'label_attr': {'class': 'form-label'}}) }}
+            <div class="relative">
+                {{ form_widget(form.location_rel) }}
+            </div>
+            {{ form_errors(form.location_rel) }}
+        </div>
+    </div>
+    <div class="flex items-center gap-3 pt-6 ml-4 mb-4">
+        {% if app.request.get('_route') starts with 'app_admin_' %}
+        <a href="{{ path('app_admin_stocks') }}" class="btn-secondary flex items-center gap-2">
+            Back to List
+        </a>
+        {% else %}
+        <a href="{{ path('app_stock_index') }}" class="btn-secondary flex items-center gap-2">
+            Back to List
+        </a>
+        {% endif %}
+        <button type="submit" class="btn-primary flex items-center gap-2 px-4 py-2 text-sm">
+            {{ button_label|default('Save Stock') }}
+        </button>
+    </div>
+</div>
+{{ form_end(form) }}
+
+<script src="{{ asset('js/stock-newlogic.js') }}"></script>

@@ -1,0 +1,134 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Admin Help Center | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-lg font-semibold text-dark-forest-green">Help Center</h2>
+<p class="text-xs text-light-gray">Find resources and support for managing your Growfico platform.</p>
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto space-y-8">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+            class="bg-white dark:bg-gray-700/50 rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200 group">
+            <div class="flex items-center justify-between mb-4">
+                <div
+                    class="w-12 h-12 bg-primary-50 dark:bg-gray-700/50 rounded-xl flex items-center justify-center group-hover:bg-primary-600 transition-colors duration-200">
+                    <ion-icon name="book-outline" class="text-2xl text-primary-600 group-hover:text-white transition-colors duration-200"></ion-icon>
+                </div>
+                <span class="text-xs font-bold text-bright-green uppercase tracking-wider">Self-Service</span>
+            </div>
+            <h3 class="text-lg font-bold text-dark-forest-green">Knowledge Base</h3>
+            <p class="text-sm text-light-gray mt-2 mb-6">Step-by-step guides on managing products, gardens, and user
+                permissions.</p>
+            <a href="{{ path('app_admin_self_service') }}"
+                class="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-dark-forest-green transition-colors">
+                Explore Documentation
+                <ion-icon name="arrow-forward-outline" class="ml-1"></ion-icon>
+            </a>
+        </div>
+
+        <div
+            class="bg-white dark:bg-gray-700/50 rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200 group">
+            <div class="flex items-center justify-between mb-4">
+                <div
+                    class="w-12 h-12 bg-primary-50 dark:bg-gray-700/50 rounded-xl flex items-center justify-center group-hover:bg-primary-600 transition-colors duration-200">
+                    <ion-icon name="footsteps-outline"
+                        class="text-2xl text-primary-600 group-hover:text-white"></ion-icon>
+                </div>
+                <span class="text-xs font-bold text-primary-600 uppercase tracking-wider">Audit</span>
+            </div>
+            <h3 class="text-lg font-bold text-dark-forest-green">Tracking Changes</h3>
+            <p class="text-sm text-light-gray mt-2 mb-6">Learn how to audit system activity and monitor revenue changes
+                over time.</p>
+            <a href="#"
+                class="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-dark-forest-green transition-colors">
+                View Audit Guide
+                <ion-icon name="arrow-forward-outline" class="ml-1"></ion-icon>
+            </a>
+        </div>
+
+        <div
+            class="bg-white dark:bg-gray-700/50 rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200 group">
+            <div class="flex items-center justify-between mb-4">
+                <div
+                    class="w-12 h-12 bg-primary-50 dark:bg-gray-700/50 rounded-xl flex items-center justify-center group-hover:bg-primary-600 transition-colors duration-200">
+                    <ion-icon name="chatbubble-ellipses-outline"
+                        class="text-2xl text-primary-600 group-hover:text-white"></ion-icon>
+                </div>
+                <span class="text-xs font-bold text-primary-700 uppercase tracking-wider">Support</span>
+            </div>
+            <h3 class="text-lg font-bold text-dark-forest-green">Contact Team</h3>
+            <p class="text-sm text-light-gray mt-2 mb-6">Facing a technical issue? Our support team is available for
+                platform assistance.</p>
+            <a href="{{ path('app_admin_chat_support') }}"
+                class="inline-flex items-center text-sm font-semibold text-primary-700 hover:text-dark-forest-green transition-colors">
+                Get Help Now
+                <ion-icon name="arrow-forward-outline" class="ml-1"></ion-icon>
+
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-700/50 rounded-2xl border border-gray-200 p-8 shadow-sm">
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-dark-forest-green">Common Questions</h3>
+            <p class="text-sm text-light-gray">Quick answers to the most frequently asked admin questions.</p>
+        </div>
+
+        <div class="space-y-4 max-w-7xl">
+            {# Using the same details style as the dashboard flow #}
+            <details class="group border-b border-gray-100 pb-4">
+                <summary
+                    class="flex justify-between items-center font-medium text-dark-forest-green cursor-pointer list-none hover:text-bright-green transition-colors">
+                    <span>How do I export my User Growth reports?</span>
+                    <ion-icon name="chevron-down-outline" class="group-open:hidden text-lg"></ion-icon>
+                    <ion-icon name="remove-outline" class="hidden group-open:block text-lg"></ion-icon>
+                </summary>
+                <p class="text-sm text-light-gray mt-3 leading-relaxed">
+                    Navigate to the User Growth section. You will find a "Download Chart" button at the top right of the
+                    user growth graph. Click it to download a PNG image of the current chart view."
+                </p>
+            </details>
+
+            <details class="group border-b border-gray-100 pb-4">
+                <summary
+                    class="flex justify-between items-center font-medium text-dark-forest-green cursor-pointer list-none hover:text-bright-green transition-colors">
+                    <span>What does the 'Active Gardens' metric include?</span>
+                    <ion-icon name="chevron-down-outline" class="group-open:hidden text-lg"></ion-icon>
+                    <ion-icon name="remove-outline" class="hidden group-open:block text-lg"></ion-icon>
+                </summary>
+                <p class="text-sm text-light-gray mt-3 leading-relaxed">
+                    This counts all garden projects currently marked as "In Progress" or "Maintained" across the
+                    Growfico platform.
+                </p>
+            </details>
+
+            <details class="group">
+                <summary
+                    class="flex justify-between items-center font-medium text-dark-forest-green cursor-pointer list-none hover:text-bright-green transition-colors">
+                    <span>How can I change my administrative password?</span>
+                    <ion-icon name="chevron-down-outline" class="group-open:hidden text-lg"></ion-icon>
+                    <ion-icon name="remove-outline" class="hidden group-open:block text-lg"></ion-icon>
+                </summary>
+                <p class="text-sm text-light-gray mt-3 leading-relaxed">
+                    Go to your User Profile settings. For security, changing your password will require verification of
+                    your current administrative credentials.
+                </p>
+            </details>
+        </div>
+    </div>
+
+    {# <div class="flex items-center justify-between py-4 border-t border-gray-100 text-xs text-light-gray">
+        <div class="flex items-center gap-4">
+            <span>Growfico Admin v1.0</span>
+            <span class="flex items-center gap-1">
+                <div class="w-2 h-2 rounded-full bg-bright-green"></div>
+                Systems Operational
+            </span>
+        </div>
+    </div> #}
+</div>
+{% endblock %}

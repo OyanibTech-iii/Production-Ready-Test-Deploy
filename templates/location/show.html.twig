@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Location Details</h1>
+
+{# Ensure the div has a unique height and is clear for Leaflet #}
+<div id="map" style="height: 450px; width: 100%; border-radius: 12px; margin-bottom: 20px; z-index: 0;" data-turbo-permanent></div>
+
+<table class="table">
+    {# Existing table code ... #}
+</table>
+
+<script>
+    (function () {
+        const initMap = () => {
+            const mapElement = document.getElementById('map');
+            if (!mapElement) return;
+
+            if (mapElement._leaflet_id) {
+                mapElement._leaflet_id = null;
+                mapElement.innerHTML = "";
+            }
+
+            const lat = Number("{{ location.latitude|default(0)|escape('js') }}");
+            const lng = Number("{{ location.longitude|default(0)|escape('js') }}");
+            const address = "{{ location.address|default('Unknown')|escape('js') }}";
+
+            if (lat !== 0 || lng !== 0) {
+                // 1. Define the different Tile Layers
+                const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                });
+
+                const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                });
+
+                const terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
+                });
+
+                // 2. Initialize map with a default layer (osm)
+                const map = L.map('map', {
+                    center: [lat, lng],
+                    zoom: 10,
+                    layers: [osm] // Default visible layer
+                });
+
+                // 3. Create a Base Maps object for the control
+                const baseMaps = {
+                    "Street Map": osm,
+                    "Satellite View": satellite,
+                    "Topography": terrain
+                };
+
+                // 4. Add the Layer Control to the top-right
+                L.control.layers(baseMaps).addTo(map);
+                map.on('contextmenu', function(e) {
+                    map.panTo(e.latlng);
+                });
+                // 5. Add the marker
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup('<b>' + address + '</b>')
+                    .openPopup();
+
+                setTimeout(() => { map.invalidateSize(); }, 200);
+            }
+        };
+
+        document.addEventListener('turbo:load', initMap);
+        initMap();
+    })();
+</script>
+<div class="actions">
+    <a href="{{ path('app_location_index') }}" class="btn">Back to list</a>
+    <a href="{{ path('app_location_edit', {'id': location.id}) }}" class="btn">Edit</a>
+    {{ include('location/_delete_form.html.twig') }}
+</div>
+{% endblock %}

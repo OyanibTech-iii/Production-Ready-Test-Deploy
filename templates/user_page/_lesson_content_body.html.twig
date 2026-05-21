@@ -1,0 +1,23 @@
+{% if lesson.contentFile %}
+{% set filename = lesson.contentFile|lower %}
+{% set is_pdf = filename ends with '.pdf' %}
+<p class="mb-2">
+    <a href="{{ asset('uploads/lessons/' ~ lesson.contentFile) }}" target="_blank" rel="noopener"
+        class="text-sm text-bright-green hover:underline font-medium">Open PDF in new tab</a>
+</p>
+{% if is_pdf %}
+<div
+    class="relative w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-50 min-h-[min(70vh,560px)] h-[100dvh] max-h-[100vh]">
+    <iframe src="{{ asset('uploads/lessons/' ~ lesson.contentFile) }}" title="{{ lesson.title }}"
+        class="absolute inset-0 block h-full w-full border-0"></iframe>
+</div>
+{% else %}
+<iframe src="{{ asset('uploads/lessons/' ~ lesson.contentFile) }}" title="{{ lesson.title }}"
+    class="block w-full min-h-[min(70vh,560px)] border border-gray-200 rounded-lg bg-gray-50"></iframe>
+{% endif %}
+{% endif %}
+{% if lesson.content %}
+<pre class="whitespace-pre-wrap text-sm text-light-gray mt-3 font-sans">{{ lesson.content }}</pre>
+{% elseif not lesson.contentFile %}
+<p class="text-sm text-gray-400">No content for this lesson yet.</p>
+{% endif %}

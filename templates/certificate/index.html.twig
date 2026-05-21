@@ -1,0 +1,120 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Certificates | Growfico{% endblock %}
+
+{% block header_title %}
+<h2 class="text-xl font-semibold text-dark-forest-green">Certificates</h2>
+<p class="text-xs text-light-gray">Manage issued certificates</p>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('styles/datatable.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-xl font-semibold text-dark-forest-green">Manage Certificates</h2>
+            <div class="flex flex-col sm:flex-row gap-4 sm:items-center">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </span>
+                    <input type="text"
+                           id="certificates-search-input"
+                           class="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-bright-green sm:text-sm"
+                           placeholder="Search certificates..."
+                           autocomplete="off"
+                           aria-label="Search certificates">
+                </div>
+                <a href="{{ path('app_certificate_new') }}"
+                   class="inline-flex items-center justify-center px-4 py-2 bg-bright-green text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors duration-200">
+                    <ion-icon name="add-outline" class="w-4 h-4 mr-2"></ion-icon>
+                    Add Certificate
+                </a>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table id="certificatesTable" class="w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Certificate Code</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issued At</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider no-sort"
+                        style="text-align: center !important;">
+                        Actions
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-500">
+                {% for certificate in certificates %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-dark-forest-green">
+                                {{ certificate.certificateCode }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-light-gray">
+                            {{ certificate.issuedAt ? certificate.issuedAt|date('M d, Y H:i') : 'N/A' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ path('app_certificate_show', {'id': certificate.id}) }}"
+                                   class="text-bright-green hover:text-green-600 transition-colors duration-200"
+                                   title="View Certificate">
+                                    <ion-icon name="eye-outline" class="w-4 h-4"></ion-icon>
+                                </a>
+                                <a href="{{ path('app_certificate_edit', {'id': certificate.id}) }}"
+                                   class="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                                   title="Edit Certificate">
+                                    <ion-icon name="create-outline" class="w-4 h-4"></ion-icon>
+                                </a>
+                                <form method="post"
+                                      action="{{ path('app_certificate_delete', {'id': certificate.id}) }}"
+                                      onsubmit="return confirm('Are you sure you want to delete this certificate?');"
+                                      class="inline">
+                                    <input type="hidden" name="_token"
+                                           value="{{ csrf_token('delete' ~ certificate.id) }}">
+                                    <button type="submit"
+                                            class="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                            title="Delete Certificate">
+                                        <ion-icon name="trash-outline" class="w-4 h-4"></ion-icon>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#certificatesTable').DataTable({
+            paging: true,
+            searching: false,
+            ordering: true,
+            info: true,
+            columnDefs: [
+                { orderable: false, targets: 'no-sort' }
+            ]
+        });
+
+        $('#certificates-search-input').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+    });
+</script>
+{% endblock %}

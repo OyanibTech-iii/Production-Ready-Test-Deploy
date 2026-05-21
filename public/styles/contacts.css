@@ -1,0 +1,29 @@
+  .animate-fade-in {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .grayscale-map {
+        filter: grayscale(100%) contrast(1.1) opacity(0.8);
+        transition: all 0.5s ease;
+    }
+
+    .map-container:hover .grayscale-map {
+        filter: grayscale(0%) contrast(1) opacity(1);
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: transparent !important;
+    }

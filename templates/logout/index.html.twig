@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logout | Growfico {% endblock %}
+
+{% block body %}
+
+    <main class="logout-screen" role="main">
+        <article class="logout-card" aria-labelledby="logout-title">
+            <img class="logo" src="{{ asset('logos/white-Text -Primary.png') }}" alt="Growfico logo">
+
+            <div class="logout-content">
+                <h1 id="logout-title">Thanks for visiting Growfico</h1>
+                <p>We're signing you out. You'll be redirected to our landing page in <span id="countdown">2</span> seconds.</p>
+
+                <div class="status-row">
+                    <div class="spinner" role="img" aria-label="Loading"></div>
+
+                    <div>
+                        <div class="progress-wrap" aria-hidden="true">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <div class="logout-footer">If you aren't redirected, <a href="{{ path('app_landinpage') }}">click here</a>.</div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        // Countdown and redirect logic
+        (function(){
+            var t = 2; // seconds
+            var el = document.getElementById('countdown');
+            if(el) el.textContent = t;
+
+            var timer = setInterval(function(){
+                t -= 1;
+                if(el) el.textContent = t > 0 ? t : 0;
+                if(t <= 0){
+                    clearInterval(timer);
+                    window.location.href = "{{ path('app_landinpage') }}";
+                }
+            }, 1000);
+        })();
+    </script>
+
+{% endblock %}

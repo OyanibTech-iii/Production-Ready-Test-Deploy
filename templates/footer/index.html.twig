@@ -1,0 +1,100 @@
+<div class="w-full overflow-hidden leading-[0] bg-transparent">
+    <img src="{{ asset('leaf/g.png') }}" alt="" class="w-full h-auto min-h-[50px] object-cover block"
+        aria-hidden="true">
+</div>
+<footer class="bg-dark-forest-green dark:bg-gray-800 text-white pb-16 pt-8 ">
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-8">
+
+            {# Brand Section #}
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="{{ asset('logos/all light.png') }}" alt="Growfico" class="h-9 w-auto" />
+                </div>
+                <p class="text-gray-400 text-sm mb-4">
+                    Empowering businesses with smart platform solutions and data-driven insights.
+                </p>
+                <div class="flex gap-4">
+                    <a href="https://www.facebook.com/GROWFICO_Official" target="_blank"
+                        rel="noopener noreferrer" class="w-8 h-8 bg-emerald-600/10 rounded-full flex items-center justify-center 
+                              hover:bg-bright-green transition-colors">
+                        <ion-icon name="logo-facebook" class="text-white text-xl"></ion-icon>
+                    </a>
+                    <a href="https://www.instagram.com/GROWFICO_Official" target="_blank"
+                        rel="noopener noreferrer" class="w-8 h-8 bg-emerald-600/10 rounded-full flex items-center justify-center 
+                              hover:bg-bright-green transition-colors">
+                        <ion-icon name="logo-instagram" class="text-white text-xl"></ion-icon>
+                    </a>
+                    <a href="{{ path('app_footer_fallback') }}" class="w-8 h-8 bg-emerald-600/10 rounded-full flex items-center justify-center 
+                              hover:bg-bright-green transition-colors">
+                        <ion-icon name="logo-twitter" class="text-white text-xl"></ion-icon>
+                    </a>
+                    <a href="{{ path('app_footer_fallback') }}" class="w-8 h-8 bg-emerald-600/10 rounded-full flex items-center justify-center 
+                              hover:bg-bright-green transition-colors">
+                        <ion-icon name="logo-linkedin" class="text-white text-xl"></ion-icon>
+                    </a>
+                </div>
+            </div>
+
+            {# Quick Links #}
+            <div>
+                <h3 class="mb-4 font-semibold">Quick Links</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="{{ path('app_landinpage') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Home</a></li>
+                    <li><a href="{{ path('app_about') }}"
+                            class="hover:text-bright-green transition-colors text-sm">About Us</a></li>
+                    <li><a href="{{ path('app_contact') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Contact Us</a></li>
+                    <li><a href="{{ path('app_products') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Products</a></li>
+                </ul>
+            </div>
+
+            {# Support #}
+            <div>
+                <h3 class="mb-4 font-semibold">Support</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="{{ path('app_help') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Help Center</a></li>
+                    <li><a href="{{ path('app_footer_fallback') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Documentation</a></li>
+                    <li><a href="{{ path('app_footer_fallback') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Community</a></li>
+                    <li><a href="{{ path('app_footer_fallback') }}"
+                            class="hover:text-bright-green transition-colors text-sm">Services</a></li>
+                </ul>
+            </div>
+
+            {# Contact #}
+            <div>
+                <h3 class="mb-4 font-semibold">Contact</h3>
+                <ul class="space-y-3 text-gray-400">
+                    <li class="flex items-start gap-2">
+                        <span class="text-sm">Kagawasan Ave. Dumaguete City, Negros Oriental</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <a href="mailto:growficoofficial@gmail.com"
+                            class="hover:text-bright-green transition-colors text-sm">
+                            growficoofficial@gmail.com
+                        </a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <a href="tel:+639458062493" class="hover:text-bright-green transition-colors text-sm">
+                            +63 945 806 2493
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-500 pt-4 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-sm">
+            <p>&copy; {{ "now"|date("Y") }} Growfico. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="{{ path('app_privaypolicy') }}" target="_blank" rel="noopener noreferrer" class="hover:text-bright-green transition-colors">Privacy Policy</a>
+                <a href="{{ path('app_terms') }}" target="_blank" rel="noopener noreferrer" class="hover:text-bright-green transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>

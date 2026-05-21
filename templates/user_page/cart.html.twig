@@ -1,0 +1,326 @@
+{% extends 'user_page/base_user.html.twig' %}
+
+{% block title %}Cart | Growfico{% endblock %}
+{% block page_title %}Your cart{% endblock %}
+{% block page_subtitle %}Items saved on your account{% endblock %}
+
+{% block user_content %}
+<div class="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+	{% if cart and cart.items is not empty %}
+	<div class="flex flex-col lg:flex-row gap-10 items-start">
+		{# Left Column: Items Grid (Scrollable) #}
+		<div class="flex-1 w-full lg:max-w-4xl xl:max-w-5xl lg:max-h-[calc(100vh-180px)] lg:overflow-y-auto pr-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+			<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 pb-4">
+				{% for item in cart.items %}
+				{% set product = item.product %}
+				{% if product %}
+				{% set imagePath = product.getImagePath() %}
+				{% set lineTotal = item.quantity * product.price %}
+				<article id="cart-item-{{ item.id }}"
+					class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 dark:hover:shadow-black/40 transition-all duration-300 overflow-hidden dark:bg-gray-800 dark:border-gray-700 flex flex-col relative group h-full">
+					{# Remove Button #}
+					<button type="button" data-item-id="{{ item.id }}"
+						class="remove-cart-item-btn absolute top-4 right-4 z-10 p-2 bg-white/90 backdrop-blur-sm dark:bg-gray-900/90 rounded-full text-red-500 hover:text-white hover:bg-red-500 dark:hover:bg-red-600 shadow-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-400 border-0 cursor-pointer"
+						title="Remove from cart" aria-label="Remove item from cart">
+						<ion-icon name="trash-outline" class="text-sm block"></ion-icon>
+					</button>
+
+					<div class="aspect-square bg-gray-50 dark:bg-gray-700 overflow-hidden shrink-0">
+						{% if imagePath %}
+						<img src="{{ (imagePath starts with 'http') ? imagePath : asset(imagePath) }}" alt=""
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+						{% else %}
+						<div class="w-full h-full flex items-center justify-center">
+							<ion-icon name="leaf-outline" class="text-3xl text-gray-300"></ion-icon>
+						</div>
+						{% endif %}
+					</div>
+					<div class="p-6 flex flex-col flex-1 gap-4 min-w-0">
+						<h3 class="font-bold text-dark-forest-green dark:text-white line-clamp-2 text-sm leading-tight tracking-tight">{{
+							product.name }}</h3>
+						
+						<div class="mt-auto space-y-4 pt-4 border-t border-gray-50 dark:border-gray-600">
+							<div class="flex justify-between items-center text-xs">
+								<span class="text-light-gray text-xs dark:text-gray-400 font-medium">Price</span>
+								<span class="font-bold text-dark-forest-green dark:text-white">₱{{ product.price|number_format(2, '.', ',') }}</span>
+							</div>
+
+							<div class="flex flex-col gap-2">
+								<div class="flex justify-between items-center">
+									<label class="text-xs text-light-gray dark:text-gray-400">Quantity</label>
+								</div>
+								<div class="flex items-center justify-between bg-gray-50 dark:bg-gray-900/50 rounded-xl p-1.5 border border-gray-100 dark:border-gray-700 w-full">
+									<button type="button" 
+										class="update-qty-btn w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white dark:hover:bg-gray-800 text-dark-forest-green dark:text-gray-300 transition-all shadow-sm active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+										data-item-id="{{ item.id }}" data-action="decrease"
+										{{ item.quantity <= 1 ? 'disabled' : '' }}>
+										<ion-icon name="remove-outline" class="text-lg"></ion-icon>
+									</button>
+									<span class="text-sm font-black text-dark-forest-green dark:text-white" id="qty-display-{{ item.id }}">{{ item.quantity }}</span>
+									<button type="button" 
+										class="update-qty-btn w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white dark:hover:bg-gray-800 text-dark-forest-green dark:text-gray-300 transition-all shadow-sm active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+										data-item-id="{{ item.id }}" data-action="increase"
+										data-max="{{ product.getCurrentStockQuantity() }}"
+										{{ item.quantity >= product.getCurrentStockQuantity() ? 'disabled' : '' }}>
+										<ion-icon name="add-outline" class="text-lg"></ion-icon>
+									</button>
+								</div>
+							</div>
+
+							<div class="flex justify-between items-center pt-2 border-t border-gray-50 dark:border-gray-700">
+								<p class="font-bold text-dark-forest-green dark:text-white text-base">₱{{ lineTotal|number_format(2, '.', ',') }}</p>
+							</div>
+
+							<button type="button"
+								class="checkout-item-btn w-full text-xs inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-bright-green/5 hover:bg-bright-green text-bright-green hover:!text-white font-bold transition-all duration-300 border border-bright-green/20"
+								data-item-id="{{ item.id }}" data-product-id="{{ product.id }}"
+								data-quantity="{{ item.quantity }}" data-product-name="{{ product.name|e('html_attr') }}"
+								data-line-total="{{ lineTotal|number_format(2, '.', '') }}">
+								<ion-icon name="bag-check-outline" class="text-base"></ion-icon>
+								Checkout item
+							</button>
+						</div>
+					</div>
+				</article>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+
+		{# Right Column: Order Summary (Fixed Dynamic Widget) #}
+		<aside class="w-full lg:w-[450px] xl:w-[500px] lg:sticky lg:top-24 self-start">
+			<div class="p-8 rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xl shadow-gray-200/60 dark:shadow-black/20">
+				<h2 class="text-sm font-semibold text-dark-forest-green dark:text-white mb-8 flex items-center gap-3">
+					<div class="w-10 h-10 rounded-xl bg-bright-green/10 flex items-center justify-center">
+						<ion-icon name="receipt-outline" class="text-bright-green text-sm"></ion-icon>
+					</div>
+					Order Summary
+				</h2>
+				
+				<div class="space-y-5">
+					<div class="flex justify-between items-center text-xs">
+						<span class="text-light-gray dark:text-gray-400 font-medium">Subtotal</span>
+						<span id="cart-subtotal" class="font-bold text-dark-forest-green dark:text-white tabular-nums text-sm">₱{{ cart.subtotal|number_format(2, '.', ',') }}</span>
+					</div>
+					
+					<div class="flex justify-between items-center text-xs">
+						<span class="text-light-gray dark:text-gray-400 font-medium">Shipping</span>
+						<span class="text-[10px] font-semibold text-gray-400 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-full tracking-wider">Free</span>
+					</div>
+					
+					<div class="flex justify-between items-center text-xs">
+						<span class="text-light-gray dark:text-gray-400 font-medium">Estimated Tax</span>
+						<span class="text-[10px] font-semibold text-gray-400 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-full uppercase tracking-wider">TBD</span>
+					</div>
+					
+					<div class="pt-8 mt-4 border-t-2 border-dashed border-gray-100 dark:border-gray-700">
+						<div class="flex justify-between items-end mb-8">
+							<div class="flex flex-col">
+								<span class="text-[10px] font-bold text-light-gray dark:text-gray-400 uppercase tracking-widest mb-1">Total Amount</span>
+								<span class="text-[10px] text-bright-green font-medium">Including VAT</span>
+							</div>
+							<span class="text-sm font-bold text-dark-forest-green dark:text-white leading-none tracking-tighter">₱{{ cart.subtotal|number_format(2, '.', ',') }}</span>
+						</div>
+						
+						<div class="flex justify-center">
+							<button type="button" id="cart-checkout-open"
+								class="w-full inline-flex items-center justify-center gap-3 px-6 py-2.5 text-xs rounded-xl bg-bright-green text-white font-semibold hover:bg-green-600 transition-all duration-300  hover:-translate-y-1">
+								<ion-icon name="bag-check-outline" class="text-sm"></ion-icon>
+								Checkout All Items
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="mt-10 pt-8 border-t border-gray-100 dark:border-gray-700">
+					<div class="bg-gray-50/50 dark:bg-gray-900/50 rounded-xl p-6 flex flex-col items-center text-center border border-gray-100 dark:border-gray-800">
+						<p class="text-xs font-medium text-light-gray dark:text-gray-400 mb-3">Forgot something? Keep shopping for more greens!</p>
+						<a href="{{ path('app_user_home') }}" 
+						   class="text-bright-green hover:text-green-600 font-semibold text-xs inline-flex items-center gap-2 transition-all no-underline group hover:text-white">
+							Continue to Shop
+						</a>
+					</div>
+				</div>
+			</div>
+		</aside>
+	</div>
+
+	{# Checkout Modal #}
+	<div id="cart-checkout-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+		<button type="button" id="cart-checkout-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+			aria-label="Close"></button>
+		<div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+			<div class="pointer-events-auto relative w-full max-w-2xl rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xl overflow-hidden"
+				role="dialog" aria-modal="true" aria-labelledby="cart-checkout-modal-title">
+				<button type="button" id="cart-checkout-close"
+					class="absolute top-3 right-3 z-10 p-2 rounded-lg text-light-gray hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+					aria-label="Close">
+					<ion-icon name="close-outline" class="text-sm"></ion-icon>
+				</button>
+
+				<div class="p-6">
+					<div class="mb-8">
+						<h2 id="cart-checkout-modal-title" class="text-sm font-semibold text-dark-forest-green dark:text-white">Complete Your Order</h2>
+						<p id="checkout-note" class="text-xs text-light-gray mt-1">Review your selected items and choose a payment method.</p>
+					</div>
+
+					<form id="checkout-form" data-checkout-url="{{ path('app_user_cart_checkout') }}">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+							{# Left Column: Payment Method #}
+							<div class="flex flex-col">
+								<div class="mb-6">
+									<label
+										class="block text-sm font-medium text-dark-forest-green dark:text-white mb-3">
+										Payment Method
+									</label>
+									<p class="text-xs text-light-gray mb-4">Select how you want to pay for your order.
+									</p>
+
+									<div class="space-y-3">
+										<button type="button"
+											class="payment-option w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-bright-green/50 hover:bg-bright-green/5 dark:hover:bg-gray-700/50 transition text-left focus:outline-none"
+											data-method="paypal">
+											<div
+												class="w-12 h-12 rounded-lg bg-[#003087]/10 flex items-center justify-center shrink-0">
+												<ion-icon name="logo-paypal" class="w-7 h-7 text-[#003087]"></ion-icon>
+											</div>
+											<span
+												class="font-semibold text-xs text-dark-forest-green dark:text-white">PayPal</span>
+											<ion-icon name="checkmark-circle"
+												class="payment-check w-6 h-6 text-bright-green ml-auto hidden"></ion-icon>
+										</button>
+
+										<button type="button"
+											class="payment-option w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-bright-green/50 hover:bg-bright-green/5 dark:hover:bg-gray-700/50 transition text-left focus:outline-none"
+											data-method="cod">
+											<div
+												class="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+												<ion-icon name="wallet-outline"
+													class="w-7 h-7 text-amber-600"></ion-icon>
+											</div>
+											<span
+												class="font-semibold text-xs text-dark-forest-green dark:text-white">Cash
+												on Delivery</span>
+											<ion-icon name="checkmark-circle"
+												class="payment-check w-6 h-6 text-bright-green ml-auto hidden"></ion-icon>
+										</button>
+									</div>
+									<input type="hidden" name="paymentMethod" value="">
+								</div>
+
+								{# Order Summary with Quantity #}
+								<div class="mt-auto border-t border-gray-200 dark:border-gray-600 pt-4 space-y-1">
+									<div class="flex justify-between items-center">
+										<span class="text-light-gray text-xs">Quantity:</span>
+										<span id="checkout-quantity-display"
+											class="text-dark-forest-green dark:text-white text-xs font-semibold"></span>
+									</div>
+									<div class="flex justify-between items-center">
+										<span class="text-dark-forest-green text-sm dark:text-white font-medium">Total
+											Amount:</span>
+										<span id="checkout-total-amount"
+											class="text-bright-green text-sm font-semibold">₱{{
+											cart.subtotal|number_format(2, '.', ',') }}</span>
+									</div>
+								</div>
+							</div>
+
+							{# Right Column: Ratings #}
+							<div class="flex flex-col border-l border-gray-100 dark:border-gray-700 md:pl-8">
+								<h3 class="text-sm font-medium text-dark-forest-green dark:text-white mb-1">Rate Your
+									Items</h3>
+								<p class="text-xs text-light-gray mb-4">Share your feedback on these products.</p>
+
+								<div id="checkout-reviews" class="space-y-4 overflow-y-auto max-h-[350px] pr-2">
+									{% for item in cart.items %}
+									{% set product = item.product %}
+									{% if product %}
+									{% set imagePath = product.getImagePath() %}
+									<div class="checkout-review-item border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50/50 dark:bg-gray-900/20"
+										data-cart-item-id="{{ item.id }}" data-product-id="{{ product.id }}">
+
+										<div class="flex items-start gap-3 mb-3">
+											<div
+												class="w-12 h-12 rounded-md bg-gray-100 dark:bg-gray-700 overflow-hidden shrink-0">
+												{% if imagePath %}
+												<img src="{{ (imagePath starts with 'http') ? imagePath : asset(imagePath) }}"
+													class="w-full h-full object-cover">
+												{% else %}
+												<div class="w-full h-full flex items-center justify-center"><ion-icon
+														name="leaf-outline" class="text-gray-400"></ion-icon></div>
+												{% endif %}
+											</div>
+											<div class="min-w-0">
+												<h4
+													class="font-semibold text-sm text-dark-forest-green dark:text-white truncate">
+													{{ product.name }}</h4>
+												{# Replaced Qty with Description #}
+												<p class="text-[10px] text-light-gray line-clamp-2 leading-tight">
+													{{ product.description|default('No description available.') }}
+												</p>
+											</div>
+										</div>
+
+										<div class="space-y-3">
+											<div class="flex gap-1">
+												{# <span class="text-sm">Rate: </span> #}
+												{% for i in 1..5 %}
+												<button type="button"
+													class="rating-star text-base text-gray-300 hover:text-yellow-400 transition-colors"
+													data-product-id="{{ product.id }}" data-rating="{{ i }}">
+													<ion-icon name="star-outline"></ion-icon>
+												</button>
+												{% endfor %}
+												<input type="hidden" name="reviews[{{ product.id }}][rating]" value=""
+													required>
+											</div>
+											<textarea name="reviews[{{ product.id }}][comment]" rows="2"
+												class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs focus:ring-1 focus:ring-bright-green bg-white dark:bg-gray-900"
+												placeholder="Optional comment..."></textarea>
+										</div>
+									</div>
+									{% endif %}
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+
+						{# Updated Button Container for Identical Widths #}
+						<div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
+							<button type="button" id="cart-checkout-cancel"
+								class="px-4 text-xs py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-semibold">
+								Cancel
+							</button>
+							<button type="submit"
+								class="px-4 text-xs py-3 bg-bright-green text-white rounded-xl hover:bg-green-600 transition-colors font-semibold shadow-lg shadow-bright-green/10">
+								Place Order
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div
+		class="bg-white rounded-xl border border-gray-200 p-12 text-center dark:bg-gray-800 dark:border-gray-700 max-w-7xl mx-auto">
+		<div class="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+			<ion-icon name="cart-outline" class="text-sm text-light-gray"></ion-icon>
+		</div>
+		<p class="text-dark-forest-green font-semibold text-sm dark:text-white">Your cart is empty</p>
+		<p class="text-xs text-light-gray mt-1 mb-6">Browse the shop and add products they are stored on your account.
+		</p>
+		<a href="{{ path('app_user_home') }}"
+			class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-bright-green text-white text-xs font-medium hover:bg-green-600 transition-colors no-underline">
+			Go to Shop
+		</a>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://js.stripe.com/v3/" data-stripe-key="{% if stripe_publishable_key %}{{ stripe_publishable_key }}{% endif %}"></script>
+<script src="{{ asset('js/cart-user.js') }}"></script>
+{% endblock %}
