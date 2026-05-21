@@ -12,10 +12,19 @@ if [ -z "$DATABASE_URL" ] && [ -n "$MYSQL_URL" ]; then
     echo "Exported DATABASE_URL from MYSQL_URL"
 fi
 
+# Set default values for critical environment variables if not set
+export APP_ENV=${APP_ENV:-prod}
+export APP_DEBUG=${APP_DEBUG:-false}
+export DATABASE_URL=${DATABASE_URL:-mysql://root@127.0.0.1:3306/app_db?serverVersion=8.0}
+export JWT_SECRET_KEY=${JWT_SECRET_KEY:-%kernel.project_dir%/config/jwt/private.pem}
+export JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY:-%kernel.project_dir%/config/jwt/public.pem}
+export REDIS_CACHE_URL=${REDIS_CACHE_URL:-redis://127.0.0.1:6379/1}
+export REDIS_RATE_LIMITER_URL=${REDIS_RATE_LIMITER_URL:-redis://127.0.0.1:6379/2}
+
 # Set default PORT if not set (Railway sets this)
-export PORT=${PORT:-80}
+export PORT=${PORT:-9000}
 echo "Configuring Nginx to listen on port $PORT"
-sed -i "s/listen 80/listen ${PORT}/g" /etc/nginx/conf.d/symfony.conf
+sed -i "s/listen 9000/listen ${PORT}/g" /etc/nginx/conf.d/symfony.conf
 
 echo "Starting PHP-FPM..."
 php-fpm -F &
@@ -34,9 +43,6 @@ fi
 if [ ! -f config/jwt/private.pem ]; then
     echo "Generating JWT keys..."
     mkdir -p config/jwt
-    # Ensure variables are set for the command even if not in env
-    export JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
-    export JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
     php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction || echo "JWT key generation failed, continuing..."
     chown -R www-data:www-data config/jwt || true
 fi
