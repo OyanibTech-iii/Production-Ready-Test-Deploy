@@ -23,7 +23,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Copy dependency manifests first to leverage Docker caching.
-COPY composer.json composer.lock ./
+COPY composer.json composer.lock package.json package-lock.json ./
 
 # Install PHP dependencies without executing project scripts yet.
 RUN composer install --no-interaction --no-scripts --optimize-autoloader
