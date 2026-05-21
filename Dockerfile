@@ -39,7 +39,7 @@ RUN if [ ! -f /app/.env ]; then \
 RUN composer install --no-interaction --optimize-autoloader --no-ansi || true
 
 # Prepare frontend importmap assets for Symfony.
-RUN php bin/console importmap:install --no-interaction
+# RUN php bin/console importmap:install --no-interaction
 
 # Warm the Symfony cache in production mode for faster startup.
 RUN php bin/console cache:warmup --env=prod --no-debug || true
