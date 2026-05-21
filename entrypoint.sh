@@ -34,8 +34,11 @@ fi
 if [ ! -f config/jwt/private.pem ]; then
     echo "Generating JWT keys..."
     mkdir -p config/jwt
+    # Ensure variables are set for the command even if not in env
+    export JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+    export JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
     php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction || echo "JWT key generation failed, continuing..."
-    chown -R www-data:www-data config/jwt
+    chown -R www-data:www-data config/jwt || true
 fi
 
 # Clear and warm up cache (just in case env vars changed)

@@ -32,7 +32,20 @@ COPY . .
 # Create a default .env file if one does not already exist.
 RUN if [ ! -f /app/.env ]; then \
     DB_URL=${DATABASE_URL:-${MYSQL_URL:-mysql://root@127.0.0.1:3306/app_db?serverVersion=8.0}}; \
-    echo "APP_ENV=${APP_ENV:-prod}\nAPP_DEBUG=${APP_DEBUG:-false}\nAPP_SECRET=${APP_SECRET:-ChangeMe}\nDEFAULT_URI=${DEFAULT_URI:-http://localhost}\nDATABASE_URL=$DB_URL\nMAILER_DSN=${MAILER_DSN:-null://null}\nMESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\n" > /app/.env; \
+    echo "APP_ENV=${APP_ENV:-prod}\n\
+APP_DEBUG=${APP_DEBUG:-false}\n\
+APP_SECRET=${APP_SECRET:-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)}\n\
+DEFAULT_URI=${DEFAULT_URI:-http://localhost}\n\
+DATABASE_URL=$DB_URL\n\
+MAILER_DSN=${MAILER_DSN:-null://null}\n\
+MESSENGER_TRANSPORT_DSN=${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}\n\
+REDIS_URL=${REDIS_URL:-redis://127.0.0.1:6379/0}\n\
+REDIS_CACHE_URL=${REDIS_CACHE_URL:-redis://127.0.0.1:6379/1}\n\
+REDIS_SESSION_URL=${REDIS_SESSION_URL:-redis://127.0.0.1:6379/1}\n\
+REDIS_RATE_LIMITER_URL=${REDIS_RATE_LIMITER_URL:-redis://127.0.0.1:6379/2}\n\
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem\n\
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem\n\
+JWT_PASSPHRASE=${JWT_PASSPHRASE:-$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)}\n" > /app/.env; \
     fi
 
 # Reinstall dependencies and optimize the autoloader for production.
